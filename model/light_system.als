@@ -3,7 +3,19 @@
 // ----------------------------------------------------------------------------
 
 abstract sig Boolean {}
-one sig True, False extends Boolean
+one sig True, False extends Boolean {}
+
+abstract sig DriverPosition {}
+one sig LeftHandDrive, RightHandDrive extends DriverPosition {}
+
+abstract sig MarketCode {}
+one sig USA, Canada, EU extends MarketCode {}
+
+one sig ECU {
+	driverPosition: DriverPosition,
+	armoredVehicle: Boolean,
+	marketCode: MarketCode
+}
 
 // ----------------------------------------------------------------------------
 // Properties
