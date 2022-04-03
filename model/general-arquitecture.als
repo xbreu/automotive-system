@@ -13,12 +13,12 @@ enum DriverPosition {
 }
 
 enum MarketCode {
+  USA,
   Canada,
-  EU,
-  USA
+  EU
 }
 
-one sig ECU {
+sig ECU {
   driverPosition: DriverPosition,
   armoredVehicle: Boolean,
   marketCode: MarketCode
