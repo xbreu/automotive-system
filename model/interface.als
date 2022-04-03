@@ -27,12 +27,12 @@ enum HorizontalDirection {
 }
 
 sig Direction {
-    vertical: one VerticalDirection,
-    horizontal: one HorizontalDirection
+    var vertical: one VerticalDirection,
+    var horizontal: one HorizontalDirection
 }
 
 sig SwitchOn {
-	switch: one Boolean
+    var switch: one Boolean
 }
 
 one sig PitmanArm {
@@ -40,13 +40,8 @@ one sig PitmanArm {
 }
 
 one sig LightRotarySwitch {
-	switchOptions: one SwitchOptions
+    switchOptions: one SwitchOptions
 }
 
 one sig HarzardWarning, DarknessMode extends SwitchOn {}
 
-
-
-
-
- 
