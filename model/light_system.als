@@ -2,19 +2,26 @@
 // Definitions
 // ----------------------------------------------------------------------------
 
-abstract sig Boolean {}
-one sig True, False extends Boolean {}
+enum Boolean {
+  True,
+  False
+}
 
-abstract sig DriverPosition {}
-one sig LeftHandDrive, RightHandDrive extends DriverPosition {}
+enum DriverPosition {
+  LeftHandDrive,
+  RightHandDrive
+}
 
-abstract sig MarketCode {}
-one sig USA, Canada, EU extends MarketCode {}
+enum MarketCode {
+  Canada,
+  EU,
+  USA
+}
 
 one sig ECU {
-	driverPosition: DriverPosition,
-	armoredVehicle: Boolean,
-	marketCode: MarketCode
+  driverPosition: DriverPosition,
+  armoredVehicle: Boolean,
+  marketCode: MarketCode
 }
 
 // ----------------------------------------------------------------------------
