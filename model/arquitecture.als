@@ -5,8 +5,8 @@ module arquitecture
 // ----------------------------------------------------------------------------
 
 enum Boolean {
-  True,
-  False
+  False,
+  True
 }
 
 enum DriverPosition {
@@ -21,9 +21,9 @@ enum MarketCode {
 }
 
 sig ECU {
-  driverPosition: DriverPosition,
-  armoredVehicle: Boolean,
-  marketCode: MarketCode
+  driverPosition: one DriverPosition,
+  armoredVehicle: one Boolean,
+  marketCode: one MarketCode
 }
 
 // ----------------------------------------------------------------------------
