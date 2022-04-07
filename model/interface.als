@@ -1,47 +1,77 @@
 module interface
 
-open arquitecture as a
+one sig Yes {}
 
-// ----------------------------------------------------------------------------
-// Definitions
-// ----------------------------------------------------------------------------
+one sig Vehicle {
+  // Enumeration attributes
+  , driverPosition: one DriverPosition
+  , marketCode: one MarketCode
+  , var keyState: one KeyState
+  , var cameraState: one CameraState
+  , var lightRotarySwitch: one LightRotarySwitch
 
-enum SwitchOptions {
-    Off,
-    Auto,
-    On
+  // Numerical attributes
+  , var currentSpeed: one Int
+  , var brightnessSensor: one Int
+  , var brakePedal: one Int
+  , var voltageBattery: one Int
+  , var steeringAngle: one Int
+
+  // Boolean attributes
+  , var hazardWarning: lone Yes
+  , var engineOn: lone Yes
+  , var closedDoors: lone Yes
+  , var oncommingTraffic: lone Yes
+  , var reverseGear: lone Yes
+
+  // Sig attributes
+  , pitmanArm: one PitmanArm
 }
 
-enum VerticalDirection {
-    NeutralV,
-    Upward5,	// 5º deflection
-    Upward7,	// 7º deflection
-    Downward5,
-    Downward7
-}
-
-enum HorizontalDirection {
-    NeutralH,
-    Forth,
-    Back
-}
-
-sig Direction {
-    var vertical: one VerticalDirection,
-    var horizontal: one HorizontalDirection
-}
-
-sig SwitchOn {
-    var switch: one Boolean
+sig ArmoredVehicle extends Vehicle {
+  , var darknessMode: lone Yes
 }
 
 one sig PitmanArm {
-    direction: one Direction
+  , var pitmanArmForthBack: one PitmanArmForthBack
+  , pitmanArmUpDown: one PitmanArmUpDown
 }
 
-one sig LightRotarySwitch {
-    switchOptions: one SwitchOptions
+one sig PitmanArmUpDown {
+  , var pitmanArmUpDownPosition: one PitmanArmUpDownPosition
+  , var pitmanArmDegree: one PitmanArmDegree
 }
 
-one sig HarzardWarning, DarknessMode extends SwitchOn {}
+enum PitmanArmDegree {
+  Degree5, Degree7
+}
 
+enum PitmanArmUpDownPosition {
+  Downward, Upward
+}
+
+enum PitmanArmForthBack {
+  Backward, Forward
+}
+
+enum KeyState {
+  NoKeyInserted, KeyInserted, KeyInIgnitionOnPosition
+}
+
+enum CameraState {
+  Ready, Dirty, NotReady
+}
+
+enum LightRotarySwitch {
+  Off, Auto, On
+}
+
+enum DriverPosition {
+  LeftHandDrive, RightHandDrive
+}
+
+enum MarketCode {
+  USA, Canada, EU
+}
+
+run Example {}
