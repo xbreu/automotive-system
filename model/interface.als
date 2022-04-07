@@ -2,30 +2,41 @@ module interface
 
 one sig Yes {}
 
+one sig Ambient {
+  , daytime: one Yes
+  , lighting: one Yes
+}
+
+abstract sig Actuator {}
+lone sig Blink, LowBeam, CorneringLight, TailLamp extends Actuator {
+  , direction: one Direction
+}
+
+lone sig BrakeLight, ReverseLight extends Actuator {}
+lone sig HighBeam {
+  , highBeamRange: Int
+  , highBeamMotor: Int
+}
+
 one sig Vehicle {
   // Enumeration attributes
   , driverPosition: one DriverPosition
   , marketCode: one MarketCode
   , var keyState: one KeyState
-  , var cameraState: one CameraState
   , var lightRotarySwitch: one LightRotarySwitch
 
   // Numerical attributes
   , var currentSpeed: one Int
-  , var brightnessSensor: one Int
-  , var brakePedal: one Int
-  , var voltageBattery: one Int
-  , var steeringAngle: one Int
 
   // Boolean attributes
+  , var brightnessSensor: one BrightnessState
+  , var brakePedal: one BreakState
   , var hazardWarning: lone Yes
   , var engineOn: lone Yes
   , var closedDoors: lone Yes
   , var oncommingTraffic: lone Yes
   , var reverseGear: lone Yes
-
-  // Sig attributes
-  , pitmanArm: one PitmanArm
+  , var cameraReady: lone Yes
 }
 
 sig ArmoredVehicle extends Vehicle {
@@ -42,8 +53,12 @@ one sig PitmanArmUpDown {
   , var pitmanArmDegree: one PitmanArmDegree
 }
 
+enum Direction {
+  Right, Left
+}
+
 enum PitmanArmDegree {
-  Degree5, Degree7
+  Low, High
 }
 
 enum PitmanArmUpDownPosition {
@@ -54,24 +69,26 @@ enum PitmanArmForthBack {
   Backward, Forward
 }
 
-enum KeyState {
-  NoKeyInserted, KeyInserted, KeyInIgnitionOnPosition
+enum BrightnessState {
+  LowBrightness, MediumBrightness, HighBrightness
 }
 
-enum CameraState {
-  Ready, Dirty, NotReady
+enum BreakState {
+  NeutralBreak, Break, FullBreak
 }
 
 enum LightRotarySwitch {
   Off, Auto, On
 }
 
-enum DriverPosition {
-  LeftHandDrive, RightHandDrive
+enum KeyState {
+  NoKeyInserted, KeyInserted, KeyInIgnitionOnPosition
 }
 
 enum MarketCode {
-  USA, Canada, EU
+  NorthAmerica, Other
 }
 
-run Example {}
+enum DriverPosition {
+  LeftHandDrive, RightHandDrive
+}
