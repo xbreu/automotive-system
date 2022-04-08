@@ -45,9 +45,7 @@ one sig Vehicle {
   , lightRotarySwitch: one SwitchState
   , brightnessSensor: one Level
   , brakePedal: one Level
-
-  // Numerical attributes
-  , currentSpeed: one Int
+  , currentSpeed: one Level
 
   // Boolean attributes
   , hazardWarning: lone Yes
