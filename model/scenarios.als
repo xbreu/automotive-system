@@ -76,5 +76,18 @@ fun pitmanArm : UserInterface -> PitmanArm {
   UserInterface -> PitmanArm
 }
 
-run Example {
+// ----------------------------------------------------------------------------
+// Scenarios
+// ----------------------------------------------------------------------------
+
+	// North America, armored car, darkness mode
+run Example1 {
+ one ArmoredVehicle
+ Vehicle.marketCode = NorthAmerica
+ some Vehicle.darknessMode
+}
+
+	//  
+run Example2 {
+
 }
