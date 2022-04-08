@@ -1,4 +1,4 @@
-module interface
+module structure
 
 // ----------------------------------------------------------------------------
 // Auxiliary
@@ -19,15 +19,6 @@ enum Level {
 }
 
 // ----------------------------------------------------------------------------
-// Ambient
-// ----------------------------------------------------------------------------
-
-one sig Ambient {
-  , daytime: lone Yes
-  , lighting: lone Yes
-}
-
-// ----------------------------------------------------------------------------
 // Actuators
 // ----------------------------------------------------------------------------
 
@@ -37,7 +28,7 @@ lone sig Blink, LowBeam, CorneringLight, TailLamp extends Actuator {
 }
 
 lone sig BrakeLight, ReverseLight extends Actuator {}
-lone sig HighBeam {
+lone sig HighBeam extends Actuator {
   , highBeamRange: Int
   , highBeamMotor: Int
 }
@@ -50,25 +41,26 @@ one sig Vehicle {
   // Enumeration attributes
   , driverHand: one HorizontalDirection
   , marketCode: one MarketCode
-  , var keyState: one KeyState
-  , var lightRotarySwitch: one SwitchState
+  , keyState: one KeyState
+  , lightRotarySwitch: one SwitchState
+  , brightnessSensor: one Level
+  , brakePedal: one Level
 
   // Numerical attributes
-  , var currentSpeed: one Int
+  , currentSpeed: one Int
 
   // Boolean attributes
-  , var brightnessSensor: one Level
-  , var brakePedal: one Level
-  , var hazardWarning: lone Yes
-  , var engineOn: lone Yes
-  , var closedDoors: lone Yes
-  , var oncommingTraffic: lone Yes
-  , var reverseGear: lone Yes
-  , var cameraReady: lone Yes
+  , hazardWarning: lone Yes
+  , closedDoors: lone Yes
+  , oncommingTraffic: lone Yes
+  , reverseGear: lone Yes
+  , cameraReady: lone Yes
+  , daytimeLights: lone Yes
+  , ambientLighting: lone Yes
 }
 
 sig ArmoredVehicle extends Vehicle {
-  , var darknessMode: lone Yes
+  , darknessMode: lone Yes
 }
 
 enum KeyState {
@@ -84,13 +76,13 @@ enum MarketCode {
 // ----------------------------------------------------------------------------
 
 one sig PitmanArm {
-  , var pitmanArmForthBack: one PitmanArmForthBack
-  , pitmanArmUpDown: one PitmanArmUpDown
+  , pitmanArmForthBack: lone PitmanArmForthBack
+  , pitmanArmUpDown: lone PitmanArmUpDown
 }
 
-one sig PitmanArmUpDown {
-  , var pitmanArmUpDownPosition: one PitmanArmUpDownPosition
-  , var pitmanArmDegree: one PitmanArmDegree
+lone sig PitmanArmUpDown {
+  , pitmanArmUpDownPosition: one PitmanArmUpDownPosition
+  , pitmanArmDegree: one PitmanArmDegree
 }
 
 enum PitmanArmDegree {
