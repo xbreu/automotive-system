@@ -85,6 +85,10 @@
    <type name="s/TailLamp"/>
 </node>
 
+<node shape="Box" color="Blue" label="Darkness">
+   <type name="DarknessMode"/>
+</node>
+
 <node shape="Box" color="Green" label="PitmanArm">
    <type name="s/PitmanArm"/>
 </node>
@@ -115,6 +119,10 @@
 
 <node shape="Hexagon">
    <type name="UserInterface"/>
+</node>
+
+<node shape="Triangle" color="Red" label="Hazard">
+   <type name="HazardWarning"/>
 </node>
 
 <node showlabel="no" color="Red">
@@ -182,6 +190,8 @@
 </edge>
 
 <edge color="Gray" label="">
+   <relation name="$darknessMode"> <type name="UserInterface"/> <type name="DarknessMode"/> </relation>
+   <relation name="$hazardWarning"> <type name="UserInterface"/> <type name="HazardWarning"/> </relation>
    <relation name="$instance"> <type name="Actuators"/> <type name="DummyActuator"/> </relation>
    <relation name="$instance"> <type name="Actuators"/> <type name="s/Actuator"/> </relation>
    <relation name="$lightRotary"> <type name="UserInterface"/> <type name="LightRotary"/> </relation>
