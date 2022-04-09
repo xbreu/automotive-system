@@ -67,6 +67,22 @@ fun PitmanArmHighDegree : set PitmanArm {
 }
 
 // ----------------------------------------------------------------------------
+// Light Rotary Switch
+// ----------------------------------------------------------------------------
+
+one abstract sig LightRotary {}
+lone sig LightRotaryOff
+       , LightRotaryAuto
+       , LightRotaryOn
+ extends LightRotary {}
+
+fact {
+  Vehicle.lightRotarySwitch = Off  => one LightRotaryOff
+  Vehicle.lightRotarySwitch = Auto => one LightRotaryAuto
+  Vehicle.lightRotarySwitch = On   => one LightRotaryOn
+}
+
+// ----------------------------------------------------------------------------
 // User Interface
 // ----------------------------------------------------------------------------
 
@@ -76,18 +92,24 @@ fun pitmanArm : UserInterface -> PitmanArm {
   UserInterface -> PitmanArm
 }
 
+fun lightRotary : UserInterface -> LightRotary {
+  UserInterface -> LightRotary
+}
+
 // ----------------------------------------------------------------------------
 // Scenarios
 // ----------------------------------------------------------------------------
 
 	// North America, armored car, darkness mode
 run Example1 {
- one ArmoredVehicle
- Vehicle.marketCode = NorthAmerica
- some Vehicle.darknessMode
+  one ArmoredVehicle
+  Vehicle.marketCode = NorthAmerica
+  some Vehicle.darknessMode
 }
 
-	//  
+	// EU, Key in ignition on position, Light On, pitman arm to downward
 run Example2 {
-
+  Vehicle.lightRotarySwitch = On
+  some PitmanArm.pitmanArmUpDown
+  PitmanArmUpDown.pitmanArmDegree = LowDegree
 }
