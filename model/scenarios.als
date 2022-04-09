@@ -83,6 +83,18 @@ fact {
 }
 
 // ----------------------------------------------------------------------------
+// Hazard and Darkness Switches
+// ----------------------------------------------------------------------------
+
+lone sig HazardWarning {}
+lone sig DarknessMode {}
+
+fact {
+	some Vehicle.hazardWarning 	   => some HazardWarning
+	some ArmoredVehicle.darknessMode => some DarknessMode
+}
+
+// ----------------------------------------------------------------------------
 // User Interface
 // ----------------------------------------------------------------------------
 
@@ -96,20 +108,34 @@ fun lightRotary : UserInterface -> LightRotary {
   UserInterface -> LightRotary
 }
 
+fun hazardWarning : UserInterface -> HazardWarning {
+  UserInterface -> HazardWarning
+}
+
+fun darknessMode : UserInterface -> DarknessMode {
+  UserInterface -> DarknessMode
+}
+
 // ----------------------------------------------------------------------------
 // Scenarios
 // ----------------------------------------------------------------------------
 
 	// North America, armored car, darkness mode
 run Example1 {
-  one ArmoredVehicle
   Vehicle.marketCode = NorthAmerica
+  one ArmoredVehicle
   some Vehicle.darknessMode
 }
 
-	// EU, Key in ignition on position, Light On, pitman arm to downward
+	// EU, Key in ignition on position, Light Auto, pitman arm to downward
 run Example2 {
-  Vehicle.lightRotarySwitch = On
+  Vehicle.marketCode = Other
+  Vehicle.keyState = KeyInIgnitionOnPosition
+  Vehicle.lightRotarySwitch = Auto
   some PitmanArm.pitmanArmUpDown
   PitmanArmUpDown.pitmanArmDegree = LowDegree
+}
+	// Hazard warning on
+run Example3 {
+  some Vehicle.hazardWarning
 }
