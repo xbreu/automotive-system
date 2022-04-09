@@ -13,7 +13,7 @@
    <type name="CorneringLight"/>
    <type name="HighBeam"/>
    <type name="Int"/>
-   <type name="LowBeam"/>
+   <type name="LightRotary"/>
    <type name="ReverseLight"/>
    <type name="String"/>
    <type name="TailLamp"/>
@@ -57,6 +57,10 @@
    <type name="s/Vehicle"/>
 </node>
 
+<node color="Yellow">
+   <type name="LowBeam"/>
+</node>
+
 <node label="BrakeLight">
    <type name="s/BrakeLight"/>
 </node>
@@ -87,6 +91,18 @@
 
 <node shape="Circle" color="Gray">
    <type name="Actuators"/>
+</node>
+
+<node shape="Circle" color="Green">
+   <type name="LightRotaryOn"/>
+</node>
+
+<node shape="Circle" color="Red">
+   <type name="LightRotaryOff"/>
+</node>
+
+<node shape="Circle" color="Yellow">
+   <type name="LightRotaryAuto"/>
 </node>
 
 <node shape="Dbl Circle" color="Green" label="Actuator">
@@ -161,16 +177,20 @@
    <type name="s/Yes"/>
 </node>
 
+<edge attribute="yes">
+   <relation name="darknessMode"> <type name="s/ArmoredVehicle"/> <type name="s/Yes"/> </relation>
+</edge>
+
 <edge color="Gray" label="">
    <relation name="$instance"> <type name="Actuators"/> <type name="DummyActuator"/> </relation>
    <relation name="$instance"> <type name="Actuators"/> <type name="s/Actuator"/> </relation>
+   <relation name="$lightRotary"> <type name="UserInterface"/> <type name="LightRotary"/> </relation>
    <relation name="$pitmanArm"> <type name="UserInterface"/> <type name="s/PitmanArm"/> </relation>
 </edge>
 
 <edge visible="no" attribute="yes">
    <relation name="brakePedal"> <type name="s/Vehicle"/> <type name="s/Level"/> </relation>
    <relation name="brightnessSensor"> <type name="s/Vehicle"/> <type name="s/Level"/> </relation>
-   <relation name="currentSpeed"> <type name="s/Vehicle"/> <type name="Int"/> </relation>
    <relation name="direction"> <type name="s/Blink"/> <type name="s/HorizontalDirection"/> </relation>
    <relation name="direction"> <type name="s/CorneringLight"/> <type name="s/HorizontalDirection"/> </relation>
    <relation name="direction"> <type name="s/LowBeam"/> <type name="s/HorizontalDirection"/> </relation>
