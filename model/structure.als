@@ -130,6 +130,7 @@ fact Init {
   some cameraReady
 
   no Actuator
+  no ActuatorWithLevel
 }
 
 run test {}
