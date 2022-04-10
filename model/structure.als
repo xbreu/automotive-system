@@ -47,6 +47,7 @@ one sig Vehicle {
   , brightnessSensor: one Level
   , brakePedal: one Level
   , currentSpeed: one Level
+  , voltageBattery: one Level
 
   // Boolean attributes
 
