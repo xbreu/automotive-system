@@ -39,6 +39,7 @@ lone sig HighBeam extends Actuator {
 
 one sig Vehicle {
   // Enumeration attributes
+
   , driverHand: one HorizontalDirection
   , marketCode: one MarketCode
   , keyState: one KeyState
@@ -48,13 +49,15 @@ one sig Vehicle {
   , currentSpeed: one Level
 
   // Boolean attributes
+
   , hazardWarning: lone Yes
+  , daytimeLights: lone Yes
+  , ambientLighting: lone Yes
+
   , closedDoors: lone Yes
   , oncommingTraffic: lone Yes
   , reverseGear: lone Yes
   , cameraReady: lone Yes
-  , daytimeLights: lone Yes
-  , ambientLighting: lone Yes
 }
 
 sig ArmoredVehicle extends Vehicle {
