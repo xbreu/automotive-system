@@ -98,3 +98,32 @@ enum PitmanArmUpDownPosition {
 enum PitmanArmForthBack {
   Backward, Forward
 }
+
+// ----------------------------------------------------------------------------
+// Initial Configuration
+// ----------------------------------------------------------------------------
+
+fact Init {
+  Vehicle.keyState          = NoKeyInserted
+  Vehicle.currentSpeed      = Low
+  Vehicle.brakePedal        = Low
+  Vehicle.voltageBattery    = Medium
+  Vehicle.lightRotarySwitch = Off
+
+  no Vehicle.hazardWarning
+  no ArmoredVehicle.darknessMode
+  no Vehicle.closedDoors
+  no pitmanArmForthBack
+  no pitmanArmUpDown
+  no reverseGear
+  no oncommingTraffic
+  some cameraReady
+
+  no Blink
+  no LowBeam
+  no CorneringLight
+  no TailLamp
+  no BrakeLight
+  no ReverseLight
+  no HighBeam
+}
