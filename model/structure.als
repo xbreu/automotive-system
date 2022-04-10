@@ -23,9 +23,19 @@ enum Level {
 // ----------------------------------------------------------------------------
 
 abstract sig Actuator {}
-lone sig Blink, LowBeam, CorneringLight, TailLamp extends Actuator {
-  , direction: one HorizontalDirection
+abstract sig ActuatorWithLevel {
+  , level: lone Level
 }
+
+lone sig BlinkLeft
+       , BlinkRight
+       , LowBeamLeft
+       , LowBeamRight
+       , CorneringLightLeft
+       , CorneringLightRight
+       , TailLampLeft
+       , TailLampRight
+ extends ActuatorWithLevel {}
 
 lone sig BrakeLight, ReverseLight extends Actuator {}
 lone sig HighBeam extends Actuator {
@@ -111,19 +121,15 @@ fact Init {
   Vehicle.lightRotarySwitch = Off
 
   no Vehicle.hazardWarning
-  no ArmoredVehicle.darknessMode
   no Vehicle.closedDoors
+  no ArmoredVehicle.darknessMode
   no pitmanArmForthBack
   no pitmanArmUpDown
   no reverseGear
   no oncommingTraffic
   some cameraReady
 
-  no Blink
-  no LowBeam
-  no CorneringLight
-  no TailLamp
-  no BrakeLight
-  no ReverseLight
-  no HighBeam
+  no Actuator
 }
+
+run test {}
