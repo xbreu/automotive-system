@@ -1,14 +1,14 @@
 module scenarios
 
 open structure as s
-open visualization as v
+open visualisation as v
 
 // ----------------------------------------------------------------------------
 // Auxiliar Relations
 // ----------------------------------------------------------------------------
 
-fun instance : Actuators -> (Actuator + DummyActuator) {
-  Actuators -> (Actuator + DummyActuator)
+fun instance : Actuators -> (Actuator + ActuatorWithLevel + DummyActuator + DummyActuatorWithLevel) {
+  Actuators -> (Actuator + ActuatorWithLevel + DummyActuator + DummyActuatorWithLevel)
 }
 
 fun component : UserInterface -> (PitmanArm + DummySwitch) { 
@@ -32,7 +32,7 @@ run Example2 {
   Vehicle . marketCode = Other
   Vehicle . keyState = KeyInIgnitionOnPosition
   Vehicle . lightRotarySwitch = Auto
-  some PitmanArm . pitmanArmUpDown
+  //some PitmanArm . pitmanArmUpDown
   PitmanArmUpDown . pitmanArmDegree = LowDegree
 }
 
