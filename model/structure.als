@@ -110,6 +110,25 @@ enum PitmanArmForthBack {
 }
 
 // ----------------------------------------------------------------------------
+// Predicates
+// ----------------------------------------------------------------------------
+
+pred blinkLeft {
+  some BlinkLeft and BlinkLeft . level = High
+}
+
+pred blinkRight {
+  some BlinkRight and BlinkRight . level = High
+}
+
+pred parkingLight {
+  some LowBeamLeft and some LowBeamRight
+  some TailLampLeft and some TailLampRight
+  LowBeamLeft . level & LowBeamRight . level = Low
+  TailLampLeft . level & TailLampRight . level = Low
+}
+
+// ----------------------------------------------------------------------------
 // Initial Configuration
 // ----------------------------------------------------------------------------
 
