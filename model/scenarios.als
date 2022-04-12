@@ -23,7 +23,7 @@ fun component : UserInterface -> (PitmanArm + DummySwitch) {
 run Example1 {
   Vehicle . marketCode = NorthAmerica
   one ArmoredVehicle
-  some Vehicle.darknessMode
+  some Vehicle . darknessMode
 }
 
 // EU, Key in ignition on position, Light Auto, pitman arm to downward
@@ -41,10 +41,13 @@ run Example3 {
   some Vehicle . hazardWarning
 }
 
+// Direction indicator on, low speed
 run Example4 {
-
+  no Actuator and not blinkRight and blinkLeft
+  Vehicle . currentSpeed = Low
 }
 
+// Parking light active
 run Example5 {
-
+  parkingLight
 }
