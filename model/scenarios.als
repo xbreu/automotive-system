@@ -32,11 +32,19 @@ run Example2 {
   Vehicle . marketCode = Other
   Vehicle . keyState = KeyInIgnitionOnPosition
   Vehicle . lightRotarySwitch = Auto
-  //some PitmanArm . pitmanArmUpDown
+  some PitmanArm . pitmanArmUpDown
   PitmanArmUpDown . pitmanArmDegree = LowDegree
 }
 
 // Hazard warning on
 run Example3 {
   some Vehicle . hazardWarning
+}
+
+run Example4 {
+
+}
+
+run Example5 {
+
 }

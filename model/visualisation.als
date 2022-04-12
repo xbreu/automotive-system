@@ -60,8 +60,7 @@ fact {
   one pitmanArmUpDown . pitmanArmDegree . HighDegree => one PitmanArmHighDegree
   lone (PitmanArmLowDegree + PitmanArmHighDegree)
 
-  no (PitmanArm - (pitmanArmForthBack . PitmanArmForthBack)
-  - (pitmanArmUpDown . PitmanArmUpDown)) => one DisabledPitmanArm
+  no PitmanArmForthBack and no PitmanArmUpDown => one DisabledPitmanArm
   no DisabledPitmanArm & (PitmanArmUp + PitmanArmDown + PitmanArmLowDegree
   + PitmanArmHighDegree)
 }
