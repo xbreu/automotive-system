@@ -114,6 +114,7 @@ enum PitmanArmForthBack {
 // ----------------------------------------------------------------------------
 
 fact Init {
+  /*
   Vehicle.keyState          = NoKeyInserted
   Vehicle.currentSpeed      = Low
   Vehicle.brakePedal        = Low
@@ -131,6 +132,7 @@ fact Init {
 
   no Actuator
   no ActuatorWithLevel
+  */
 }
 
 run test {}
