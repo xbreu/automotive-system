@@ -1,23 +1,14 @@
 <?xml version="1.0"?>
 <alloy>
 
-<view nodetheme="Martha" edgetheme="Standard" fontsize="14">
+<view nodetheme="Martha" edgetheme="Neon">
 
 <defaultnode/>
 
 <defaultedge/>
 
 <node>
-   <type name="Blink"/>
-   <type name="BrakeLight"/>
-   <type name="CorneringLight"/>
-   <type name="HighBeam"/>
-   <type name="Int"/>
-   <type name="LightRotary"/>
-   <type name="ReverseLight"/>
    <type name="String"/>
-   <type name="TailLamp"/>
-   <type name="univ"/>
    <type name="s/ArmoredVehicle"/>
    <type name="s/Auto"/>
    <type name="s/Backward"/>
@@ -25,20 +16,31 @@
    <type name="s/Forward"/>
    <type name="s/High"/>
    <type name="s/HighDegree"/>
+   <type name="s/HorizontalDirection"/>
    <type name="s/KeyInIgnitionOnPosition"/>
    <type name="s/KeyInserted"/>
+   <type name="s/KeyState"/>
    <type name="s/Left"/>
    <type name="s/Low"/>
    <type name="s/LowDegree"/>
+   <type name="s/MarketCode"/>
    <type name="s/Medium"/>
    <type name="s/NoKeyInserted"/>
    <type name="s/NorthAmerica"/>
    <type name="s/Off"/>
    <type name="s/On"/>
    <type name="s/Other"/>
+   <type name="s/PitmanArmDegree"/>
+   <type name="s/PitmanArmForthBack"/>
+   <type name="s/PitmanArmUpDown"/>
+   <type name="s/PitmanArmUpDownPosition"/>
    <type name="s/Right"/>
+   <type name="s/SwitchState"/>
    <type name="s/Upward"/>
+   <type name="s/Vehicle"/>
+   <type name="s/Yes"/>
    <type name="seq/Int"/>
+   <type name="v/DummySwitch"/>
    <type name="s/open$3/Ord"/>
    <type name="s/open$4/Ord"/>
    <type name="s/open$5/Ord"/>
@@ -49,176 +51,170 @@
    <type name="s/ordering/Ord"/>
 </node>
 
-<node color="Green" label="Blink">
-   <type name="s/Blink"/>
+<node color="Blue" label="LightRotary">
+   <type name="v/LightRotaryAuto"/>
 </node>
 
-<node color="Red" label="Vehicle">
-   <type name="s/Vehicle"/>
+<node color="Green" label="LightRotary">
+   <type name="v/LightRotaryOn"/>
 </node>
 
-<node color="Yellow">
-   <type name="LowBeam"/>
+<node color="Green" label="PitmanArm">
+   <type name="s/PitmanArm"/>
+</node>
+
+<node color="Red" label="LightRotary">
+   <type name="v/LightRotaryOff"/>
+</node>
+
+<node label="BlinkLeft">
+   <type name="s/BlinkLeft"/>
+   <type name="v/BlinkLeft"/>
+</node>
+
+<node label="BlinkRight">
+   <type name="s/BlinkRight"/>
+   <type name="v/BlinkRight"/>
 </node>
 
 <node label="BrakeLight">
    <type name="s/BrakeLight"/>
+   <type name="v/BrakeLight"/>
 </node>
 
-<node label="CorneringLight">
-   <type name="s/CorneringLight"/>
+<node label="CorneringLightLeft">
+   <type name="s/CorneringLightLeft"/>
+   <type name="v/CorneringLightLeft"/>
+</node>
+
+<node label="CorneringLightRight">
+   <type name="s/CorneringLightRight"/>
+   <type name="v/CorneringLightRight"/>
 </node>
 
 <node label="HighBeam">
    <type name="s/HighBeam"/>
+   <type name="v/HighBeam"/>
 </node>
 
-<node label="LowBeam">
-   <type name="s/LowBeam"/>
+<node label="Level">
+   <type name="s/Level"/>
+</node>
+
+<node label="LowBeamLeft">
+   <type name="s/LowBeamLeft"/>
+   <type name="v/LowBeamLeft"/>
+</node>
+
+<node label="LowBeamRight">
+   <type name="s/LowBeamRight"/>
+   <type name="v/LowBeamRight"/>
 </node>
 
 <node label="ReverseLight">
    <type name="s/ReverseLight"/>
+   <type name="v/ReverseLight"/>
 </node>
 
-<node label="TailLamp">
-   <type name="s/TailLamp"/>
+<node label="TailLampLeft">
+   <type name="s/TailLampLeft"/>
+   <type name="v/TailLampLeft"/>
 </node>
 
-<node shape="Box" color="Blue" label="Darkness">
-   <type name="DarknessMode"/>
+<node label="TailLampRight">
+   <type name="s/TailLampRight"/>
+   <type name="v/TailLampRight"/>
 </node>
 
-<node shape="Box" color="Green" label="PitmanArm">
-   <type name="s/PitmanArm"/>
-</node>
-
-<node shape="Circle" color="Gray">
-   <type name="Actuators"/>
-</node>
-
-<node shape="Circle" color="Green">
-   <type name="LightRotaryOn"/>
-</node>
-
-<node shape="Circle" color="Red">
-   <type name="LightRotaryOff"/>
-</node>
-
-<node shape="Circle" color="Yellow">
-   <type name="LightRotaryAuto"/>
+<node shape="Dbl Circle" color="Green">
+   <type name="s/ActuatorWithLevel"/>
 </node>
 
 <node shape="Dbl Circle" color="Green" label="Actuator">
    <type name="s/Actuator"/>
 </node>
 
+<node shape="Dbl Circle" color="Green" label="AmbientLighting">
+   <type name="v/AmbientLightingOn"/>
+</node>
+
+<node shape="Dbl Circle" color="Green" label="HazardWarning">
+   <type name="v/HazardWarningOn"/>
+</node>
+
 <node shape="Dbl Circle" color="Red">
-   <type name="DummyActuator"/>
+   <type name="v/DummyActuator"/>
+   <type name="v/DummyActuatorWithLevel"/>
 </node>
 
-<node shape="Hexagon">
-   <type name="UserInterface"/>
+<node shape="Dbl Circle" color="Red" label="DarknessMode">
+   <type name="v/DarknessModeOff"/>
+   <type name="v/DarknessModeOn"/>
 </node>
 
-<node shape="Triangle" color="Red" label="Hazard">
-   <type name="HazardWarning"/>
+<node shape="Dbl Circle" color="Red" label="DaytimeLights">
+   <type name="v/DaytimeLightsOff"/>
+   <type name="v/DaytimeLightsOn"/>
+</node>
+
+<node shape="Dbl Circle" color="Red" label="HazardWarning">
+   <type name="v/HazardWarningOff"/>
+</node>
+
+<node shape="Dbl Octagon" color="Red" label="AmbientLighting">
+   <type name="v/AmbientLightingOff"/>
+</node>
+
+<node shape="Ellipse">
+   <type name="v/LightRotary"/>
+</node>
+
+<node shape="Ellipse" color="Gray" label="Actuators">
+   <type name="v/Actuators"/>
+</node>
+
+<node shape="Ellipse" color="Gray" label="UserInterface">
+   <type name="v/UserInterface"/>
 </node>
 
 <node showlabel="no" color="Red">
-   <set name="$DisabledPitmanArm" type="s/PitmanArm"/>
+   <set name="v/DisabledPitmanArm" type="s/PitmanArm"/>
 </node>
 
-<node showlabel="no" shape="House">
-   <set name="$PitmanArmTop" type="s/PitmanArm"/>
+<node showlabel="no" shape="Inv Trapezoid">
+   <set name="v/PitmanArmDown" type="s/PitmanArm"/>
 </node>
 
-<node showlabel="no" shape="Inv House">
-   <set name="$PitmanArmDown" type="s/PitmanArm"/>
+<node showlabel="no" shape="Triangle">
+   <set name="v/PitmanArmUp" type="s/PitmanArm"/>
 </node>
 
 <node showlabel="no" style="Bold">
-   <set name="$PitmanArmHighDegree" type="s/PitmanArm"/>
+   <set name="v/PitmanArmHighDegree" type="s/PitmanArm"/>
 </node>
 
 <node showlabel="no" style="Dashed">
-   <set name="$PitmanArmLowDegree" type="s/PitmanArm"/>
+   <set name="v/PitmanArmLowDegree" type="s/PitmanArm"/>
 </node>
 
-<node visible="no" label="HorizontalDirection">
-   <type name="s/HorizontalDirection"/>
+<node visible="yes">
+   <type name="Int"/>
+   <type name="univ"/>
 </node>
-
-<node visible="no" label="KeyState">
-   <type name="s/KeyState"/>
-</node>
-
-<node visible="no" label="Level">
-   <type name="s/Level"/>
-</node>
-
-<node visible="no" label="MarketCode">
-   <type name="s/MarketCode"/>
-</node>
-
-<node visible="no" label="PitmanArmDegree">
-   <type name="s/PitmanArmDegree"/>
-</node>
-
-<node visible="no" label="PitmanArmForthBack">
-   <type name="s/PitmanArmForthBack"/>
-</node>
-
-<node visible="no" label="PitmanArmUpDown">
-   <type name="s/PitmanArmUpDown"/>
-</node>
-
-<node visible="no" label="PitmanArmUpDownPosition">
-   <type name="s/PitmanArmUpDownPosition"/>
-</node>
-
-<node visible="no" label="SwitchState">
-   <type name="s/SwitchState"/>
-</node>
-
-<node visible="no" label="Yes">
-   <type name="s/Yes"/>
-</node>
-
-<edge attribute="yes">
-   <relation name="darknessMode"> <type name="s/ArmoredVehicle"/> <type name="s/Yes"/> </relation>
-</edge>
 
 <edge color="Gray" label="">
-   <relation name="$darknessMode"> <type name="UserInterface"/> <type name="DarknessMode"/> </relation>
-   <relation name="$hazardWarning"> <type name="UserInterface"/> <type name="HazardWarning"/> </relation>
-   <relation name="$instance"> <type name="Actuators"/> <type name="DummyActuator"/> </relation>
-   <relation name="$instance"> <type name="Actuators"/> <type name="s/Actuator"/> </relation>
-   <relation name="$lightRotary"> <type name="UserInterface"/> <type name="LightRotary"/> </relation>
-   <relation name="$pitmanArm"> <type name="UserInterface"/> <type name="s/PitmanArm"/> </relation>
+   <relation name="$component"> <type name="v/UserInterface"/> <type name="s/PitmanArm"/> </relation>
+   <relation name="$component"> <type name="v/UserInterface"/> <type name="v/DummySwitch"/> </relation>
+   <relation name="$instance"> <type name="v/Actuators"/> <type name="s/Actuator"/> </relation>
+   <relation name="$instance"> <type name="v/Actuators"/> <type name="s/ActuatorWithLevel"/> </relation>
+   <relation name="$instance"> <type name="v/Actuators"/> <type name="v/DummyActuator"/> </relation>
+   <relation name="$instance"> <type name="v/Actuators"/> <type name="v/DummyActuatorWithLevel"/> </relation>
 </edge>
 
 <edge visible="no" attribute="yes">
-   <relation name="brakePedal"> <type name="s/Vehicle"/> <type name="s/Level"/> </relation>
-   <relation name="brightnessSensor"> <type name="s/Vehicle"/> <type name="s/Level"/> </relation>
-   <relation name="direction"> <type name="s/Blink"/> <type name="s/HorizontalDirection"/> </relation>
-   <relation name="direction"> <type name="s/CorneringLight"/> <type name="s/HorizontalDirection"/> </relation>
-   <relation name="direction"> <type name="s/LowBeam"/> <type name="s/HorizontalDirection"/> </relation>
-   <relation name="direction"> <type name="s/TailLamp"/> <type name="s/HorizontalDirection"/> </relation>
-   <relation name="driverHand"> <type name="s/Vehicle"/> <type name="s/HorizontalDirection"/> </relation>
-   <relation name="highBeamMotor"> <type name="s/HighBeam"/> <type name="Int"/> </relation>
-   <relation name="highBeamRange"> <type name="s/HighBeam"/> <type name="Int"/> </relation>
-   <relation name="keyState"> <type name="s/Vehicle"/> <type name="s/KeyState"/> </relation>
-   <relation name="lightRotarySwitch"> <type name="s/Vehicle"/> <type name="s/SwitchState"/> </relation>
-   <relation name="marketCode"> <type name="s/Vehicle"/> <type name="s/MarketCode"/> </relation>
-</edge>
-
-<edge visible="no" attribute="yes" label="proximityPosition">
-   <relation name="pitmanArmForthBack"> <type name="s/PitmanArm"/> <type name="s/PitmanArmForthBack"/> </relation>
-</edge>
-
-<edge visible="yes">
-   <relation name="pitmanArmUpDown"> <type name="s/PitmanArm"/> <type name="s/PitmanArmUpDown"/> </relation>
+   <relation name="highBeamHighMotor"> <type name="s/HighBeam"/> <type name="s/Yes"/> </relation>
+   <relation name="highBeamHighRange"> <type name="s/HighBeam"/> <type name="s/Yes"/> </relation>
+   <relation name="level"> <type name="s/ActuatorWithLevel"/> <type name="s/Level"/> </relation>
 </edge>
 
 </view>
