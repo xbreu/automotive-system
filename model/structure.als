@@ -39,8 +39,8 @@ lone sig BlinkLeft
 
 lone sig BrakeLight, ReverseLight extends Actuator {}
 lone sig HighBeam extends Actuator {
-  , highBeamRange: Int
-  , highBeamMotor: Int
+  , highBeamHighRange: lone Yes
+  , highBeamHighMotor: lone Yes
 }
 
 // ----------------------------------------------------------------------------
