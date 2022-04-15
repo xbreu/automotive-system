@@ -23,7 +23,7 @@ enum Level {
 // ----------------------------------------------------------------------------
 
 abstract sig Actuator {}
-abstract sig ActuatorWithLevel {
+abstract sig ActuatorWithLevel extends Actuator {
   , level: lone Level
 }
 
@@ -37,7 +37,10 @@ lone sig BlinkLeft
        , TailLampRight
  extends ActuatorWithLevel {}
 
-lone sig BrakeLight, ReverseLight extends Actuator {}
+lone sig BrakeLight
+       , ReverseLight
+ extends Actuator {}
+
 lone sig HighBeam extends Actuator {
   , highBeamHighRange: lone Yes
   , highBeamHighMotor: lone Yes
@@ -133,23 +136,20 @@ pred parkingLight {
 // ----------------------------------------------------------------------------
 
 fact Init {
-  /*
-  Vehicle.keyState          = NoKeyInserted
-  Vehicle.currentSpeed      = Low
-  Vehicle.brakePedal        = Low
-  Vehicle.voltageBattery    = Medium
-  Vehicle.lightRotarySwitch = Off
+  /*Vehicle . keyState          = NoKeyInserted
+  Vehicle . currentSpeed      = Low
+  Vehicle . brakePedal        = Low
+  Vehicle . voltageBattery    = Medium
+  Vehicle . lightRotarySwitch = Off
 
-  no Vehicle.hazardWarning
-  no Vehicle.closedDoors
-  no ArmoredVehicle.darknessMode
+  some closedDoors
   no pitmanArmForthBack
   no pitmanArmUpDown
+  no hazardWarning
+  no darknessMode
   no reverseGear
   no oncommingTraffic
   some cameraReady
 
-  no Actuator
-  no ActuatorWithLevel
-  */
+  no Actuator*/
 }

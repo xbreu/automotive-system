@@ -9,35 +9,35 @@ open structure as s
 one sig Actuators {}
 
 abstract sig DummyActuator {}
-abstract sig DummyActuatorWithLevel {}
+abstract sig DummyActuatorWithLevel extends DummyActuator {}
 
-lone sig BlinkLeft
-       , BlinkRight
-       , LowBeamLeft
-       , LowBeamRight
-       , CorneringLightLeft
-       , CorneringLightRight
-       , TailLampLeft
-       , TailLampRight
+lone sig DummyBlinkLeft
+       , DummyBlinkRight
+       , DummyLowBeamLeft
+       , DummyLowBeamRight
+       , DummyCorneringLightLeft
+       , DummyCorneringLightRight
+       , DummyTailLampLeft
+       , DummyTailLampRight
 extends DummyActuatorWithLevel {}
 
-lone sig BrakeLight
-       , ReverseLight
-       , HighBeam
+lone sig DummyBrakeLight
+       , DummyReverseLight
+       , DummyHighBeam
  extends DummyActuator {}
 
 fact {
-  one (s/BlinkLeft + this/BlinkLeft)
-  one (s/BlinkRight + this/BlinkRight)
-  one (s/LowBeamLeft + this/LowBeamLeft)
-  one (s/LowBeamRight + this/LowBeamRight)
-  one (s/CorneringLightLeft + this/CorneringLightLeft)
-  one (s/CorneringLightRight + this/CorneringLightRight)
-  one (s/TailLampLeft + this/TailLampLeft)
-  one (s/TailLampRight + this/TailLampRight)
-  one (s/BrakeLight + this/BrakeLight)
-  one (s/ReverseLight + this/ReverseLight)
-  one (s/HighBeam + this/HighBeam)
+  one (BlinkLeft + DummyBlinkLeft)
+  one (BlinkRight + DummyBlinkRight)
+  one (LowBeamLeft + DummyLowBeamLeft)
+  one (LowBeamRight + DummyLowBeamRight)
+  one (CorneringLightLeft + DummyCorneringLightLeft)
+  one (CorneringLightRight + DummyCorneringLightRight)
+  one (TailLampLeft + DummyTailLampLeft)
+  one (TailLampRight + DummyTailLampRight)
+  one (BrakeLight + DummyBrakeLight)
+  one (ReverseLight + DummyReverseLight)
+  one (HighBeam + DummyHighBeam)
 }
 
 // ----------------------------------------------------------------------------
