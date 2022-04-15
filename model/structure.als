@@ -23,7 +23,7 @@ enum Level {
 // ----------------------------------------------------------------------------
 
 abstract sig Actuator {}
-abstract sig ActuatorWithLevel extends Actuator {
+abstract sig ActuatorWithLevel {
   , level: lone Level
 }
 
