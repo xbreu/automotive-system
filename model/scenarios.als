@@ -7,8 +7,8 @@ open visualization as v
 // Auxiliar Relations
 // ----------------------------------------------------------------------------
 
-fun instance : Actuators -> (Actuator + ActuatorWithLevel + DummyActuator + DummyActuatorWithLevel) {
-  Actuators -> (Actuator + ActuatorWithLevel + DummyActuator + DummyActuatorWithLevel)
+fun instance : Actuators -> (Actuator + DummyActuator) {
+  Actuators -> (Actuator + DummyActuator)
 }
 
 fun component : UserInterface -> (PitmanArm + DummySwitch) {
