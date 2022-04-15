@@ -1,7 +1,7 @@
 module scenarios
 
 open structure as s
-open visualisation as v
+open visualization as v
 
 // ----------------------------------------------------------------------------
 // Auxiliar Relations
@@ -11,7 +11,7 @@ fun instance : Actuators -> (Actuator + ActuatorWithLevel + DummyActuator + Dumm
   Actuators -> (Actuator + ActuatorWithLevel + DummyActuator + DummyActuatorWithLevel)
 }
 
-fun component : UserInterface -> (PitmanArm + DummySwitch) { 
+fun component : UserInterface -> (PitmanArm + DummySwitch) {
   UserInterface -> (PitmanArm + DummySwitch)
 }
 
