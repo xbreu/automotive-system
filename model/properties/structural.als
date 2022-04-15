@@ -10,20 +10,18 @@ assert {
   some daytimeLights => some LowBeamLeft and some LowBeamRight
 }
 
-// Direction blinking is only available when the ignition is on
+// Direction blinking is only available when the ignition is on.
 assert {
   (highBlinkLeft or highBlinkRight)
   => Vehicle . keyState = KeyInIgnitionOnPosition
 }
 
 // ELS-6 For cars sold in USA and Canada, the daytime running light must be
-// dimmed by 50% during direction blinking on the blinking side
+// dimmed by 50% during direction blinking on the blinking side.
 assert {
-  (Vehicle . marketCode = NorthAmerica and highBlinkLeft)
-  => LowBeamLeft . level = Medium
-
-  (Vehicle . marketCode = NorthAmerica and highBlinkRight)
-  => LowBeamRight . level = Medium
+  (Vehicle . marketCode = NorthAmerica and some Vehicle . daytimeLights)
+  =>  (some BlinkLeft => LowBeamLeft . level = Medium)
+  and (some BlinkRight => LowBeamRight . level = Medium)
 }
 
 // ELS-14 If the ignition is On and the light rotary switch is in the position
