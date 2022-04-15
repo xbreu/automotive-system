@@ -1,7 +1,6 @@
 module scenarios
 
-open structure as s
-open visualization as v
+open visualization
 
 // ----------------------------------------------------------------------------
 // Auxiliar Relations

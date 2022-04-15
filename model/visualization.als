@@ -1,6 +1,6 @@
 module visualization
 
-open structure as s
+open structure/structure
 
 // ----------------------------------------------------------------------------
 // Actuators

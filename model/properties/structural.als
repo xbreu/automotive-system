@@ -1,6 +1,6 @@
 module properties/structural
 
-open structure as s
+open structure/structure
 
 // ELS-6 For cars sold in USA and Canada, the daytime running light must be
 // dimmed by 50% during direction blinking on the blinking side.
