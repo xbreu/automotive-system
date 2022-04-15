@@ -1,4 +1,4 @@
-module structural/structure
+module structure/structure
 
 open structure/signatures
 
