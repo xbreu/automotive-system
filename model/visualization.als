@@ -1,4 +1,4 @@
-module visualisation
+module visualization
 
 open structure as s
 
@@ -79,11 +79,11 @@ lone sig HazardWarningOn
        , DaytimeLightsOn
        , DaytimeLightsOff
  extends DummySwitch {}
-  
+
 fact {
   some Vehicle . hazardWarning => one HazardWarningOn
   one (HazardWarningOn + HazardWarningOff)
-  
+
   some Vehicle . ambientLighting => one AmbientLightingOn
   one (AmbientLightingOn + AmbientLightingOff)
 
