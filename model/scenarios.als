@@ -21,6 +21,8 @@ fun component : UserInterface -> (PitmanArm + DummySwitch) {
 // Scenarios
 // ----------------------------------------------------------------------------
 
+run FreeExample {}
+
 // North America, armored car, darkness mode
 run Example1 {
   Vehicle . marketCode = NorthAmerica
