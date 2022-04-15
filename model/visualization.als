@@ -9,7 +9,7 @@ open structure as s
 one sig Actuators {}
 
 abstract sig DummyActuator {}
-abstract sig DummyActuatorWithLevel extends DummyActuator {}
+abstract sig DummyActuatorWithLevel {}
 
 lone sig DummyBlinkLeft
        , DummyBlinkRight
@@ -25,6 +25,10 @@ lone sig DummyBrakeLight
        , DummyReverseLight
        , DummyHighBeam
  extends DummyActuator {}
+
+fun AllDummyActuators : set DummyActuator + DummyActuatorWithLevel {
+  DummyActuator + DummyActuatorWithLevel
+}
 
 fact {
   one (BlinkLeft + DummyBlinkLeft)
