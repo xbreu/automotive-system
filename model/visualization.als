@@ -1,4 +1,4 @@
-module visualisation
+module visualization
 
 open structure as s
 
@@ -9,23 +9,39 @@ open structure as s
 one sig Actuators {}
 
 abstract sig DummyActuator {}
-lone sig Blink
-       , LowBeam
-       , CorneringLight
-       , TailLamp
-       , BrakeLight
-       , ReverseLight
-       , HighBeam
+abstract sig DummyActuatorWithLevel {}
+
+lone sig DummyBlinkLeft
+       , DummyBlinkRight
+       , DummyLowBeamLeft
+       , DummyLowBeamRight
+       , DummyCorneringLightLeft
+       , DummyCorneringLightRight
+       , DummyTailLampLeft
+       , DummyTailLampRight
+extends DummyActuatorWithLevel {}
+
+lone sig DummyBrakeLight
+       , DummyReverseLight
+       , DummyHighBeam
  extends DummyActuator {}
 
+fun AllDummyActuators : set DummyActuator + DummyActuatorWithLevel {
+  DummyActuator + DummyActuatorWithLevel
+}
+
 fact {
-  one (s/Blink + this/Blink)
-  one (s/LowBeam + this/LowBeam)
-  one (s/CorneringLight + this/CorneringLight)
-  one (s/TailLamp + this/TailLamp)
-  one (s/BrakeLight + this/BrakeLight)
-  one (s/ReverseLight + this/ReverseLight)
-  one (s/HighBeam + this/HighBeam)
+  one (BlinkLeft + DummyBlinkLeft)
+  one (BlinkRight + DummyBlinkRight)
+  one (LowBeamLeft + DummyLowBeamLeft)
+  one (LowBeamRight + DummyLowBeamRight)
+  one (CorneringLightLeft + DummyCorneringLightLeft)
+  one (CorneringLightRight + DummyCorneringLightRight)
+  one (TailLampLeft + DummyTailLampLeft)
+  one (TailLampRight + DummyTailLampRight)
+  one (BrakeLight + DummyBrakeLight)
+  one (ReverseLight + DummyReverseLight)
+  one (HighBeam + DummyHighBeam)
 }
 
 // ----------------------------------------------------------------------------
@@ -48,8 +64,7 @@ fact {
   one pitmanArmUpDown . pitmanArmDegree . HighDegree => one PitmanArmHighDegree
   lone (PitmanArmLowDegree + PitmanArmHighDegree)
 
-  no (PitmanArm - (pitmanArmForthBack . PitmanArmForthBack)
-  - (pitmanArmUpDown . PitmanArmUpDown)) => one DisabledPitmanArm
+  no PitmanArmForthBack and no PitmanArmUpDown => one DisabledPitmanArm
   no DisabledPitmanArm & (PitmanArmUp + PitmanArmDown + PitmanArmLowDegree
   + PitmanArmHighDegree)
 }
@@ -68,11 +83,11 @@ lone sig HazardWarningOn
        , DaytimeLightsOn
        , DaytimeLightsOff
  extends DummySwitch {}
-  
+
 fact {
   some Vehicle . hazardWarning => one HazardWarningOn
   one (HazardWarningOn + HazardWarningOff)
-  
+
   some Vehicle . ambientLighting => one AmbientLightingOn
   one (AmbientLightingOn + AmbientLightingOff)
 

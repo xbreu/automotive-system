@@ -23,14 +23,27 @@ enum Level {
 // ----------------------------------------------------------------------------
 
 abstract sig Actuator {}
-lone sig Blink, LowBeam, CorneringLight, TailLamp extends Actuator {
-  , direction: one HorizontalDirection
+abstract sig ActuatorWithLevel {
+  , level: lone Level
 }
 
-lone sig BrakeLight, ReverseLight extends Actuator {}
+lone sig BlinkLeft
+       , BlinkRight
+       , LowBeamLeft
+       , LowBeamRight
+       , CorneringLightLeft
+       , CorneringLightRight
+       , TailLampLeft
+       , TailLampRight
+ extends ActuatorWithLevel {}
+
+lone sig BrakeLight
+       , ReverseLight
+ extends Actuator {}
+
 lone sig HighBeam extends Actuator {
-  , highBeamRange: Int
-  , highBeamMotor: Int
+  , highBeamHighRange: lone Yes
+  , highBeamHighMotor: lone Yes
 }
 
 // ----------------------------------------------------------------------------
@@ -38,30 +51,30 @@ lone sig HighBeam extends Actuator {
 // ----------------------------------------------------------------------------
 
 one sig Vehicle {
-  // Enumeration attributes
-
+  // Car attributes
   , driverHand: one HorizontalDirection
   , marketCode: one MarketCode
-  , keyState: one KeyState
+
+  // User interface
   , lightRotarySwitch: one SwitchState
-  , brightnessSensor: one Level
-  , brakePedal: one Level
-  , currentSpeed: one Level
-  , voltageBattery: one Level
-
-  // Boolean attributes
-
   , hazardWarning: lone Yes
   , daytimeLights: lone Yes
   , ambientLighting: lone Yes
 
+  // Sensors
+  , keyState: one KeyState
+  , brightnessSensor: one Level
+  , brakePedal: one Level
+  , voltageBattery: one Level
   , closedDoors: lone Yes
   , oncommingTraffic: lone Yes
-  , reverseGear: lone Yes
   , cameraReady: lone Yes
+  , currentSpeed: one Level
+  , reverseGear: lone Yes
 }
 
 sig ArmoredVehicle extends Vehicle {
+  // User interface only available at armored vehicles
   , darknessMode: lone Yes
 }
 
@@ -97,4 +110,65 @@ enum PitmanArmUpDownPosition {
 
 enum PitmanArmForthBack {
   Backward, Forward
+}
+
+// ----------------------------------------------------------------------------
+// Predicates
+// ----------------------------------------------------------------------------
+
+pred highBlinkLeft {
+  some BlinkLeft and BlinkLeft . level = High
+}
+
+pred highBlinkRight {
+  some BlinkRight and BlinkRight . level = High
+}
+
+pred parkingLight {
+  some LowBeamLeft and some LowBeamRight
+  some TailLampLeft and some TailLampRight
+  LowBeamLeft . level & LowBeamRight . level = Low
+  TailLampLeft . level & TailLampRight . level = Low
+}
+
+// ----------------------------------------------------------------------------
+// Initial Configuration
+// ----------------------------------------------------------------------------
+
+fact Init {
+  Vehicle . keyState          = NoKeyInserted
+  Vehicle . currentSpeed      = Low
+  Vehicle . brakePedal        = Low
+  Vehicle . voltageBattery    = Medium
+  Vehicle . lightRotarySwitch = Off
+
+  some closedDoors
+  no pitmanArmForthBack
+  no pitmanArmUpDown
+  no hazardWarning
+  no darknessMode
+  no reverseGear
+  no oncommingTraffic
+  some cameraReady
+
+  no Actuator
+  no ActuatorWithLevel
+}
+
+// ----------------------------------------------------------------------------
+// Properties
+// ----------------------------------------------------------------------------
+
+// Control of the low beam headlights. If daytime running light is activated,
+// low beam headlights are active all the time and ambient light illuminates
+// the vehicle surrounding while leaving the car during darkness. The function
+// low beam headlight also includes parking light.
+fact daytimeLightsBeams {
+  some daytimeLights => some LowBeamLeft and some LowBeamRight
+}
+
+// Direction blinking is only available when the ignition is on.
+fact directionDependsOnIgnition {
+  (highBlinkLeft or highBlinkRight)
+  => Vehicle . keyState = KeyInIgnitionOnPosition
 }
