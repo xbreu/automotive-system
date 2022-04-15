@@ -43,7 +43,7 @@ run Example3 {
 
 // Direction indicator on, low speed
 run Example4 {
-  no Actuator and not blinkRight and blinkLeft
+  no Actuator and no BlinkRight and some BlinkLeft
   Vehicle . currentSpeed = Low
 }
 
