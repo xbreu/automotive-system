@@ -11,13 +11,17 @@ open structure/signatures
 // the vehicle surrounding while leaving the car during darkness. The function
 // low beam headlight also includes parking light.
 fact daytimeLightsBeams {
-  some daytimeLights => some LowBeamLeft and some LowBeamRight
+  always (
+    some daytimeLights => some LowBeamLeft and some LowBeamRight
+  )
 }
 
 // Direction blinking is only available when the ignition is on.
 fact directionDependsOnIgnition {
-  (highBlinkLeft or highBlinkRight)
-  => Vehicle . keyState = KeyInIgnitionOnPosition
+  always (
+    (highBlinkLeft or highBlinkRight)
+    => Vehicle . keyState = KeyInIgnitionOnPosition
+  )
 }
 
 // ----------------------------------------------------------------------------
@@ -45,11 +49,25 @@ pred activateBlinkingLeft [p : PitmanArm] {
   p . pitmanArmUpDown . pitmanArmDegree' = HighDegree
 }
 
+pred disableBlinkingLeft [p : PitmanArm] {
+  p . pitmanArmUpDown . pitmanArmUpDownPosition = Downward
+  p . pitmanArmUpDown . pitmanArmDegree = HighDegree
+
+  p . pitmanArmUpDown' = none
+}
+
 pred activateBlinkingRight [p : PitmanArm] {
   no pitmanArmUpDown
 
   p . pitmanArmUpDown . pitmanArmUpDownPosition' = Upward
   p . pitmanArmUpDown . pitmanArmDegree' = HighDegree
+}
+
+pred disableBlinkingRight [p : PitmanArm] {
+  p . pitmanArmUpDown . pitmanArmUpDownPosition = Upward
+  p . pitmanArmUpDown . pitmanArmDegree = HighDegree
+
+  p . pitmanArmUpDown' = none
 }
 
 pred activateTipBlinkingLeft [p : PitmanArm] {
@@ -59,9 +77,23 @@ pred activateTipBlinkingLeft [p : PitmanArm] {
   p . pitmanArmUpDown . pitmanArmDegree' = LowDegree
 }
 
+pred disableTipBlinkingLeft [p : PitmanArm] {
+  p . pitmanArmUpDown . pitmanArmUpDownPosition = Downward
+  p . pitmanArmUpDown . pitmanArmDegree = LowDegree
+
+  p . pitmanArmUpDown' = none
+}
+
 pred activateTipBlinkingRight [p : PitmanArm] {
   no pitmanArmUpDown
 
-  p . pitmanArmUpDown . pitmanArmUpDownPosition' = Downward
+  p . pitmanArmUpDown . pitmanArmUpDownPosition' = Upward
   p . pitmanArmUpDown . pitmanArmDegree' = LowDegree
+}
+
+pred disableBlinkingLeft [p : PitmanArm] {
+  p . pitmanArmUpDown . pitmanArmUpDownPosition = Upward
+  p . pitmanArmUpDown . pitmanArmDegree = LowDegree
+
+  p . pitmanArmUpDown' = none
 }
