@@ -24,6 +24,20 @@ fact directionDependsOnIgnition {
 // Operations
 // ----------------------------------------------------------------------------
 
+fact Traces {
+  always (
+    nop or
+    some p:PitmanArm | activateBlinkingLeft [p] or
+    some p:PitmanArm | activateBlinkingRight [p] or
+    some p:PitmanArm | activateTipBlinkingLeft [p] or
+    some p:PitmanArm | activateTipBlinkingRight [p]
+  )
+}
+
+pred nop {
+
+}
+
 pred activateBlinkingLeft [p : PitmanArm] {
   no pitmanArmUpDown
 
