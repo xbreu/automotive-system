@@ -116,8 +116,16 @@ enum PitmanArmForthBack {
 // Predicates
 // ----------------------------------------------------------------------------
 
+pred LowBlinkLeft {
+  some BlinkLeft and BlinkLeft . level = Low
+}
+
 pred highBlinkLeft {
   some BlinkLeft and BlinkLeft . level = High
+}
+
+pred LowBlinkRight {
+  some BlinkRight and BlinkRight . level = Low
 }
 
 pred highBlinkRight {
