@@ -52,25 +52,25 @@ lone sig HighBeam extends Actuator {
 
 one sig Vehicle {
   // Car attributes
-  , driverHand: one HorizontalDirection
-  , marketCode: one MarketCode
+  , var driverHand: one HorizontalDirection
+  , var marketCode: one MarketCode
 
   // User interface
-  , lightRotarySwitch: one SwitchState
-  , hazardWarning: lone Yes
-  , daytimeLights: lone Yes
-  , ambientLighting: lone Yes
+  , var lightRotarySwitch: one SwitchState
+  , var hazardWarning: lone Yes
+  , var daytimeLights: lone Yes
+  , var ambientLighting: lone Yes
 
   // Sensors
-  , keyState: one KeyState
-  , brightnessSensor: one Level
-  , brakePedal: one Level
-  , voltageBattery: one Level
-  , closedDoors: lone Yes
-  , oncommingTraffic: lone Yes
-  , cameraReady: lone Yes
-  , currentSpeed: one Level
-  , reverseGear: lone Yes
+  , var keyState: one KeyState
+  , var brightnessSensor: one Level
+  , var brakePedal: one Level
+  , var voltageBattery: one Level
+  , var closedDoors: lone Yes
+  , var oncommingTraffic: lone Yes
+  , var cameraReady: lone Yes
+  , var currentSpeed: one Level
+  , var reverseGear: lone Yes
 }
 
 sig ArmoredVehicle extends Vehicle {
@@ -91,13 +91,13 @@ enum MarketCode {
 // ----------------------------------------------------------------------------
 
 one sig PitmanArm {
-  , pitmanArmForthBack: lone PitmanArmForthBack
-  , pitmanArmUpDown: lone PitmanArmUpDown
+  , var pitmanArmForthBack: lone PitmanArmForthBack
+  , var pitmanArmUpDown: lone PitmanArmUpDown
 }
 
 lone sig PitmanArmUpDown {
-  , pitmanArmUpDownPosition: one PitmanArmUpDownPosition
-  , pitmanArmDegree: one PitmanArmDegree
+  , var pitmanArmUpDownPosition: one PitmanArmUpDownPosition
+  , var pitmanArmDegree: one PitmanArmDegree
 }
 
 enum PitmanArmDegree {
@@ -122,6 +122,16 @@ pred highBlinkLeft {
 
 pred highBlinkRight {
   some BlinkRight and BlinkRight . level = High
+}
+
+pred tipBlinkingLeft {
+  PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Downward and
+  PitmanArm . pitmanArmUpDown . pitmanArmDegree = LowDegree
+}
+
+pred tipBlinkingRight {
+  PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Upward and
+  PitmanArm . pitmanArmUpDown . pitmanArmDegree = LowDegree
 }
 
 pred parkingLight {
