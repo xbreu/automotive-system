@@ -24,3 +24,30 @@ fact directionDependsOnIgnition {
 // Operations
 // ----------------------------------------------------------------------------
 
+pred activateBlinkingLeft [p : PitmanArm] {
+  no pitmanArmUpDown
+
+  p . pitmanArmUpDown . pitmanArmUpDownPosition' = Downward
+  p . pitmanArmUpDown . pitmanArmDegree' = HighDegree
+}
+
+pred activateBlinkingRight [p : PitmanArm] {
+  no pitmanArmUpDown
+
+  p . pitmanArmUpDown . pitmanArmUpDownPosition' = Upward
+  p . pitmanArmUpDown . pitmanArmDegree' = HighDegree
+}
+
+pred activateTipBlinkingLeft [p : PitmanArm] {
+  no pitmanArmUpDown
+
+  p . pitmanArmUpDown . pitmanArmUpDownPosition' = Downward
+  p . pitmanArmUpDown . pitmanArmDegree' = LowDegree
+}
+
+pred activateTipBlinkingRight [p : PitmanArm] {
+  no pitmanArmUpDown
+
+  p . pitmanArmUpDown . pitmanArmUpDownPosition' = Downward
+  p . pitmanArmUpDown . pitmanArmDegree' = LowDegree
+}
