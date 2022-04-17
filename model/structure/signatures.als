@@ -113,8 +113,28 @@ enum PitmanArmForthBack {
 }
 
 // ----------------------------------------------------------------------------
+// Aggregations of Signatures
+// ----------------------------------------------------------------------------
+
+fun Blink : (BlinkLeft + BlinkRight) {
+  BlinkLeft + BlinkRight
+}
+
+// ----------------------------------------------------------------------------
 // Predicates
 // ----------------------------------------------------------------------------
+
+pred ignitionOnLock {
+  Vehicle . keyState in  KeyInserted + KeyInIgnitionOnPosition
+}
+
+pred directionBlinking {
+  PitmanArm . pitmanArmUpDown . pitmanArmDegree = HighDegree
+}
+
+pred engineOn {
+  Vehicle . keyState = KeyInIgnitionOnPosition
+}
 
 pred LowBlinkLeft {
   some BlinkLeft and BlinkLeft . level = Low
