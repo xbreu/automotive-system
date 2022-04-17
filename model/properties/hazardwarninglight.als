@@ -7,7 +7,20 @@ open structure/structure
 // ignition lock, the pulse ratio is bright to dark 1:1. If the ignition key is
 // not in the lock, the pulse ratio is 1:2.
 check ELS8 {
+  always (
+    some hazardWarning => {
+      eventually some Blink
 
+      // It is synchronous, which means, no direction blinking is activated
+      // or both are activated at the same time.
+      no Blink or (some BlinkLeft and some BlinkRight)
+
+      // Whenever it blinks or stops, the next operation should occur
+      // eventually after it.
+      some Blink => eventually no Blink
+      no Blink => eventually some Blink
+    }
+  )
 }
 
 // ELS-9 | The adaptation of the pulse ratio must occur at the latest after two
