@@ -10,7 +10,13 @@ open structure/structure
 check ELS1{
   always (
     PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Downward
-    => eventually (some BlinkLeft)
+    and
+    PitmanArm . pitmanArmUpDown . pitmanArmDegree = HighDegree
+    => eventually (
+        some BlinkLeft and  
+        (always eventually some BlinkLeft . level) 
+            and not (eventually always some BlinkLeft . level)
+    )
   )
 }
 
@@ -21,9 +27,8 @@ check ELS2 {
   always (
     tipBlinkingLeft
     => eventually (
-      highBlinkLeft and after lowBlinkLeft and after
-      highBlinkLeft and after lowBlinkLeft and after
-      highBlinkLeft and after lowBlinkLeft
+      highBlinkLeft; lowBlinkLeft; highBlinkLeft;
+      lowBlinkLeft; highBlinkLeft; lowBlinkLeft
     )
   )
 }

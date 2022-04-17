@@ -5,10 +5,12 @@ open structure/structure
 // ELS-14 | If the ignition is On and the light rotary switch is in the
 // position On, then low beam headlights are activated.
 check ELS14 {
-  (Vehicle . keyState = KeyInIgnitionOnPosition and
-  Vehicle . lightRotarySwitch = On) =>
-  (some LowBeamLeft and some LowBeamRight and
-  some LowBeamLeft . level & LowBeamRight . level)
+  always (
+    (Vehicle . keyState = KeyInIgnitionOnPosition and
+    Vehicle . lightRotarySwitch = On) =>
+    (some LowBeamLeft and some LowBeamRight and
+    some LowBeamLeft . level & LowBeamRight . level)
+  )
 }
 
 // ELS-15 | While the ignition is in position KeyInserted: if the light rotary
