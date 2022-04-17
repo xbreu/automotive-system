@@ -1,6 +1,30 @@
 module structure/structure
 
-open structure/signatures
+open structure/predicates
+
+// ----------------------------------------------------------------------------
+// Initial Configuration
+// ----------------------------------------------------------------------------
+
+fact init {
+  Vehicle . keyState          = NoKeyInserted
+  Vehicle . currentSpeed      = Low
+  Vehicle . brakePedal        = Low
+  Vehicle . voltageBattery    = Medium
+  Vehicle . lightRotarySwitch = Off
+
+  some closedDoors
+  no pitmanArmForthBack
+  no pitmanArmUpDown
+  no hazardWarning
+  no darknessMode
+  no reverseGear
+  no oncommingTraffic
+  some cameraReady
+
+  no Actuator
+  no ActuatorWithLevel
+}
 
 // ----------------------------------------------------------------------------
 // Properties
@@ -28,13 +52,13 @@ fact directionDependsOnIgnition {
 // Operations
 // ----------------------------------------------------------------------------
 
-fact Traces {
+fact traces {
   always (
     nop or
-    some p:PitmanArm | activateBlinkingLeft [p] or
-    some p:PitmanArm | activateBlinkingRight [p] or
-    some p:PitmanArm | activateTipBlinkingLeft [p] or
-    some p:PitmanArm | activateTipBlinkingRight [p]
+    some p : PitmanArm | activateBlinkingLeft[p]
+                      or activateBlinkingRight[p]
+                      or activateTipBlinkingLeft[p]
+                      or activateTipBlinkingRight[p]
   )
 }
 
@@ -42,56 +66,56 @@ pred nop {
 
 }
 
-pred activateBlinkingLeft [p : PitmanArm] {
+pred activateBlinkingLeft[p : PitmanArm] {
   no pitmanArmUpDown
 
   p . pitmanArmUpDown . pitmanArmUpDownPosition' = Downward
   p . pitmanArmUpDown . pitmanArmDegree' = HighDegree
 }
 
-pred disableBlinkingLeft [p : PitmanArm] {
+pred disableBlinkingLeft[p : PitmanArm] {
   p . pitmanArmUpDown . pitmanArmUpDownPosition = Downward
   p . pitmanArmUpDown . pitmanArmDegree = HighDegree
 
   p . pitmanArmUpDown' = none
 }
 
-pred activateBlinkingRight [p : PitmanArm] {
+pred activateBlinkingRight[p : PitmanArm] {
   no pitmanArmUpDown
 
   p . pitmanArmUpDown . pitmanArmUpDownPosition' = Upward
   p . pitmanArmUpDown . pitmanArmDegree' = HighDegree
 }
 
-pred disableBlinkingRight [p : PitmanArm] {
+pred disableBlinkingRight[p : PitmanArm] {
   p . pitmanArmUpDown . pitmanArmUpDownPosition = Upward
   p . pitmanArmUpDown . pitmanArmDegree = HighDegree
 
   p . pitmanArmUpDown' = none
 }
 
-pred activateTipBlinkingLeft [p : PitmanArm] {
+pred activateTipBlinkingLeft[p : PitmanArm] {
   no pitmanArmUpDown
 
   p . pitmanArmUpDown . pitmanArmUpDownPosition' = Downward
   p . pitmanArmUpDown . pitmanArmDegree' = LowDegree
 }
 
-pred disableTipBlinkingLeft [p : PitmanArm] {
+pred disableTipBlinkingLeft[p : PitmanArm] {
   p . pitmanArmUpDown . pitmanArmUpDownPosition = Downward
   p . pitmanArmUpDown . pitmanArmDegree = LowDegree
 
   p . pitmanArmUpDown' = none
 }
 
-pred activateTipBlinkingRight [p : PitmanArm] {
+pred activateTipBlinkingRight[p : PitmanArm] {
   no pitmanArmUpDown
 
   p . pitmanArmUpDown . pitmanArmUpDownPosition' = Upward
   p . pitmanArmUpDown . pitmanArmDegree' = LowDegree
 }
 
-pred disableBlinkingLeft [p : PitmanArm] {
+pred disableBlinkingLeft[p : PitmanArm] {
   p . pitmanArmUpDown . pitmanArmUpDownPosition = Upward
   p . pitmanArmUpDown . pitmanArmDegree = LowDegree
 
