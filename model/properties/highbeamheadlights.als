@@ -5,7 +5,7 @@ open structure/structure
 // ELS-30 | The headlamp flasher is activated by pulling the pitman arm, i.e.
 // as long as the pitman arm is pulled 1©, the high beam headlight is
 // activated.
-check {
+check ELS30 {
   //
 }
 
@@ -13,13 +13,13 @@ check {
 // arm to 4 causes the activation of the high beam headlight with a fixed
 // illumination area of 220 m and 100 % luminous strength
 // (i.e. highBeamMotor = 7 and highBeamRange = 100).
-check {
+check ELS31 {
 
 }
 
 // ELS-32 | If the light rotary switch is in position Auto, the adaptive high
 // beam is activated by moving the pitman arm to the back 4.
-check {
+check ELS32 {
 
 }
 
@@ -28,7 +28,7 @@ check {
 // the camera, the street should be illuminated within 2 seconds according to
 // the characteristic curve in Fig. 7 (for light illumination distance) and
 // Fig. 8 (for luminous strength).
-check {
+check ELS33 {
 
 }
 
@@ -37,27 +37,27 @@ check {
 // seconds by reducing the area of illumination to 65 meters by an adjustment
 // of the headlight position as well as by reduction of the luminous strength
 // to 30%.
-check {
+check ELS34 {
 
 }
 
 // ELS-35 | If no advancing vehicle is recognized any more, the high beam
 // illumination is restored after 2 seconds.
-check {
+check ELS35 {
 
 }
 
 // ELS-36 | The light illumination distance of the high beam headlight is
 // within 100m and 300m, depending on the vehicle speed (see characteristic
 // curve in Fig. 7).
-check {
+check ELS36 {
 
 }
 
 // ELS-37 | If an adaptive cruise control is part of the vehicle, the light
 // illumination distance is not calculated upon the actual vehicle speed but
 // the target speed provided by the advanced cruise control.
-check {
+check ELS37 {
 
 }
 
@@ -65,6 +65,6 @@ check {
 // position, the adaptive high beam headlight is deactivated. The illumination
 // of the street is reduced immediately (i.e. without gentle fade-out) to low
 // beam headlights.
-check {
+check ELS38 {
 
 }

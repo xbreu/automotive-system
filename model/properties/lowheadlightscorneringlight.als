@@ -4,7 +4,7 @@ open structure/structure
 
 // ELS-14 | If the ignition is On and the light rotary switch is in the
 // position On, then low beam headlights are activated.
-check ELS14{
+check ELS14 {
   (Vehicle . keyState = KeyInIgnitionOnPosition and
   Vehicle . lightRotarySwitch = On) =>
   (some LowBeamLeft and some LowBeamRight and
@@ -16,7 +16,7 @@ check ELS14{
 // with 50% (to save power). With additionally activated ambient light, ambient
 // light control (Req. ELS-19) has priority over Req. ELS-15. With additionally
 // activated daytime running light, Req. ELS-15 has priority over Req. ELS-17.
-check ELS15{
+check ELS15 {
   always (
     Vehicle . keyState = KeyInserted => (
       Vehicle . lightRotarySwitch = On and
@@ -33,7 +33,7 @@ check ELS15{
 // overrules running daytime light if ignition is KeyInserted). If ambient
 // light is active (see Req. ELS-19), ambient light delays the deactivation of
 // the low beam headlamps.
-check ELS16{
+check ELS16 {
 
 }
 
@@ -42,6 +42,6 @@ check ELS16{
 // active as long as the ignition key is in the ignition lock (i.e. KeyInserted
 // or KeyInIgnitionOnPosition). With additionally activated ambient light,
 // ambient light control (Req. ELS-19) has priority over daytime running light.
-check ELS17{
+check ELS17 {
 
 }

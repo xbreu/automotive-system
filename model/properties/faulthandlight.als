@@ -5,29 +5,29 @@ open structure/structure
 // ELS-42 | A subvoltage is present if the voltage in the vehicle electrical
 // system is less than 8.5V. With subvoltage, the adaptive high beam headlight
 // is not available.
-check {
+check ELS42 {
   //
 }
 
 // ELS-43 | If the light rotary switch is in position Auto and the pitman arm
 // is pulled, the high beam headlight is activated (see Req. ELS-31) even in
 // case of subvoltage.
-check {
+check ELS43 {
 
 }
 
 // ELS-44 | With subvoltage the ambient light is not available.
-check {
+check ELS44 {
 
 }
 
 // ELS-45 | With subvoltage the cornering light is not available.
-check {
+check ELS45 {
 
 }
 
 // ELS-46 | With subvoltage an activated parking light is switched off.
-check {
+check ELS46 {
 
 }
 
@@ -36,14 +36,14 @@ check {
 // exceen the maximum light intensity of (100 - (voltage - 14.5) · 20)%. This
 // reduction serves the protection of the illuminant (protection from "burning
 // out").
-check {
+check ELS47 {
 
 }
 
 // ELS-48 | With overvoltage, the illumination area requirements do not need to
 // be respected (see Req. ELS-33 and Req. ELS-36). Instead, illumination area
 // is fixed to 220m.
-check {
+check ELS48 {
 
 }
 
@@ -53,6 +53,6 @@ check {
 // headlights are activated (see Req. ELS-31), which means that high beam
 // headlights are activated with a fixed illumination area of 220m and 100%
 // luminous strength (i.e. highBeamMotor = 7 and highBeamRange = 100).
-check {
+check ELS49 {
 
 }
