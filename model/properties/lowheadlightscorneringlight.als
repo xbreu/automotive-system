@@ -2,23 +2,28 @@ module properties/lowheadlightscorneringlight
 
 open structure/structure
 
-// ELS-14 | If the ignition is On and the light rotary switch is in the position On,
-// then low beam headlights are activated.
+// ELS-14 | If the ignition is On and the light rotary switch is in the
+// position On, then low beam headlights are activated.
 check ELS14{
-    (Vehicle . keyState = KeyInIgnitionOnPosition and
-    Vehicle . lightRotarySwitch = On) =>
-    (some LowBeamLeft and some LowBeamRight and 
-    some LowBeamLeft . level & LowBeamRight . level)
+  (Vehicle . keyState = KeyInIgnitionOnPosition and
+  Vehicle . lightRotarySwitch = On) =>
+  (some LowBeamLeft and some LowBeamRight and
+  some LowBeamLeft . level & LowBeamRight . level)
 }
 
-// ELS-15 | While the ignition is in position KeyInserted: if the light rotary switch
-// is turned to the position On, the low beam headlights are activated
-// with 50% (to save power). With additionally activated ambient light,
-// ambient light control (Req. ELS-19) has priority over Req. ELS-15.
-// With additionally activated daytime running light, Req. ELS-15 has
-// priority over Req. ELS-17.
+// ELS-15 | While the ignition is in position KeyInserted: if the light rotary
+// switch is turned to the position On, the low beam headlights are activated
+// with 50% (to save power). With additionally activated ambient light, ambient
+// light control (Req. ELS-19) has priority over Req. ELS-15. With additionally
+// activated daytime running light, Req. ELS-15 has priority over Req. ELS-17.
 check ELS15{
-
+  always (
+    Vehicle . keyState = KeyInserted => (
+      Vehicle . lightRotarySwitch = On and
+      (some daytimeLights or no ambientLighting)
+      => mediumLowBeam
+    )
+  )
 }
 
 // ELS-16 | If the ignition is already off and the driver turns the light rotary
