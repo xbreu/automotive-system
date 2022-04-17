@@ -63,7 +63,7 @@ check ELS4 {
 // ELS-5 | Direction blinking right and tip-blinking right: Analogous to the
 // left side (see Req. Req. ELS-1 to Req. ELS-4).
 check ELS5 {
-  always (
+  always {
     PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Upward
     => eventually (some BlinkRight)
 
@@ -72,7 +72,7 @@ check ELS5 {
       highBlinkRight and after lowBlinkRight and after
       highBlinkRight and after lowBlinkRight and after
       highBlinkRight and after lowBlinkRight)
-  )
+  }
 }
 
 // ELS-6 | For cars sold in USA and Canada, the daytime running light must be
