@@ -26,22 +26,22 @@ check ELS15{
   )
 }
 
-// ELS-16 | If the ignition is already off and the driver turns the light rotary
-// switch to position Auto, the low beam headlights remain off or are
+// ELS-16 | If the ignition is already off and the driver turns the light
+// rotary switch to position Auto, the low beam headlights remain off or are
 // deactivated (depending on the previous state). In case of conflict,
-// Req. ELS-16 has priority over Req. ELS-17 (i.e. the later manual
-// activitiy overrules running daytime light if ignition is KeyInserted). If
-// ambient light is active (see Req. ELS-19), ambient light delays the
-// deactivation of the low beam headlamps.
+// Req. ELS-16 has priority over Req. ELS-17 (i.e. the later manual activitiy
+// overrules running daytime light if ignition is KeyInserted). If ambient
+// light is active (see Req. ELS-19), ambient light delays the deactivation of
+// the low beam headlamps.
 check ELS16{
 
 }
 
 // ELS-17 | With activated daytime running light, the low beam headlights are
-// activated after starting the engine. The daytime running light remains active as long as the ignition key is in the ignition lock (i.e.
-// KeyInserted or KeyInIgnitionOnPosition). With additionally activated
-// ambient light, ambient light control (Req. ELS-19) has priority over
-// daytime running light.
+// activated after starting the engine. The daytime running light remains
+// active as long as the ignition key is in the ignition lock (i.e. KeyInserted
+// or KeyInIgnitionOnPosition). With additionally activated ambient light,
+// ambient light control (Req. ELS-19) has priority over daytime running light.
 check ELS17{
 
 }
