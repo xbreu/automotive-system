@@ -3,7 +3,7 @@ module properties/directionblinking
 open structure/structure
 
 // ELS-1 | Direction blinking left: When moving the pitman arm in position ”turn
-// left” 3 , the vehicle flashes all left direction indicators 
+// left” 3 , the vehicle flashes all left direction indicators
 // (front left, exterior mirror left, rear left) synchronously with pulse ratio bright to
 // dark 1:1 and a frequency of 1.0 Hz ± 0.1 Hz (i.e. 60 flashes per minute
 // ± 6 flashes).
@@ -19,9 +19,9 @@ check ELS1{
 check ELS2 {
     tipBlinkingLeft
     => eventually (
-        highBlinkLeft and after LowBlinkLeft and after
-        highBlinkLeft and after LowBlinkLeft and after
-        highBlinkLeft and after LowBlinkLeft)
+        highBlinkLeft and after lowBlinkLeft and after
+        highBlinkLeft and after lowBlinkLeft and after
+        highBlinkLeft and after lowBlinkLeft)
 }
 
 
@@ -31,11 +31,11 @@ check ELS2 {
 // flashing cycle must be started (i.e. direction blinking, tip-blinking, or
 // hazard warning light, depending on the interrupting request)
 check ELS3 {
-    (   highBlinkLeft and 
+    (   highBlinkLeft and
         PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Upward
         => eventually (some BlinkRight and no BlinkLeft) )
     or
-    (   highBlinkRight and 
+    (   highBlinkRight and
         PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Downward
         => eventually (some BlinkLeft and no BlinkRight) )
     or
@@ -49,7 +49,7 @@ check ELS3 {
 // indicators on the left (see Req. ELS-1) until the pitman arm leaves the
 // position ”tip-blinking left”.
 check ELS4 {
-    
+
 }
 
 // ELS-5 | Direction blinking right and tip-blinking right: Analogous to the left
@@ -60,9 +60,9 @@ check ELS5 {
 
     tipBlinkingRight
     => eventually (
-        highBlinkRight and after LowBlinkRight and after
-        highBlinkRight and after LowBlinkRight and after
-        highBlinkRight and after LowBlinkRight)
+        highBlinkRight and after lowBlinkRight and after
+        highBlinkRight and after lowBlinkRight and after
+        highBlinkRight and after lowBlinkRight)
 }
 
 // ELS-6 | For cars sold in USA and Canada, the daytime running light must be
@@ -78,5 +78,5 @@ check ELS6 {
 // cycle is completed and then the new command is processed (either
 // three flashing cycles due to tip-blinking or constant direction blinking).
 check ELS7 {
-    
+
 }

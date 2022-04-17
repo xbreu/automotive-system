@@ -136,7 +136,12 @@ pred engineOn {
   Vehicle . keyState = KeyInIgnitionOnPosition
 }
 
-pred LowBlinkLeft {
+pred mediumLowBeam {
+  LowBeamLeft . level = Medium
+  LowBeamRight . level = Medium
+}
+
+pred lowBlinkLeft {
   some BlinkLeft and BlinkLeft . level = Low
 }
 
@@ -144,7 +149,7 @@ pred highBlinkLeft {
   some BlinkLeft and BlinkLeft . level = High
 }
 
-pred LowBlinkRight {
+pred lowBlinkRight {
   some BlinkRight and BlinkRight . level = Low
 }
 
