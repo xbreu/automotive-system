@@ -14,6 +14,7 @@ fact init {
   Vehicle . lightRotarySwitch = Off
 
   some closedDoors
+  no PitmanArmUpDown
   no pitmanArmForthBack
   no pitmanArmUpDown
   no hazardWarning
@@ -52,72 +53,54 @@ fact directionDependsOnIgnition {
 // Operations
 // ----------------------------------------------------------------------------
 
+fact fairness {
+  always eventually blinkCycle // Change this
+}
+
 fact traces {
   always (
-    nop or
-    some p : PitmanArm | activateBlinkingLeft[p]
-                      or activateBlinkingRight[p]
-                      or activateTipBlinkingLeft[p]
-                      or activateTipBlinkingRight[p]
+    nop
+    or blinkCycle
+    or activateBlinkingLeft
   )
 }
 
 pred nop {
-
+  PitmanArmUpDown' = PitmanArmUpDown
+  Actuator' = Actuator
+  ActuatorWithLevel' = ActuatorWithLevel
 }
 
-pred activateBlinkingLeft[p : PitmanArm] {
-  no pitmanArmUpDown
+pred blinkCycle {
+  some BlinkLeft => (
+    (some BlinkLeft . level => after no BlinkLeft . level)
+    and
+    (no BlinkLeft . level => after some BlinkLeft . level)
+    and
+    after some BlinkLeft
+  )
 
-  p . pitmanArmUpDown . pitmanArmUpDownPosition' = Downward
-  p . pitmanArmUpDown . pitmanArmDegree' = HighDegree
+  some BlinkRight => (
+    (some BlinkRight . level => after no BlinkRight . level)
+    and
+    (no BlinkRight . level => after some BlinkRight . level)
+    and
+    after some BlinkRight
+  )
+  
+  PitmanArmUpDown' = PitmanArmUpDown
 }
 
-pred disableBlinkingLeft[p : PitmanArm] {
-  p . pitmanArmUpDown . pitmanArmUpDownPosition = Downward
-  p . pitmanArmUpDown . pitmanArmDegree = HighDegree
+pred activateBlinkingLeft {
+  no PitmanArmUpDown
 
-  p . pitmanArmUpDown' = none
+  some PitmanArm . pitmanArmUpDown'
+  after PitmanArmUpDown . pitmanArmUpDownPosition = Downward
+  after PitmanArmUpDown . pitmanArmDegree = HighDegree
+  after BlinkLeft . level = High
 }
 
-pred activateBlinkingRight[p : PitmanArm] {
-  no pitmanArmUpDown
-
-  p . pitmanArmUpDown . pitmanArmUpDownPosition' = Upward
-  p . pitmanArmUpDown . pitmanArmDegree' = HighDegree
+run {
+  eventually (some BlinkLeft . level)
 }
 
-pred disableBlinkingRight[p : PitmanArm] {
-  p . pitmanArmUpDown . pitmanArmUpDownPosition = Upward
-  p . pitmanArmUpDown . pitmanArmDegree = HighDegree
-
-  p . pitmanArmUpDown' = none
-}
-
-pred activateTipBlinkingLeft[p : PitmanArm] {
-  no pitmanArmUpDown
-
-  p . pitmanArmUpDown . pitmanArmUpDownPosition' = Downward
-  p . pitmanArmUpDown . pitmanArmDegree' = LowDegree
-}
-
-pred disableTipBlinkingLeft[p : PitmanArm] {
-  p . pitmanArmUpDown . pitmanArmUpDownPosition = Downward
-  p . pitmanArmUpDown . pitmanArmDegree = LowDegree
-
-  p . pitmanArmUpDown' = none
-}
-
-pred activateTipBlinkingRight[p : PitmanArm] {
-  no pitmanArmUpDown
-
-  p . pitmanArmUpDown . pitmanArmUpDownPosition' = Upward
-  p . pitmanArmUpDown . pitmanArmDegree' = LowDegree
-}
-
-pred disableBlinkingLeft[p : PitmanArm] {
-  p . pitmanArmUpDown . pitmanArmUpDownPosition = Upward
-  p . pitmanArmUpDown . pitmanArmDegree = LowDegree
-
-  p . pitmanArmUpDown' = none
-}

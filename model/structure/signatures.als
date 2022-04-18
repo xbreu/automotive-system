@@ -22,12 +22,12 @@ enum Level {
 // Actuators
 // ----------------------------------------------------------------------------
 
-abstract sig Actuator {}
-abstract sig ActuatorWithLevel {
-  , level: lone Level
+abstract var sig Actuator {}
+abstract var sig ActuatorWithLevel {
+  , var level: lone Level
 }
 
-lone sig BlinkLeft
+lone var sig BlinkLeft
        , BlinkRight
        , LowBeamLeft
        , LowBeamRight
@@ -37,13 +37,13 @@ lone sig BlinkLeft
        , TailLampRight
  extends ActuatorWithLevel {}
 
-lone sig BrakeLight
+lone var sig BrakeLight
        , ReverseLight
  extends Actuator {}
 
-lone sig HighBeam extends Actuator {
-  , highBeamHighRange: lone Yes
-  , highBeamHighMotor: lone Yes
+lone var sig HighBeam extends Actuator {
+  , var highBeamHighRange: lone Yes
+  , var highBeamHighMotor: lone Yes
 }
 
 // ----------------------------------------------------------------------------
@@ -95,7 +95,7 @@ one sig PitmanArm {
   , var pitmanArmUpDown: lone PitmanArmUpDown
 }
 
-lone sig PitmanArmUpDown {
+lone var sig PitmanArmUpDown {
   , var pitmanArmUpDownPosition: one PitmanArmUpDownPosition
   , var pitmanArmDegree: one PitmanArmDegree
 }
