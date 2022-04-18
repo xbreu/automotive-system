@@ -60,18 +60,104 @@ fact fairness {
 fact traces {
   always (
     nop
+    or insertKey
+    or keyOnPosition
+    or lightRotaryToOff
+    or lightRotaryToAuto
+    or lightRotaryToOn
     or blinkCycle
     or activateBlinkingLeft
   )
 }
 
 pred nop {
+  keyState' = keyState
+  currentSpeed' = currentSpeed
+  brakePedal' = brakePedal
+  voltageBattery' = voltageBattery
+  lightRotarySwitch' = lightRotarySwitch
   PitmanArmUpDown' = PitmanArmUpDown
   Actuator' = Actuator
   ActuatorWithLevel' = ActuatorWithLevel
 }
 
+pred insertKey {
+  Vehicle . keyState = NoKeyInserted
+
+  Vehicle . keyState' = KeyInserted
+
+  currentSpeed'      = currentSpeed
+  brakePedal'        = brakePedal
+  voltageBattery'    = voltageBattery
+  lightRotarySwitch' = lightRotarySwitch
+  Actuator'          = Actuator
+  ActuatorWithLevel' = ActuatorWithLevel
+}
+
+pred keyOnPosition {
+  Vehicle . keyState = NoKeyInserted
+
+  Vehicle . keyState' = KeyInIgnitionOnPosition
+  // Activates Low Beam
+  Vehicle . lightRotarySwitch = On
+    => after (some LowBeamLeft and some LowBeamRight and mediumLowBeam)
+
+  currentSpeed'      = currentSpeed
+  brakePedal'        = brakePedal
+  voltageBattery'    = voltageBattery
+  lightRotarySwitch' = lightRotarySwitch
+  Actuator'          = Actuator
+  ActuatorWithLevel' = ActuatorWithLevel
+}
+
+pred lightRotaryToOff {
+  Vehicle . lightRotarySwitch != Off
+
+  Vehicle . lightRotarySwitch' = Off
+
+  keyState'       = keyState
+  currentSpeed'   = currentSpeed
+  brakePedal'     = brakePedal
+  voltageBattery' = voltageBattery
+  PitmanArmUpDown'= PitmanArmUpDown
+  Actuator'          = Actuator
+  ActuatorWithLevel' = ActuatorWithLevel
+}
+
+pred lightRotaryToAuto {
+  Vehicle . lightRotarySwitch != Auto
+
+  Vehicle . lightRotarySwitch' = Auto
+
+  keyState'       = keyState
+  currentSpeed'   = currentSpeed
+  brakePedal'     = brakePedal
+  voltageBattery' = voltageBattery
+  PitmanArmUpDown'= PitmanArmUpDown
+  Actuator'          = Actuator
+  ActuatorWithLevel' = ActuatorWithLevel
+}
+
+pred lightRotaryToOn {
+  Vehicle . lightRotarySwitch != On
+
+  Vehicle . lightRotarySwitch' = On
+  // Activates Low Beam
+  Vehicle . keyState = KeyInIgnitionOnPosition 
+    => after (some LowBeamLeft and some LowBeamRight and mediumLowBeam)
+
+  keyState'        = keyState
+  currentSpeed'    = currentSpeed
+  brakePedal'      = brakePedal
+  voltageBattery'  = voltageBattery
+  PitmanArmUpDown' = PitmanArmUpDown
+  Actuator'          = Actuator
+  ActuatorWithLevel' = ActuatorWithLevel
+}
+
 pred blinkCycle {
+  some BlinkLeft + BlinkRight
+
   some BlinkLeft => (
     (some BlinkLeft . level => after no BlinkLeft . level)
     and
@@ -88,7 +174,14 @@ pred blinkCycle {
     after some BlinkRight
   )
   
-  PitmanArmUpDown' = PitmanArmUpDown
+  keyState'         = keyState
+  currentSpeed'     = currentSpeed
+  brakePedal'       = brakePedal
+  voltageBattery'   = voltageBattery
+  lightRotarySwitch'= lightRotarySwitch
+  LowBeamLeft'      = LowBeamLeft
+  LowBeamRight'     = LowBeamRight
+  PitmanArmUpDown'  = PitmanArmUpDown
 }
 
 pred activateBlinkingLeft {
@@ -98,9 +191,17 @@ pred activateBlinkingLeft {
   after PitmanArmUpDown . pitmanArmUpDownPosition = Downward
   after PitmanArmUpDown . pitmanArmDegree = HighDegree
   after BlinkLeft . level = High
+
+  keyState'          = keyState
+  currentSpeed'      = currentSpeed
+  brakePedal'        = brakePedal
+  voltageBattery'    = voltageBattery
+  lightRotarySwitch' = lightRotarySwitch
+  LowBeamLeft'      = LowBeamLeft
+  LowBeamRight'     = LowBeamRight
 }
 
 run {
-  eventually (some BlinkLeft . level)
+  eventually (some LowBeamLeft)
 }
 

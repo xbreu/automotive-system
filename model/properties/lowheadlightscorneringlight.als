@@ -8,8 +8,7 @@ check ELS14 {
   always (
     (Vehicle . keyState = KeyInIgnitionOnPosition and
     Vehicle . lightRotarySwitch = On) =>
-    (some LowBeamLeft and some LowBeamRight and
-    some LowBeamLeft . level & LowBeamRight . level)
+    (some LowBeamLeft and some LowBeamRight)
   )
 }
 
