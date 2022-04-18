@@ -12,11 +12,10 @@ check ELS1{
     PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Downward
     and
     PitmanArm . pitmanArmUpDown . pitmanArmDegree = HighDegree
-    => eventually (
-        some BlinkLeft and  
-        (always eventually some BlinkLeft . level) 
-            and not (eventually always some BlinkLeft . level)
-    )
+    => 
+      some BlinkLeft and 
+      (always eventually some BlinkLeft . level) 
+          and not (eventually always some BlinkLeft . level)
   )
 }
 
