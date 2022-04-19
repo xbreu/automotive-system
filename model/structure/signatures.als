@@ -75,7 +75,7 @@ one sig Vehicle {
 
 sig ArmoredVehicle extends Vehicle {
   // User interface only available at armored vehicles
-  , darknessMode: lone Yes
+  , var darknessMode: lone Yes
 }
 
 enum KeyState {
