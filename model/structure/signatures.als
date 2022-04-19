@@ -52,14 +52,14 @@ lone var sig HighBeam extends Actuator {
 
 one sig Vehicle {
   // Car attributes
-  , var driverHand: one HorizontalDirection
-  , var marketCode: one MarketCode
+  , driverHand: one HorizontalDirection
+  , marketCode: one MarketCode
 
   // User interface
   , var lightRotarySwitch: one SwitchState
   , var hazardWarning: lone Yes
-  , var daytimeLights: lone Yes
-  , var ambientLighting: lone Yes
+  , daytimeLights: lone Yes
+  , ambientLighting: lone Yes
 
   // Sensors
   , var keyState: one KeyState
