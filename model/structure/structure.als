@@ -67,6 +67,7 @@ fact traces {
     or lightRotaryToOn
     or blinkCycle
     or activateBlinkingLeft
+    or activateBlinkingRight
   )
 }
 
@@ -79,6 +80,8 @@ pred nop {
   PitmanArmUpDown' = PitmanArmUpDown
   Actuator' = Actuator
   ActuatorWithLevel' = ActuatorWithLevel
+  pitmanArmDegree'  = pitmanArmDegree 
+  pitmanArmUpDownPosition' = pitmanArmUpDownPosition
 }
 
 pred insertKey {
@@ -92,6 +95,8 @@ pred insertKey {
   lightRotarySwitch' = lightRotarySwitch
   Actuator'          = Actuator
   ActuatorWithLevel' = ActuatorWithLevel
+  pitmanArmDegree'  = pitmanArmDegree 
+  pitmanArmUpDownPosition' = pitmanArmUpDownPosition
 }
 
 pred keyOnPosition {
@@ -108,6 +113,8 @@ pred keyOnPosition {
   lightRotarySwitch' = lightRotarySwitch
   Actuator'          = Actuator
   ActuatorWithLevel' = ActuatorWithLevel
+  pitmanArmDegree'  = pitmanArmDegree 
+  pitmanArmUpDownPosition' = pitmanArmUpDownPosition
 }
 
 pred lightRotaryToOff {
@@ -122,6 +129,8 @@ pred lightRotaryToOff {
   PitmanArmUpDown'= PitmanArmUpDown
   Actuator'          = Actuator
   ActuatorWithLevel' = ActuatorWithLevel
+  pitmanArmDegree'  = pitmanArmDegree 
+  pitmanArmUpDownPosition' = pitmanArmUpDownPosition
 }
 
 pred lightRotaryToAuto {
@@ -136,6 +145,8 @@ pred lightRotaryToAuto {
   PitmanArmUpDown'= PitmanArmUpDown
   Actuator'          = Actuator
   ActuatorWithLevel' = ActuatorWithLevel
+  pitmanArmDegree'  = pitmanArmDegree 
+  pitmanArmUpDownPosition' = pitmanArmUpDownPosition
 }
 
 pred lightRotaryToOn {
@@ -153,6 +164,8 @@ pred lightRotaryToOn {
   PitmanArmUpDown' = PitmanArmUpDown
   Actuator'          = Actuator
   ActuatorWithLevel' = ActuatorWithLevel
+  pitmanArmDegree'  = pitmanArmDegree 
+  pitmanArmUpDownPosition' = pitmanArmUpDownPosition
 }
 
 pred blinkCycle {
@@ -182,6 +195,8 @@ pred blinkCycle {
   LowBeamLeft'      = LowBeamLeft
   LowBeamRight'     = LowBeamRight
   PitmanArmUpDown'  = PitmanArmUpDown
+  pitmanArmDegree'  = pitmanArmDegree 
+  pitmanArmUpDownPosition' = pitmanArmUpDownPosition
 }
 
 pred activateBlinkingLeft {
@@ -199,9 +214,23 @@ pred activateBlinkingLeft {
   lightRotarySwitch' = lightRotarySwitch
   LowBeamLeft'      = LowBeamLeft
   LowBeamRight'     = LowBeamRight
+  BlinkRight'       = BlinkRight
 }
 
-run {
-  eventually (some LowBeamLeft)
-}
+pred activateBlinkingRight {
+  no PitmanArmUpDown
 
+  some PitmanArm . pitmanArmUpDown'
+  after PitmanArmUpDown . pitmanArmUpDownPosition = Upward
+  after PitmanArmUpDown . pitmanArmDegree = HighDegree
+  after BlinkRight . level = High
+
+  keyState'          = keyState
+  currentSpeed'      = currentSpeed
+  brakePedal'        = brakePedal
+  voltageBattery'    = voltageBattery
+  lightRotarySwitch' = lightRotarySwitch
+  LowBeamLeft'       = LowBeamLeft
+  LowBeamRight'      = LowBeamRight
+  BlinkLeft'         = BlinkLeft
+}
