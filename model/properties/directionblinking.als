@@ -9,15 +9,13 @@ open structure/structure
 // ± 6 flashes).
 check ELS1{
   always (
-    PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Downward
-    and
-    PitmanArm . pitmanArmUpDown . pitmanArmDegree = HighDegree
+    blinkingLeft
     => 
       (
         some BlinkLeft and 
       (always eventually some BlinkLeft . level) 
           and not (eventually always some BlinkLeft . level)
-      ) 
+      ) until not blinkingLeft
   )
 }
 
@@ -26,10 +24,11 @@ check ELS1{
 // (see Req. ELS-1) should flash for three flashing cycles.
 check ELS2 {
   always (
-    tipBlinkingLeft
+    historically (tipBlinkingLeft)
     => eventually (
-      highBlinkLeft; lowBlinkLeft; highBlinkLeft;
-      lowBlinkLeft; highBlinkLeft; lowBlinkLeft
+        highBlinkLeft; lowBlinkLeft; 
+        highBlinkLeft; lowBlinkLeft; 
+        highBlinkLeft; lowBlinkLeft
     )
   )
 }
@@ -63,16 +62,22 @@ check ELS3 {
 // direction indicators on the left (see Req. ELS-1) until the pitman arm
 // leaves the position "tip-blinking left".
 check ELS4 {
-
+  always (
+    tipBlinkingLeft
+      => 
+    (
+      some BlinkLeft and 
+      (always eventually some BlinkLeft . level) 
+        and not (eventually always some BlinkLeft . level)
+    ) until not tipBlinkingLeft
+  )
 }
 
 // ELS-5 | Direction blinking right and tip-blinking right: Analogous to the
 // left side (see Req. Req. ELS-1 to Req. ELS-4).
 check ELS5 {
   always (
-    PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Upward
-    and
-    PitmanArm . pitmanArmUpDown . pitmanArmDegree = HighDegree
+    blinkingRight
     => 
       some BlinkRight and 
       (always eventually some BlinkRight . level) 

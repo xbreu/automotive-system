@@ -54,7 +54,7 @@ fact directionDependsOnIgnition {
 // ----------------------------------------------------------------------------
 
 fact fairness {
-  always eventually blinkCycle // Change this
+  //always eventually activateBlinkingLeft // Change this
 }
 
 fact traces {
@@ -67,7 +67,9 @@ fact traces {
     or lightRotaryToOn
     or blinkCycle
     or activateBlinkingLeft
+    or deactivateBlinkingLeft
     or activateBlinkingRight
+    or deactivateBlinkingRight
   )
 }
 
@@ -393,6 +395,28 @@ pred activateBlinkingLeft {
   BlinkRight'        = BlinkRight
 }
 
+pred deactivateBlinkingLeft {
+  // Guards
+  blinkingLeft
+
+  // Effects
+  no PitmanArm . pitmanArmUpDown'
+  no pitmanArmUpDownPosition'
+  no pitmanArmDegree'
+  no BlinkLeft'
+
+  // Frame conditions
+  keyState'          = keyState
+  currentSpeed'      = currentSpeed
+  brakePedal'        = brakePedal
+  voltageBattery'    = voltageBattery
+  hazardWarning'     = hazardWarning
+  lightRotarySwitch' = lightRotarySwitch
+  LowBeamLeft'       = LowBeamLeft
+  LowBeamRight'      = LowBeamRight
+  BlinkRight'        = BlinkRight
+}
+
 pred activateBlinkingRight {
   // Guards
   no PitmanArmUpDown
@@ -402,6 +426,28 @@ pred activateBlinkingRight {
   after PitmanArmUpDown . pitmanArmUpDownPosition = Upward
   after PitmanArmUpDown . pitmanArmDegree = HighDegree
   after BlinkRight . level = High
+
+  // Frame conditions
+  keyState'          = keyState
+  currentSpeed'      = currentSpeed
+  brakePedal'        = brakePedal
+  voltageBattery'    = voltageBattery
+  hazardWarning'     = hazardWarning
+  lightRotarySwitch' = lightRotarySwitch
+  LowBeamLeft'       = LowBeamLeft
+  LowBeamRight'      = LowBeamRight
+  BlinkLeft'         = BlinkLeft
+}
+
+pred deactivateBlinkingRight {
+  // Guards
+  blinkingRight
+
+  // Effects
+  no PitmanArm . pitmanArmUpDown'
+  no pitmanArmUpDownPosition'
+  no pitmanArmDegree'
+  no BlinkRight'
 
   // Frame conditions
   keyState'          = keyState

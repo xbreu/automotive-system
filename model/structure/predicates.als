@@ -35,6 +35,16 @@ pred highBlinkRight {
   some BlinkRight and BlinkRight . level = High
 }
 
+pred blinkingLeft {
+  PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Downward and
+  PitmanArm . pitmanArmUpDown . pitmanArmDegree = HighDegree
+}
+
+pred blinkingRight {
+  PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Upward and
+  PitmanArm . pitmanArmUpDown . pitmanArmDegree = HighDegree
+}
+
 pred tipBlinkingLeft {
   PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Downward and
   PitmanArm . pitmanArmUpDown . pitmanArmDegree = LowDegree

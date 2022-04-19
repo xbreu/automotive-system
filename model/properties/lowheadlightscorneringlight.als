@@ -35,7 +35,11 @@ check ELS15 {
 // light is active (see Req. ELS-19), ambient light delays the deactivation of
 // the low beam headlamps.
 check ELS16 {
-
+  always (
+    Vehicle . keyState != KeyInIgnitionOnPosition and
+    Vehicle . lightRotarySwitch = Auto =>
+      after no LowBeamLeft + LowBeamRight 
+  )
 }
 
 // ELS-17 | With activated daytime running light, the low beam headlights are
