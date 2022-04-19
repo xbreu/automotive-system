@@ -61,7 +61,7 @@ fact traces {
   always (
     nop
     or insertKey
-    or keyOnPosition
+    or putKeyOnPosition
     or lightRotaryToOff
     or lightRotaryToAuto
     or lightRotaryToOn
@@ -72,65 +72,164 @@ fact traces {
 }
 
 pred nop {
-  keyState' = keyState
-  currentSpeed' = currentSpeed
-  brakePedal' = brakePedal
-  voltageBattery' = voltageBattery
-  lightRotarySwitch' = lightRotarySwitch
-  PitmanArmUpDown' = PitmanArmUpDown
-  Actuator' = Actuator
-  ActuatorWithLevel' = ActuatorWithLevel
-  pitmanArmDegree'  = pitmanArmDegree 
+  // Frame conditions
+  Actuator'                = Actuator
+  ActuatorWithLevel'       = ActuatorWithLevel
+  level'                   = level
+  BlinkLeft'               = BlinkLeft
+  BlinkRight'              = BlinkRight
+  LowBeamLeft'             = LowBeamLeft
+  LowBeamRight'            = LowBeamRight
+  CorneringLightLeft'      = CorneringLightLeft
+  CorneringLightRight'     = CorneringLightRight
+  TailLampLeft'            = TailLampLeft
+  TailLampRight'           = TailLampRight
+  BrakeLight'              = BrakeLight
+  ReverseLight'            = ReverseLight
+  HighBeam'                = HighBeam
+  highBeamHighRange'       = highBeamHighRange
+  highBeamHighMotor'       = highBeamHighMotor
+  lightRotarySwitch'       = lightRotarySwitch
+  hazardWarning'           = hazardWarning
+  keyState'                = keyState
+  brightnessSensor'        = brightnessSensor
+  brakePedal'              = brakePedal
+  voltageBattery'          = voltageBattery
+  closedDoors'             = closedDoors
+  oncommingTraffic'        = oncommingTraffic
+  cameraReady'             = cameraReady
+  currentSpeed'            = currentSpeed
+  reverseGear'             = reverseGear
+  darknessMode'            = darknessMode
+  pitmanArmForthBack'      = pitmanArmForthBack
+  pitmanArmUpDown'         = pitmanArmUpDown
+  PitmanArmUpDown'         = PitmanArmUpDown
   pitmanArmUpDownPosition' = pitmanArmUpDownPosition
+  pitmanArmDegree'         = pitmanArmDegree
 }
 
 pred insertKey {
+  // Guards
   Vehicle . keyState = NoKeyInserted
 
+  // Effects
   Vehicle . keyState' = KeyInserted
 
-  currentSpeed'      = currentSpeed
-  brakePedal'        = brakePedal
-  voltageBattery'    = voltageBattery
-  lightRotarySwitch' = lightRotarySwitch
-  Actuator'          = Actuator
-  ActuatorWithLevel' = ActuatorWithLevel
-  pitmanArmDegree'  = pitmanArmDegree 
+  // Frame conditions
+  Actuator'                = Actuator
+  ActuatorWithLevel'       = ActuatorWithLevel
+  level'                   = level
+  BlinkLeft'               = BlinkLeft
+  BlinkRight'              = BlinkRight
+  LowBeamLeft'             = LowBeamLeft
+  LowBeamRight'            = LowBeamRight
+  CorneringLightLeft'      = CorneringLightLeft
+  CorneringLightRight'     = CorneringLightRight
+  TailLampLeft'            = TailLampLeft
+  TailLampRight'           = TailLampRight
+  BrakeLight'              = BrakeLight
+  ReverseLight'            = ReverseLight
+  HighBeam'                = HighBeam
+  highBeamHighRange'       = highBeamHighRange
+  highBeamHighMotor'       = highBeamHighMotor
+  lightRotarySwitch'       = lightRotarySwitch
+  hazardWarning'           = hazardWarning
+  brightnessSensor'        = brightnessSensor
+  brakePedal'              = brakePedal
+  voltageBattery'          = voltageBattery
+  closedDoors'             = closedDoors
+  oncommingTraffic'        = oncommingTraffic
+  cameraReady'             = cameraReady
+  currentSpeed'            = currentSpeed
+  reverseGear'             = reverseGear
+  darknessMode'            = darknessMode
+  pitmanArmForthBack'      = pitmanArmForthBack
+  pitmanArmUpDown'         = pitmanArmUpDown
+  PitmanArmUpDown'         = PitmanArmUpDown
   pitmanArmUpDownPosition' = pitmanArmUpDownPosition
+  pitmanArmDegree'         = pitmanArmDegree
 }
 
-pred keyOnPosition {
+pred putKeyOnPosition {
+  // Guards
   Vehicle . keyState = NoKeyInserted
 
+  // Effects
   Vehicle . keyState' = KeyInIgnitionOnPosition
-  // Activates Low Beam
-  Vehicle . lightRotarySwitch = On
-    => after (some LowBeamLeft and some LowBeamRight and mediumLowBeam)
+  activateLowBeam
 
-  currentSpeed'      = currentSpeed
-  brakePedal'        = brakePedal
-  voltageBattery'    = voltageBattery
-  lightRotarySwitch' = lightRotarySwitch
-  Actuator'          = Actuator
-  ActuatorWithLevel' = ActuatorWithLevel
-  pitmanArmDegree'  = pitmanArmDegree 
+  // Frame conditions
+  Actuator'                = Actuator
+  ActuatorWithLevel'       = ActuatorWithLevel
+  BlinkLeft'               = BlinkLeft
+  BlinkRight'              = BlinkRight
+  CorneringLightLeft'      = CorneringLightLeft
+  CorneringLightRight'     = CorneringLightRight
+  TailLampLeft'            = TailLampLeft
+  TailLampRight'           = TailLampRight
+  BrakeLight'              = BrakeLight
+  ReverseLight'            = ReverseLight
+  HighBeam'                = HighBeam
+  highBeamHighRange'       = highBeamHighRange
+  highBeamHighMotor'       = highBeamHighMotor
+  lightRotarySwitch'       = lightRotarySwitch
+  hazardWarning'           = hazardWarning
+  brightnessSensor'        = brightnessSensor
+  brakePedal'              = brakePedal
+  voltageBattery'          = voltageBattery
+  closedDoors'             = closedDoors
+  oncommingTraffic'        = oncommingTraffic
+  cameraReady'             = cameraReady
+  currentSpeed'            = currentSpeed
+  reverseGear'             = reverseGear
+  darknessMode'            = darknessMode
+  pitmanArmForthBack'      = pitmanArmForthBack
+  pitmanArmUpDown'         = pitmanArmUpDown
+  PitmanArmUpDown'         = PitmanArmUpDown
   pitmanArmUpDownPosition' = pitmanArmUpDownPosition
+  pitmanArmDegree'         = pitmanArmDegree
 }
 
 pred lightRotaryToOff {
+  // Guards
   Vehicle . lightRotarySwitch != Off
 
+  // Effects
   Vehicle . lightRotarySwitch' = Off
 
-  keyState'       = keyState
-  currentSpeed'   = currentSpeed
-  brakePedal'     = brakePedal
-  voltageBattery' = voltageBattery
-  PitmanArmUpDown'= PitmanArmUpDown
-  Actuator'          = Actuator
-  ActuatorWithLevel' = ActuatorWithLevel
-  pitmanArmDegree'  = pitmanArmDegree 
+  // Frame conditions
+  Actuator'                = Actuator
+  ActuatorWithLevel'       = ActuatorWithLevel
+  level'                   = level
+  BlinkLeft'               = BlinkLeft
+  BlinkRight'              = BlinkRight
+  LowBeamLeft'             = LowBeamLeft
+  LowBeamRight'            = LowBeamRight
+  CorneringLightLeft'      = CorneringLightLeft
+  CorneringLightRight'     = CorneringLightRight
+  TailLampLeft'            = TailLampLeft
+  TailLampRight'           = TailLampRight
+  BrakeLight'              = BrakeLight
+  ReverseLight'            = ReverseLight
+  HighBeam'                = HighBeam
+  highBeamHighRange'       = highBeamHighRange
+  highBeamHighMotor'       = highBeamHighMotor
+  hazardWarning'           = hazardWarning
+  keyState'                = keyState
+  brightnessSensor'        = brightnessSensor
+  brakePedal'              = brakePedal
+  voltageBattery'          = voltageBattery
+  closedDoors'             = closedDoors
+  oncommingTraffic'        = oncommingTraffic
+  cameraReady'             = cameraReady
+  currentSpeed'            = currentSpeed
+  reverseGear'             = reverseGear
+  darknessMode'            = darknessMode
+  pitmanArmForthBack'      = pitmanArmForthBack
+  pitmanArmUpDown'         = pitmanArmUpDown
+  PitmanArmUpDown'         = PitmanArmUpDown
   pitmanArmUpDownPosition' = pitmanArmUpDownPosition
+  pitmanArmDegree'         = pitmanArmDegree
 }
 
 pred lightRotaryToAuto {
@@ -138,39 +237,90 @@ pred lightRotaryToAuto {
 
   Vehicle . lightRotarySwitch' = Auto
 
-  keyState'       = keyState
-  currentSpeed'   = currentSpeed
-  brakePedal'     = brakePedal
-  voltageBattery' = voltageBattery
-  PitmanArmUpDown'= PitmanArmUpDown
-  Actuator'          = Actuator
-  ActuatorWithLevel' = ActuatorWithLevel
-  pitmanArmDegree'  = pitmanArmDegree 
+  // Frame conditions
+  Actuator'                = Actuator
+  ActuatorWithLevel'       = ActuatorWithLevel
+  level'                   = level
+  BlinkLeft'               = BlinkLeft
+  BlinkRight'              = BlinkRight
+  LowBeamLeft'             = LowBeamLeft
+  LowBeamRight'            = LowBeamRight
+  CorneringLightLeft'      = CorneringLightLeft
+  CorneringLightRight'     = CorneringLightRight
+  TailLampLeft'            = TailLampLeft
+  TailLampRight'           = TailLampRight
+  BrakeLight'              = BrakeLight
+  ReverseLight'            = ReverseLight
+  HighBeam'                = HighBeam
+  highBeamHighRange'       = highBeamHighRange
+  highBeamHighMotor'       = highBeamHighMotor
+  hazardWarning'           = hazardWarning
+  keyState'                = keyState
+  brightnessSensor'        = brightnessSensor
+  brakePedal'              = brakePedal
+  voltageBattery'          = voltageBattery
+  closedDoors'             = closedDoors
+  oncommingTraffic'        = oncommingTraffic
+  cameraReady'             = cameraReady
+  currentSpeed'            = currentSpeed
+  reverseGear'             = reverseGear
+  darknessMode'            = darknessMode
+  pitmanArmForthBack'      = pitmanArmForthBack
+  pitmanArmUpDown'         = pitmanArmUpDown
+  PitmanArmUpDown'         = PitmanArmUpDown
   pitmanArmUpDownPosition' = pitmanArmUpDownPosition
+  pitmanArmDegree'         = pitmanArmDegree
 }
 
 pred lightRotaryToOn {
+  // Guards
   Vehicle . lightRotarySwitch != On
 
+  // Effects
   Vehicle . lightRotarySwitch' = On
-  // Activates Low Beam
-  Vehicle . keyState = KeyInIgnitionOnPosition 
-    => after (some LowBeamLeft and some LowBeamRight and mediumLowBeam)
+  activateLowBeam
 
-  keyState'        = keyState
-  currentSpeed'    = currentSpeed
-  brakePedal'      = brakePedal
-  voltageBattery'  = voltageBattery
-  PitmanArmUpDown' = PitmanArmUpDown
-  Actuator'          = Actuator
-  ActuatorWithLevel' = ActuatorWithLevel
-  pitmanArmDegree'  = pitmanArmDegree 
+  // Frame conditions
+  Actuator'                = Actuator
+  ActuatorWithLevel'       = ActuatorWithLevel
+  level'                   = level
+  BlinkLeft'               = BlinkLeft
+  BlinkRight'              = BlinkRight
+  LowBeamLeft'             = LowBeamLeft
+  LowBeamRight'            = LowBeamRight
+  CorneringLightLeft'      = CorneringLightLeft
+  CorneringLightRight'     = CorneringLightRight
+  TailLampLeft'            = TailLampLeft
+  TailLampRight'           = TailLampRight
+  BrakeLight'              = BrakeLight
+  ReverseLight'            = ReverseLight
+  HighBeam'                = HighBeam
+  highBeamHighRange'       = highBeamHighRange
+  highBeamHighMotor'       = highBeamHighMotor
+  lightRotarySwitch'       = lightRotarySwitch
+  hazardWarning'           = hazardWarning
+  keyState'                = keyState
+  brightnessSensor'        = brightnessSensor
+  brakePedal'              = brakePedal
+  voltageBattery'          = voltageBattery
+  closedDoors'             = closedDoors
+  oncommingTraffic'        = oncommingTraffic
+  cameraReady'             = cameraReady
+  currentSpeed'            = currentSpeed
+  reverseGear'             = reverseGear
+  darknessMode'            = darknessMode
+  pitmanArmForthBack'      = pitmanArmForthBack
+  pitmanArmUpDown'         = pitmanArmUpDown
+  PitmanArmUpDown'         = PitmanArmUpDown
   pitmanArmUpDownPosition' = pitmanArmUpDownPosition
+  pitmanArmDegree'         = pitmanArmDegree
 }
 
 pred blinkCycle {
+  // Guards
   some BlinkLeft + BlinkRight
 
+  // Effects
   some BlinkLeft => (
     (some BlinkLeft . level => after no BlinkLeft . level)
     and
@@ -186,51 +336,96 @@ pred blinkCycle {
     and
     after some BlinkRight
   )
-  
-  keyState'         = keyState
-  currentSpeed'     = currentSpeed
-  brakePedal'       = brakePedal
-  voltageBattery'   = voltageBattery
-  lightRotarySwitch'= lightRotarySwitch
-  LowBeamLeft'      = LowBeamLeft
-  LowBeamRight'     = LowBeamRight
-  PitmanArmUpDown'  = PitmanArmUpDown
-  pitmanArmDegree'  = pitmanArmDegree 
+
+  // Frame conditions
+  Actuator'                = Actuator
+  ActuatorWithLevel'       = ActuatorWithLevel
+  level'                   = level
+  LowBeamLeft'             = LowBeamLeft
+  LowBeamRight'            = LowBeamRight
+  CorneringLightLeft'      = CorneringLightLeft
+  CorneringLightRight'     = CorneringLightRight
+  TailLampLeft'            = TailLampLeft
+  TailLampRight'           = TailLampRight
+  BrakeLight'              = BrakeLight
+  ReverseLight'            = ReverseLight
+  HighBeam'                = HighBeam
+  highBeamHighRange'       = highBeamHighRange
+  highBeamHighMotor'       = highBeamHighMotor
+  lightRotarySwitch'       = lightRotarySwitch
+  hazardWarning'           = hazardWarning
+  keyState'                = keyState
+  brightnessSensor'        = brightnessSensor
+  brakePedal'              = brakePedal
+  voltageBattery'          = voltageBattery
+  closedDoors'             = closedDoors
+  oncommingTraffic'        = oncommingTraffic
+  cameraReady'             = cameraReady
+  currentSpeed'            = currentSpeed
+  reverseGear'             = reverseGear
+  darknessMode'            = darknessMode
+  pitmanArmForthBack'      = pitmanArmForthBack
+  pitmanArmUpDown'         = pitmanArmUpDown
+  PitmanArmUpDown'         = PitmanArmUpDown
   pitmanArmUpDownPosition' = pitmanArmUpDownPosition
+  pitmanArmDegree'         = pitmanArmDegree
 }
 
 pred activateBlinkingLeft {
+  // Guards
   no PitmanArmUpDown
 
+  // Effects
   some PitmanArm . pitmanArmUpDown'
   after PitmanArmUpDown . pitmanArmUpDownPosition = Downward
   after PitmanArmUpDown . pitmanArmDegree = HighDegree
   after BlinkLeft . level = High
 
+  // Frame conditions
   keyState'          = keyState
   currentSpeed'      = currentSpeed
   brakePedal'        = brakePedal
   voltageBattery'    = voltageBattery
+  hazardWarning'     = hazardWarning
   lightRotarySwitch' = lightRotarySwitch
-  LowBeamLeft'      = LowBeamLeft
-  LowBeamRight'     = LowBeamRight
-  BlinkRight'       = BlinkRight
+  LowBeamLeft'       = LowBeamLeft
+  LowBeamRight'      = LowBeamRight
+  BlinkRight'        = BlinkRight
 }
 
 pred activateBlinkingRight {
+  // Guards
   no PitmanArmUpDown
 
+  // Effects
   some PitmanArm . pitmanArmUpDown'
   after PitmanArmUpDown . pitmanArmUpDownPosition = Upward
   after PitmanArmUpDown . pitmanArmDegree = HighDegree
   after BlinkRight . level = High
 
+  // Frame conditions
   keyState'          = keyState
   currentSpeed'      = currentSpeed
   brakePedal'        = brakePedal
   voltageBattery'    = voltageBattery
+  hazardWarning'     = hazardWarning
   lightRotarySwitch' = lightRotarySwitch
   LowBeamLeft'       = LowBeamLeft
   LowBeamRight'      = LowBeamRight
   BlinkLeft'         = BlinkLeft
+}
+
+pred activateLowBeam {
+  Vehicle . lightRotarySwitch = On
+    => after {
+      some LowBeamLeft
+      some LowBeamRight
+      level' = level
+         - ((LowBeamLeft + LowBeamRight) <: level)
+         + ((LowBeamLeft + LowBeamRight) -> Medium)
+    } else {
+      LowBeamLeft'  = LowBeamLeft
+      LowBeamRight' = LowBeamRight
+      level'        = level
+    }
 }
