@@ -6,29 +6,44 @@ open structure/structure
 // system is less than 8.5V. With subvoltage, the adaptive high beam headlight
 // is not available.
 check ELS42 {
-  //
+  always (
+    subvoltage => not adaptiveHighBeam
+  )
 }
 
 // ELS-43 | If the light rotary switch is in position Auto and the pitman arm
 // is pulled, the high beam headlight is activated (see Req. ELS-31) even in
 // case of subvoltage.
 check ELS43 {
-
+  always (
+    (Vehicle . lightRotarySwitch in Auto and
+     PitmanArm . pitmanArmForthBack in Forward)
+    => some HighBeam
+  )
 }
 
 // ELS-44 | With subvoltage the ambient light is not available.
 check ELS44 {
-
+  always (
+    subvoltage => no Vehicle . ambientLighting
+  )
 }
 
 // ELS-45 | With subvoltage the cornering light is not available.
 check ELS45 {
-
+  always (
+    subvoltage => no (CorneringLightLeft + CorneringLightRight)
+  )
 }
 
 // ELS-46 | With subvoltage an activated parking light is switched off.
 check ELS46 {
-
+  always (
+    not subvoltage
+    and parkingLight
+    and (after subvoltage)
+    => (after not parkingLight)
+  )
 }
 
 // ELS-47 | An overvoltage is present if the voltage in the vehicle electrical

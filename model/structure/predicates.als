@@ -46,8 +46,24 @@ pred tipBlinkingRight {
 }
 
 pred parkingLight {
-  some LowBeamLeft and some LowBeamRight
-  some TailLampLeft and some TailLampRight
-  LowBeamLeft . level & LowBeamRight . level = Low
-  TailLampLeft . level & TailLampRight . level = Low
+  Vehicle . keyState in NoKeyInserted
+  Vehicle . lightRotarySwitch in On
+  some pitmanArmUpDown
+
+  ( LowBeamLeft   . level
+  & LowBeamRight  . level
+  & TailLampLeft  . level
+  & TailLampRight . level) = Low
+}
+
+pred subvoltage {
+  Vehicle . voltageBattery in Low
+}
+
+pred overvoltage {
+  Vehicle . voltageBattery in High
+}
+
+pred adaptiveHighBeam {
+  PitmanArm . pitmanArmForthBack in Backward and some HighBeam
 }
