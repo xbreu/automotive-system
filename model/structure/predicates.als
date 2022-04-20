@@ -74,6 +74,14 @@ pred overvoltage {
   Vehicle . voltageBattery in High
 }
 
+pred pushingPitmanArm {
+  PitmanArm . pitmanArmForthBack in Backward
+}
+
+pred pullingPitmanArm {
+  PitmanArm . pitmanArmForthBack in Forward
+}
+
 pred adaptiveHighBeam {
-  PitmanArm . pitmanArmForthBack in Backward and some HighBeam
+  pushingPitmanArm and some HighBeam
 }

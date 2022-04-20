@@ -6,7 +6,9 @@ open structure/structure
 // as long as the pitman arm is pulled 1©, the high beam headlight is
 // activated.
 check ELS30 {
-  //
+  always (
+    pullingPitmanArm => some HighBeam
+  )
 }
 
 // ELS-31 | If the light rotary switch is in position On, pushing the pitman
@@ -14,13 +16,19 @@ check ELS30 {
 // illumination area of 220 m and 100 % luminous strength
 // (i.e. highBeamMotor = 7 and highBeamRange = 100).
 check ELS31 {
-
+  always (
+    Vehicle . lightRotarySwitch = On and pullingPitmanArm =>
+      some HighBeam . highBeamHighMotor and some HighBeam . highBeamHighRange
+  )
 }
 
 // ELS-32 | If the light rotary switch is in position Auto, the adaptive high
 // beam is activated by moving the pitman arm to the back 4.
 check ELS32 {
-
+  always (
+    Vehicle . lightRotarySwitch = Auto and pullingPitmanArm =>
+      adaptiveHighBeam
+  )
 }
 
 // ELS-33 | If adaptive high beam headlight is activated and the vehicle drives
@@ -29,7 +37,7 @@ check ELS32 {
 // the characteristic curve in Fig. 7 (for light illumination distance) and
 // Fig. 8 (for luminous strength).
 check ELS33 {
-
+  
 }
 
 // ELS-34 | If the camera recognizes the lights of an advancing vehicle, an
@@ -38,13 +46,20 @@ check ELS33 {
 // of the headlight position as well as by reduction of the luminous strength
 // to 30%.
 check ELS34 {
-
+  always (
+    some Vehicle . oncommingTraffic and some HighBeam =>
+      no HighBeam . highBeamHighRange and no HighBeam . highBeamHighMotor
+  )
 }
 
 // ELS-35 | If no advancing vehicle is recognized any more, the high beam
 // illumination is restored after 2 seconds.
 check ELS35 {
-
+  always (
+    (historically some Vehicle . oncommingTraffic and some HighBeam) and 
+      no Vehicle . oncommingTraffic => 
+        some HighBeam . highBeamHighRange and some HighBeam . highBeamHighMotor
+  )
 }
 
 // ELS-36 | The light illumination distance of the high beam headlight is
@@ -66,5 +81,8 @@ check ELS37 {
 // of the street is reduced immediately (i.e. without gentle fade-out) to low
 // beam headlights.
 check ELS38 {
-
+  always (
+  no PitmanArm . pitmanArmForthBack and before some PitmanArm . pitmanArmForthBack =>
+    no HighBeam and some LowBeamLeft + LowBeamRight
+  )
 }
