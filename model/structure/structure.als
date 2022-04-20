@@ -74,6 +74,8 @@ fact traces {
     or pushPitmanArm
     or lowBrake
     or highBrake
+    or voltageBatteryDown
+    or voltageBatteryUp
   )
 }
 
@@ -631,6 +633,97 @@ pred highBrake {
   keyState'                = keyState
   brightnessSensor'        = brightnessSensor
   voltageBattery'          = voltageBattery
+  closedDoors'             = closedDoors
+  oncommingTraffic'        = oncommingTraffic
+  cameraReady'             = cameraReady
+  currentSpeed'            = currentSpeed
+  reverseGear'             = reverseGear
+  darknessMode'            = darknessMode
+  pitmanArmForthBack'      = pitmanArmForthBack
+  pitmanArmUpDown'         = pitmanArmUpDown
+  PitmanArmUpDown'         = PitmanArmUpDown
+  pitmanArmUpDownPosition' = pitmanArmUpDownPosition
+  pitmanArmDegree'         = pitmanArmDegree
+}
+
+pred voltageBatteryDown {
+  // Guard
+  Vehicle . voltageBattery != Low
+  
+  // Effects
+  Vehicle . voltageBattery = Medium =>
+    Vehicle . voltageBattery' = Low
+  Vehicle . voltageBattery = High =>
+    Vehicle . voltageBattery' = Medium
+   
+
+  // Frame conditions
+  Actuator'                = Actuator
+  ActuatorWithLevel'       = ActuatorWithLevel
+  level'                   = level
+  BlinkLeft'               = BlinkLeft
+  BlinkRight'              = BlinkRight
+  LowBeamLeft'             = LowBeamLeft
+  LowBeamRight'            = LowBeamRight
+  CorneringLightLeft'      = CorneringLightLeft
+  CorneringLightRight'     = CorneringLightRight
+  TailLampLeft'            = TailLampLeft
+  TailLampRight'           = TailLampRight
+  BrakeLight'              = BrakeLight
+  ReverseLight'            = ReverseLight
+  HighBeam'                = HighBeam
+  highBeamHighRange'       = highBeamHighRange
+  highBeamHighMotor'       = highBeamHighMotor
+  lightRotarySwitch'       = lightRotarySwitch
+  hazardWarning'           = hazardWarning
+  keyState'                = keyState
+  brightnessSensor'        = brightnessSensor
+  brakePedal'              = brakePedal
+  closedDoors'             = closedDoors
+  oncommingTraffic'        = oncommingTraffic
+  cameraReady'             = cameraReady
+  currentSpeed'            = currentSpeed
+  reverseGear'             = reverseGear
+  darknessMode'            = darknessMode
+  pitmanArmForthBack'      = pitmanArmForthBack
+  pitmanArmUpDown'         = pitmanArmUpDown
+  PitmanArmUpDown'         = PitmanArmUpDown
+  pitmanArmUpDownPosition' = pitmanArmUpDownPosition
+  pitmanArmDegree'         = pitmanArmDegree
+}
+pred voltageBatteryUp {
+  // Guard
+  Vehicle . voltageBattery != High
+  
+  // Effects
+  Vehicle . voltageBattery = Low =>
+    Vehicle . voltageBattery' = Medium
+  Vehicle . voltageBattery = Medium =>
+    Vehicle . voltageBattery' = High
+   
+
+  // Frame conditions
+  Actuator'                = Actuator
+  ActuatorWithLevel'       = ActuatorWithLevel
+  level'                   = level
+  BlinkLeft'               = BlinkLeft
+  BlinkRight'              = BlinkRight
+  LowBeamLeft'             = LowBeamLeft
+  LowBeamRight'            = LowBeamRight
+  CorneringLightLeft'      = CorneringLightLeft
+  CorneringLightRight'     = CorneringLightRight
+  TailLampLeft'            = TailLampLeft
+  TailLampRight'           = TailLampRight
+  BrakeLight'              = BrakeLight
+  ReverseLight'            = ReverseLight
+  HighBeam'                = HighBeam
+  highBeamHighRange'       = highBeamHighRange
+  highBeamHighMotor'       = highBeamHighMotor
+  lightRotarySwitch'       = lightRotarySwitch
+  hazardWarning'           = hazardWarning
+  keyState'                = keyState
+  brightnessSensor'        = brightnessSensor
+  brakePedal'              = brakePedal
   closedDoors'             = closedDoors
   oncommingTraffic'        = oncommingTraffic
   cameraReady'             = cameraReady
