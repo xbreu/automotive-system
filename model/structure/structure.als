@@ -70,6 +70,8 @@ fact traces {
     or deactivateBlinkingLeft
     or activateBlinkingRight
     or deactivateBlinkingRight
+    or pullPitmanArm
+    or pushPitmanArm
   )
 }
 
@@ -474,4 +476,84 @@ pred activateLowBeam {
       LowBeamRight' = LowBeamRight
       level'        = level
     }
+}
+
+pred pullPitmanArm {
+  // Guards
+  no PitmanArm . pitmanArmForthBack
+
+  // Effects
+  PitmanArm . pitmanArmForthBack' = Forward
+
+  // Frame conditions
+  Actuator'                = Actuator
+  ActuatorWithLevel'       = ActuatorWithLevel
+  level'                   = level
+  LowBeamLeft'             = LowBeamLeft
+  LowBeamRight'            = LowBeamRight
+  CorneringLightLeft'      = CorneringLightLeft
+  CorneringLightRight'     = CorneringLightRight
+  TailLampLeft'            = TailLampLeft
+  TailLampRight'           = TailLampRight
+  BrakeLight'              = BrakeLight
+  ReverseLight'            = ReverseLight
+  HighBeam'                = HighBeam
+  highBeamHighRange'       = highBeamHighRange
+  highBeamHighMotor'       = highBeamHighMotor
+  lightRotarySwitch'       = lightRotarySwitch
+  hazardWarning'           = hazardWarning
+  keyState'                = keyState
+  brightnessSensor'        = brightnessSensor
+  brakePedal'              = brakePedal
+  voltageBattery'          = voltageBattery
+  closedDoors'             = closedDoors
+  oncommingTraffic'        = oncommingTraffic
+  cameraReady'             = cameraReady
+  currentSpeed'            = currentSpeed
+  reverseGear'             = reverseGear
+  darknessMode'            = darknessMode
+  pitmanArmUpDown'         = pitmanArmUpDown
+  PitmanArmUpDown'         = PitmanArmUpDown
+  pitmanArmUpDownPosition' = pitmanArmUpDownPosition
+  pitmanArmDegree'         = pitmanArmDegree
+}
+
+pred pushPitmanArm {
+  // Guards
+  no PitmanArm . pitmanArmForthBack
+
+  // Effects
+  PitmanArm . pitmanArmForthBack' = Backward
+
+  // Frame conditions
+  Actuator'                = Actuator
+  ActuatorWithLevel'       = ActuatorWithLevel
+  level'                   = level
+  LowBeamLeft'             = LowBeamLeft
+  LowBeamRight'            = LowBeamRight
+  CorneringLightLeft'      = CorneringLightLeft
+  CorneringLightRight'     = CorneringLightRight
+  TailLampLeft'            = TailLampLeft
+  TailLampRight'           = TailLampRight
+  BrakeLight'              = BrakeLight
+  ReverseLight'            = ReverseLight
+  HighBeam'                = HighBeam
+  highBeamHighRange'       = highBeamHighRange
+  highBeamHighMotor'       = highBeamHighMotor
+  lightRotarySwitch'       = lightRotarySwitch
+  hazardWarning'           = hazardWarning
+  keyState'                = keyState
+  brightnessSensor'        = brightnessSensor
+  brakePedal'              = brakePedal
+  voltageBattery'          = voltageBattery
+  closedDoors'             = closedDoors
+  oncommingTraffic'        = oncommingTraffic
+  cameraReady'             = cameraReady
+  currentSpeed'            = currentSpeed
+  reverseGear'             = reverseGear
+  darknessMode'            = darknessMode
+  pitmanArmUpDown'         = pitmanArmUpDown
+  PitmanArmUpDown'         = PitmanArmUpDown
+  pitmanArmUpDownPosition' = pitmanArmUpDownPosition
+  pitmanArmDegree'         = pitmanArmDegree
 }
