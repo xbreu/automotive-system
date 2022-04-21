@@ -85,16 +85,16 @@ lone sig HazardWarningOn
  extends DummySwitch {}
 
 fact {
-  some Vehicle . hazardWarning => one HazardWarningOn
+  some HazardWarningVehicle => one HazardWarningOn
   one (HazardWarningOn + HazardWarningOff)
 
-  some Vehicle . ambientLighting => one AmbientLightingOn
+  some AmbientLighting => one AmbientLightingOn
   one (AmbientLightingOn + AmbientLightingOff)
 
-  some Vehicle . daytimeLights => one DaytimeLightsOn
+  some DaytimeLights => one DaytimeLightsOn
   one (DaytimeLightsOn + DaytimeLightsOff)
 
-  some ArmoredVehicle . darknessMode => one DarknessModeOn
+  some DarknessModeVehicle => one DarknessModeOn
   lone (DarknessModeOn + DarknessModeOff)
   no ArmoredVehicle => no (DarknessModeOn + DarknessModeOff)
 }
