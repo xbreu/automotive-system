@@ -6,14 +6,14 @@ open visualization
 // Auxiliar Relations
 // ----------------------------------------------------------------------------
 
-fun instance : Actuators -> (Actuator + ActuatorWithLevel +
-                             DummyActuator + DummyActuatorWithLevel) {
-  Actuators -> (Actuator + ActuatorWithLevel +
-                DummyActuator + DummyActuatorWithLevel)
+one sig Actuators {}
+fun instance : Actuators -> (Actuator + ActuatorWithLevel) {
+  Actuators -> (Actuator + ActuatorWithLevel)
 }
 
-fun component : UserInterface -> (PitmanArm + DummySwitch) {
-  UserInterface -> (PitmanArm + DummySwitch)
+one sig UserInterface {}
+fun component : UserInterface -> PitmanArm {
+  UserInterface -> PitmanArm
 }
 
 // ----------------------------------------------------------------------------
