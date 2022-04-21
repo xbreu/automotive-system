@@ -25,7 +25,7 @@ run FreeExample {}
 // North America, armored car, darkness mode
 run Example1 {
   some NorthAmericanVehicle
-  one ArmoredVehicle
+  some ArmoredVehicle
   some DarknessModeVehicle
 }
 
@@ -33,11 +33,11 @@ run Example1 {
 run Example2 {
   no ArmoredVehicle
   no NorthAmericanVehicle
-  Vehicle . keyState = KeyInIgnitionOnPosition
-  Vehicle . lightRotarySwitch = Auto
-  PitmanArmUpDown . pitmanArmUpDownPosition = Downward
-  PitmanArmUpDown . pitmanArmDegree = HighDegree
-}
+  eventually Vehicle . keyState = KeyInIgnitionOnPosition
+  eventually Vehicle . lightRotarySwitch = Auto
+  eventually PitmanArmUpDown . pitmanArmUpDownPosition = Downward
+  eventually PitmanArmUpDown . pitmanArmDegree = HighDegree
+} for 15 steps
 
 // Hazard warning on
 run Example3 {
