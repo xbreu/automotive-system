@@ -118,7 +118,6 @@ pred lightRotaryToOff {
 
   // Effects
   Vehicle . lightRotarySwitch' = Off
-  updateActuators
 
   // Frame conditions
   hazardWarning'           = hazardWarning
@@ -146,7 +145,6 @@ pred lightRotaryToAuto {
 
   // Effects
   Vehicle . lightRotarySwitch' = Auto
-  updateActuators
 
   // Frame conditions
   hazardWarning'           = hazardWarning
@@ -174,7 +172,6 @@ pred lightRotaryToOn {
 
   // Effects
   Vehicle . lightRotarySwitch' = On
-  updateActuators
 
   // Frame conditions
   hazardWarning'           = hazardWarning
@@ -202,7 +199,6 @@ pred switchHazardWarning {
   => no hazardWarning'
   no hazardWarning
   => some hazardWarning'
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -230,7 +226,6 @@ pred removeKey {
 
   // Effects
   Vehicle . keyState' = NoKeyInserted
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -258,7 +253,6 @@ pred insertKey {
 
   // Effects
   Vehicle . keyState' = KeyInserted
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -286,7 +280,6 @@ pred removeKeyFromPosition {
 
   // Effects
   Vehicle . keyState' = KeyInserted
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -314,7 +307,6 @@ pred putKeyOnPosition {
 
   // Effects
   Vehicle . keyState' = KeyInIgnitionOnPosition
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -342,7 +334,6 @@ pred brightnessSensorToLow {
 
   // Effects
   Vehicle . brightnessSensor' = Low
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -370,7 +361,6 @@ pred brightnessSensorToMedium {
 
   // Effects
   Vehicle . brightnessSensor' = Medium
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -398,7 +388,6 @@ pred brightnessSensorToHigh {
 
   // Effects
   Vehicle . brightnessSensor' = High
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -429,7 +418,6 @@ pred brakePedalUp {
   => Vehicle . brakePedal' = Medium
   Vehicle . brakePedal = Medium
   => Vehicle . brakePedal' = High
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -460,7 +448,6 @@ pred brakePedalDown {
   => Vehicle . brakePedal' = Low
   Vehicle . brakePedal = High
   => Vehicle . brakePedal' = Medium
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -488,7 +475,6 @@ pred voltageBatteryToLow {
 
   // Effects
   Vehicle . voltageBattery' = Low
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -516,7 +502,6 @@ pred voltageBatteryToMedium {
 
   // Effects
   Vehicle . voltageBattery' = Medium
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -544,7 +529,6 @@ pred voltageBatteryToHigh {
 
   // Effects
   Vehicle . voltageBattery' = High
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -572,7 +556,6 @@ pred switchClosedDoors {
   => some Vehicle . closedDoors'
   some Vehicle . closedDoors
   => no Vehicle . closedDoors'
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -600,7 +583,6 @@ pred switchOncommingTraffic {
   => some Vehicle . oncommingTraffic'
   some Vehicle . oncommingTraffic
   => no Vehicle . oncommingTraffic'
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -628,7 +610,6 @@ pred switchCameraReady {
   => some Vehicle . cameraReady'
   some Vehicle . cameraReady
   => no Vehicle . cameraReady'
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -659,7 +640,6 @@ pred currentSpeedUp {
   => Vehicle . currentSpeed' = Medium
   Vehicle . currentSpeed = Medium
   => Vehicle . currentSpeed' = High
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -690,7 +670,6 @@ pred currentSpeedDown {
   => Vehicle . currentSpeed' = Low
   Vehicle . currentSpeed = High
   => Vehicle . currentSpeed' = Medium
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -718,7 +697,6 @@ pred switchReverseGear {
   => some Vehicle . reverseGear'
   some Vehicle . reverseGear
   => no Vehicle . reverseGear'
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -746,7 +724,6 @@ pred switchDarknessMode {
   => no Vehicle . darknessMode'
   no Vehicle . darknessMode
   => some Vehicle . darknessMode'
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -774,7 +751,6 @@ pred deactivatePitmanArm {
 
   // Effects
   no PitmanArm'
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -806,7 +782,6 @@ pred pitmanArmToUpDown[p: PitmanArmUpDownPosition, d: PitmanArmDegree] {
   some PitmanArmUpDown'
   PitmanArmUpDown . pitmanArmUpDownPosition' = p
   PitmanArmUpDown . pitmanArmDegree' = d
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -829,7 +804,6 @@ pred pitmanArmToForward {
 
   // Effects
   some PitmanArmForward'
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
@@ -852,7 +826,6 @@ pred pitmanArmToBackward {
 
   // Effects
   some PitmanArmBackward'
-  updateActuators
 
   // Frame conditions
   lightRotarySwitch'       = lightRotarySwitch
