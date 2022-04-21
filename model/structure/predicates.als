@@ -67,6 +67,12 @@ pred parkingLight {
   & TailLampRight . level) = Low
 }
 
+pred parkingLightCondition {
+  Vehicle . keyState in NoKeyInserted
+  Vehicle . lightRotarySwitch in On
+  some PitmanArmUpDown
+}
+
 pred subvoltage {
   Vehicle . voltageBattery in Low
 }
@@ -188,17 +194,17 @@ pred inactiveCorneringLightRight {
 }
 
 pred activeTailLampLeft {
-
+  parkingLightCondition or Vehicle . brakePedal != Low
 }
 
 pred inactiveTailLampLeft {
-
+  not parkingLightCondition and Vehicle . brakePedal = Low
 }
 
 pred activeTailLampRight {
-
+  parkingLightCondition or Vehicle . brakePedal != Low
 }
 
 pred inactiveTailLampRight {
-
+  not parkingLightCondition and Vehicle . brakePedal = Low
 }

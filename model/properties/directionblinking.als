@@ -26,9 +26,9 @@ check ELS2 {
   always (
     historically (tipBlinkingLeft)
     => (
-        eventually highBlinkLeft; eventually lowBlinkLeft;
-        eventually highBlinkLeft; eventually lowBlinkLeft;
-        eventually highBlinkLeft; eventually lowBlinkLeft
+        eventually (highBlinkLeft; eventually (lowBlinkLeft; 
+        eventually (highBlinkLeft; eventually (lowBlinkLeft; 
+        eventually (highBlinkLeft; eventually (lowBlinkLeft))))))
     )
   )
 }
