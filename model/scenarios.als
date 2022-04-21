@@ -24,15 +24,15 @@ run FreeExample {}
 
 // North America, armored car, darkness mode
 run Example1 {
-  Vehicle . marketCode = NorthAmerica
+  some NorthAmericanVehicle
   one ArmoredVehicle
-  some Vehicle . darknessMode
+  some DarknessModeVehicle
 }
 
 // EU, Key in ignition on position, Light Auto, pitman arm to downward
 run Example2 {
   no ArmoredVehicle
-  Vehicle . marketCode = Other
+  no NorthAmericanVehicle
   Vehicle . keyState = KeyInIgnitionOnPosition
   Vehicle . lightRotarySwitch = Auto
   PitmanArmUpDown . pitmanArmUpDownPosition = Downward
@@ -41,7 +41,7 @@ run Example2 {
 
 // Hazard warning on
 run Example3 {
-  some Vehicle . hazardWarning
+  some HazardWarningVehicle
 }
 
 // Direction indicator on, low speed
