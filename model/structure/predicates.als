@@ -164,7 +164,8 @@ pred inactiveHighMotorHighBeam {
 // ----------------------------------------------------------------------------
 
 pred activeBlinkLeft {
-
+  blinkingLeft or
+  tipBlinkingLeft
 }
 
 pred inactiveBlinkLeft {
@@ -172,7 +173,8 @@ pred inactiveBlinkLeft {
 }
 
 pred activeBlinkRight {
-
+  blinkingRight or
+  tipBlinkingRight
 }
 
 pred inactiveBlinkRight {
