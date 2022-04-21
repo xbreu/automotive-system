@@ -23,6 +23,6 @@ check ELS40 {
 // engaged.
 check ELS41 {
   always (
-    some Vehicle . reverseGear => some ReverseLight
+    some ReverseGearVehicle => some ReverseLight
   )
 }
