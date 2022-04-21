@@ -373,3 +373,19 @@ fact {
     no OncommingTrafficVehicle
   } => after some HighBeam
 }
+
+// While the ignition is in position KeyInserted: if the light rotary switch
+// is turned to the position On, the low beam headlights are activated
+// with 50% (to save power). With additionally activated ambient light,
+// ambient light control (Req. ELS-19) has priority over Req. ELS-15.
+// With additionally activated daytime running light, Req. ELS-15 has
+// priority over Req. ELS-17.
+fact {
+  always (
+    some LowBeam and 
+    Vehicle . keyState = KeyInserted and
+    no AmbientLighting
+    => LowBeam . level = Medium
+    else LowBeam . level = High
+  )
+}

@@ -179,21 +179,33 @@ pred inactiveBlinkRight {
 
 }
 
-pred activeLowBeamLeft {
+// ----------------------------------------------------------------------------
+// Low Beam
+// ----------------------------------------------------------------------------
 
+pred activeLowBeamLeft {
+  Vehicle . keyState in KeyInserted + KeyInIgnitionOnPosition and
+  (Vehicle . lightRotarySwitch = On or some DaytimeLights)
 }
 
 pred inactiveLowBeamLeft {
-
+  Vehicle . keyState != KeyInIgnitionOnPosition and
+  Vehicle . lightRotarySwitch = Auto
 }
 
 pred activeLowBeamRight {
-
+  Vehicle . keyState in KeyInserted + KeyInIgnitionOnPosition and
+  (Vehicle . lightRotarySwitch = On or some DaytimeLights)
 }
 
 pred inactiveLowBeamRight {
-
+  Vehicle . keyState != KeyInIgnitionOnPosition and
+  Vehicle . lightRotarySwitch = Auto
 }
+
+// ----------------------------------------------------------------------------
+// Cornering Light
+// ----------------------------------------------------------------------------
 
 pred activeCorneringLightLeft {
   (some LowBeam 
@@ -228,6 +240,10 @@ pred inactiveCorneringLightRight {
     and Vehicle . currentSpeed = Low) and
   no ReverseGearVehicle
 }
+
+// ----------------------------------------------------------------------------
+// Tail Lamp
+// ----------------------------------------------------------------------------
 
 pred activeTailLampLeft {
   parkingLightCondition or Vehicle . brakePedal != Low
