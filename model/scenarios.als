@@ -58,5 +58,5 @@ run Example5 {
 }
 
 run TestExample {
-  eventually Vehicle . brakePedal = Medium
+  eventually Vehicle . brakePedal = High
 }
