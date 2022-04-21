@@ -90,15 +90,14 @@ enum MarketCode {
 // Pitman Arm
 // ----------------------------------------------------------------------------
 
-one sig PitmanArm {
-  , var pitmanArmForthBack: lone PitmanArmForthBack
-  , var pitmanArmUpDown: lone PitmanArmUpDown
-}
+lone var abstract sig PitmanArm {}
 
-lone var sig PitmanArmUpDown {
+lone var sig PitmanArmUpDown extends PitmanArm {
   , var pitmanArmUpDownPosition: one PitmanArmUpDownPosition
   , var pitmanArmDegree: one PitmanArmDegree
 }
+
+lone var sig PitmanArmForward, PitmanArmBackward extends PitmanArm {}
 
 enum PitmanArmDegree {
   LowDegree, HighDegree
@@ -106,10 +105,6 @@ enum PitmanArmDegree {
 
 enum PitmanArmUpDownPosition {
   Downward, Upward
-}
-
-enum PitmanArmForthBack {
-  Backward, Forward
 }
 
 // ----------------------------------------------------------------------------
