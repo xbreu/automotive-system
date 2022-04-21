@@ -21,7 +21,7 @@ fact init {
   no DarknessModeVehicle
   no ReverseGearVehicle
   no OncommingTrafficVehicle
-  some CameraReadyVehicle
+  no CameraReadyVehicle
 
   no Actuator
   no ActuatorWithLevel
