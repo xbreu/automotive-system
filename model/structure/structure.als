@@ -7,15 +7,17 @@ open structure/predicates
 // ----------------------------------------------------------------------------
 
 fact init {
+  Vehicle . lightRotarySwitch = Off
   Vehicle . keyState          = NoKeyInserted
-  Vehicle . currentSpeed      = Low
   Vehicle . brakePedal        = Low
   Vehicle . voltageBattery    = Medium
-  Vehicle . lightRotarySwitch = Off
+
+  no hazardWarning
+
+  Vehicle . currentSpeed      = Low
 
   some closedDoors
   no PitmanArm
-  no hazardWarning
   no darknessMode
   no reverseGear
   no oncommingTraffic
@@ -85,7 +87,7 @@ fact traces {
     or some p: PitmanArmUpDownPosition, d: PitmanArmDegree | pitmanArmToUpDown[p, d]
     or pitmanArmToForward
     or pitmanArmToBackward
-  )
+  ) and updateActuators
 }
 
 pred nop {
