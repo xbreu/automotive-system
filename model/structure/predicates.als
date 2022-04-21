@@ -7,7 +7,7 @@ pred ignitionOnLock {
 }
 
 pred directionBlinking {
-  some PitmanArmForward . pitmanArmUpDownPosition
+  some PitmanArmUpDown . pitmanArmUpDownPosition
   PitmanArmUpDown . pitmanArmDegree = HighDegree
 }
 
@@ -37,22 +37,22 @@ pred highBlinkRight {
 }
 
 pred blinkingLeft {
-  PitmanArmForward . pitmanArmUpDownPosition = Downward
+  PitmanArmUpDown . pitmanArmUpDownPosition = Downward
   PitmanArmUpDown . pitmanArmDegree = HighDegree
 }
 
 pred blinkingRight {
-  PitmanArmForward . pitmanArmUpDownPosition = Upward
+  PitmanArmUpDown . pitmanArmUpDownPosition = Upward
   PitmanArmUpDown . pitmanArmDegree = HighDegree
 }
 
 pred tipBlinkingLeft {
-  PitmanArmForward . pitmanArmUpDownPosition = Downward
+  PitmanArmUpDown . pitmanArmUpDownPosition = Downward
   PitmanArmUpDown . pitmanArmDegree = LowDegree
 }
 
 pred tipBlinkingRight {
-  PitmanArmForward . pitmanArmUpDownPosition = Upward
+  PitmanArmUpDown . pitmanArmUpDownPosition = Upward
   PitmanArmUpDown . pitmanArmDegree = LowDegree
 }
 
