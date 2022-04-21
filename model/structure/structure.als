@@ -12,16 +12,16 @@ fact init {
   Vehicle . brakePedal        = Low
   Vehicle . voltageBattery    = Medium
 
-  no hazardWarning
+  no HazardWarningVehicle
 
   Vehicle . currentSpeed      = Low
 
-  some closedDoors
+  some ClosedDoorsVehicle
   no PitmanArm
-  no darknessMode
-  no reverseGear
-  no oncommingTraffic
-  some cameraReady
+  no DarknessModeVehicle
+  no ReverseGearVehicle
+  no OncommingTrafficVehicle
+  no CameraReadyVehicle
 
   no Actuator
   no ActuatorWithLevel

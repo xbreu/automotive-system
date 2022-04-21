@@ -51,8 +51,8 @@ check ELS3 {
       => eventually (some BlinkLeft and no BlinkRight) )
     or
     ( (highBlinkRight or highBlinkLeft) and
-      some hazardWarning
-      => eventually (some hazardWarning and not (highBlinkLeft and highBlinkLeft) ) )
+      some HazardWarningVehicle
+      => eventually (some HazardWarningVehicle and not (highBlinkLeft and highBlinkLeft) ) )
   )
 }
 
@@ -89,7 +89,7 @@ check ELS5 {
 // dimmed by 50% during direction blinking on the blinking side.
 check ELS6 {
   always (
-    (Vehicle . marketCode = NorthAmerica and some daytimeLights)
+    (some NorthAmericanVehicle and some DaytimeLights)
     =>  (some BlinkLeft => LowBeamLeft . level = Medium)
     and (some BlinkRight => LowBeamRight . level = Medium)
   )

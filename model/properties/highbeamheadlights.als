@@ -18,7 +18,7 @@ check ELS30 {
 check ELS31 {
   always (
     Vehicle . lightRotarySwitch = On and pullingPitmanArm =>
-      some HighBeam . highBeamHighMotor and some HighBeam . highBeamHighRange
+      some HighMotorHighBeam and some HighRangeHighBeam
   )
 }
 
@@ -47,8 +47,8 @@ check ELS33 {
 // to 30%.
 check ELS34 {
   always (
-    some Vehicle . oncommingTraffic and some HighBeam =>
-      no HighBeam . highBeamHighRange and no HighBeam . highBeamHighMotor
+    some OncommingTrafficVehicle and some HighBeam =>
+      no HighRangeHighBeam and no HighMotorHighBeam
   )
 }
 
@@ -56,9 +56,9 @@ check ELS34 {
 // illumination is restored after 2 seconds.
 check ELS35 {
   always (
-    (historically some Vehicle . oncommingTraffic and some HighBeam) and 
-      no Vehicle . oncommingTraffic => 
-        some HighBeam . highBeamHighRange and some HighBeam . highBeamHighMotor
+    (historically some OncommingTrafficVehicle and some HighBeam) and 
+      no OncommingTrafficVehicle => 
+        some HighMotorHighBeam and some HighRangeHighBeam
   )
 }
 
