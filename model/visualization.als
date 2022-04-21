@@ -56,15 +56,15 @@ lone sig PitmanArmUp
       in PitmanArm {}
 
 fact {
-  one pitmanArmUpDown . pitmanArmUpDownPosition . Upward => one PitmanArmUp
-  one pitmanArmUpDown . pitmanArmUpDownPosition . Downward => one PitmanArmDown
+  PitmanArmUpDown . pitmanArmUpDownPosition = Upward => one PitmanArmUp
+  PitmanArmUpDown . pitmanArmUpDownPosition = Downward => one PitmanArmDown
   lone (PitmanArmUp + PitmanArmDown)
 
-  one pitmanArmUpDown . pitmanArmDegree . LowDegree => one PitmanArmLowDegree
-  one pitmanArmUpDown . pitmanArmDegree . HighDegree => one PitmanArmHighDegree
+  PitmanArmUpDown . pitmanArmDegree = LowDegree => one PitmanArmLowDegree
+  PitmanArmUpDown . pitmanArmDegree = HighDegree => one PitmanArmHighDegree
   lone (PitmanArmLowDegree + PitmanArmHighDegree)
 
-  no PitmanArmForthBack and no PitmanArmUpDown => one DisabledPitmanArm
+  no PitmanArm => one DisabledPitmanArm
   no DisabledPitmanArm & (PitmanArmUp + PitmanArmDown + PitmanArmLowDegree
   + PitmanArmHighDegree)
 }

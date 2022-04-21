@@ -25,10 +25,10 @@ check ELS1{
 check ELS2 {
   always (
     historically (tipBlinkingLeft)
-    => eventually (
-        highBlinkLeft; lowBlinkLeft; 
-        highBlinkLeft; lowBlinkLeft; 
-        highBlinkLeft; lowBlinkLeft
+    => (
+        eventually highBlinkLeft; eventually lowBlinkLeft; 
+        eventually highBlinkLeft; eventually lowBlinkLeft; 
+        eventually highBlinkLeft; eventually lowBlinkLeft
     )
   )
 }
