@@ -88,7 +88,7 @@ pred adaptiveHighBeam {
 }
 
 // ----------------------------------------------------------------------------
-// Actuator activation
+// Brake Light
 // ----------------------------------------------------------------------------
 
 pred activeBrakeLight {
@@ -99,6 +99,10 @@ pred inactiveBrakeLight {
   Vehicle . brakePedal = Low
 }
 
+// ----------------------------------------------------------------------------
+// Reverse Light
+// ----------------------------------------------------------------------------
+
 pred activeReverseLight {
   some ReverseGearVehicle
 }
@@ -107,8 +111,18 @@ pred inactiveReverseLight {
   no ReverseGearVehicle
 }
 
-pred activeHighBeam {
+// ----------------------------------------------------------------------------
+// High Beam
+// ----------------------------------------------------------------------------
 
+pred activeAdaptiveHighBeam {
+  Vehicle . lightRotarySwitch = Auto
+  and some PitmanArmBackward
+}
+
+pred activeHighBeam {
+  (some PitmanArmForward)
+  or (some PitmanArmBackward)
 }
 
 pred inactiveHighBeam {
@@ -123,7 +137,7 @@ pred activeHighRangeHighBeam {
 
 pred inactiveHighRangeHighBeam {
   inactiveHighBeam or {
-
+    some PitmanArmBackward
   }
 }
 
@@ -135,9 +149,13 @@ pred activeHighMotorHighBeam {
 
 pred inactiveHighMotorHighBeam {
   inactiveHighBeam or {
-
+    some PitmanArmBackward
   }
 }
+
+// ----------------------------------------------------------------------------
+// Blinking Lights
+// ----------------------------------------------------------------------------
 
 pred activeBlinkLeft {
 
