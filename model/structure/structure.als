@@ -14,9 +14,7 @@ fact init {
   Vehicle . lightRotarySwitch = Off
 
   some closedDoors
-  no PitmanArmUpDown
-  no pitmanArmForthBack
-  no pitmanArmUpDown
+  no PitmanArm
   no hazardWarning
   no darknessMode
   no reverseGear
@@ -891,74 +889,4 @@ pred updateActuators {
   HighBeam'                = HighBeam
   highBeamHighRange'       = highBeamHighRange
   highBeamHighMotor'       = highBeamHighMotor
-}
-
-pred activateLowBeam {
-  Vehicle . lightRotarySwitch = On
-    => after {
-      some LowBeamLeft
-      some LowBeamRight
-      level' = level
-         - ((LowBeamLeft + LowBeamRight) <: level)
-         + ((LowBeamLeft + LowBeamRight) -> Medium)
-    } else {
-      LowBeamLeft'  = LowBeamLeft
-      LowBeamRight' = LowBeamRight
-      level'        = level
-    }
-}
-
-pred blinkCycle {
-  // Guards
-  some BlinkLeft + BlinkRight
-
-  // Effects
-  some BlinkLeft => (
-    (some BlinkLeft . level => after no BlinkLeft . level)
-    and
-    (no BlinkLeft . level => after some BlinkLeft . level)
-    and
-    after some BlinkLeft
-  )
-
-  some BlinkRight => (
-    (some BlinkRight . level => after no BlinkRight . level)
-    and
-    (no BlinkRight . level => after some BlinkRight . level)
-    and
-    after some BlinkRight
-  )
-
-  // Frame conditions
-  Actuator'                = Actuator
-  ActuatorWithLevel'       = ActuatorWithLevel
-  level'                   = level
-  LowBeamLeft'             = LowBeamLeft
-  LowBeamRight'            = LowBeamRight
-  CorneringLightLeft'      = CorneringLightLeft
-  CorneringLightRight'     = CorneringLightRight
-  TailLampLeft'            = TailLampLeft
-  TailLampRight'           = TailLampRight
-  BrakeLight'              = BrakeLight
-  ReverseLight'            = ReverseLight
-  HighBeam'                = HighBeam
-  highBeamHighRange'       = highBeamHighRange
-  highBeamHighMotor'       = highBeamHighMotor
-  lightRotarySwitch'       = lightRotarySwitch
-  hazardWarning'           = hazardWarning
-  keyState'                = keyState
-  brightnessSensor'        = brightnessSensor
-  brakePedal'              = brakePedal
-  voltageBattery'          = voltageBattery
-  closedDoors'             = closedDoors
-  oncommingTraffic'        = oncommingTraffic
-  cameraReady'             = cameraReady
-  currentSpeed'            = currentSpeed
-  reverseGear'             = reverseGear
-  darknessMode'            = darknessMode
-  pitmanArmForthBack'      = pitmanArmForthBack
-  pitmanArmUpDown'         = pitmanArmUpDown
-  PitmanArmUpDown'         = PitmanArmUpDown
-  pitmanArmUpDownPosition' = pitmanArmUpDownPosition
-  pitmanArmDegree'         = pitmanArmDegree
 }
