@@ -106,7 +106,7 @@ enum PitmanArmUpDownPosition {
 // Steering Wheel
 // ----------------------------------------------------------------------------
 
-one var abstract sig SteeringWheel {}
+lone var abstract sig SteeringWheel {}
 
 lone var sig SteeringLeft
           ,  SteeringRight

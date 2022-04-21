@@ -196,10 +196,8 @@ pred inactiveLowBeamRight {
 }
 
 pred activeCorneringLightLeft {
-  (some LowBeam and (blinkingLeft or tipBlinkingLeft) 
-    and Vehicle . currentSpeed = Low)
-  or
-  (some LowBeam and (some SteeringLeft) 
+  (some LowBeam 
+    and (blinkingLeft or tipBlinkingLeft or some SteeringLeft) 
     and Vehicle . currentSpeed = Low)
   or
   (
@@ -208,14 +206,15 @@ pred activeCorneringLightLeft {
 }
 
 pred inactiveCorneringLightLeft {
-
+  not (some LowBeam 
+    and (blinkingLeft or tipBlinkingLeft or some SteeringLeft) 
+    and Vehicle . currentSpeed = Low) and
+  no ReverseGearVehicle
 }
 
 pred activeCorneringLightRight {
-  (some LowBeam and (blinkingRight or tipBlinkingRight) 
-    and Vehicle . currentSpeed = Low)
-  or
-  (some LowBeam and (some SteeringRight) 
+  (some LowBeam 
+    and (blinkingRight or tipBlinkingRight or some SteeringRight) 
     and Vehicle . currentSpeed = Low)
   or
   (
@@ -224,7 +223,10 @@ pred activeCorneringLightRight {
 }
 
 pred inactiveCorneringLightRight {
-
+  not (some LowBeam 
+    and (blinkingRight or tipBlinkingRight or some SteeringRight) 
+    and Vehicle . currentSpeed = Low) and
+  no ReverseGearVehicle
 }
 
 pred activeTailLampLeft {
