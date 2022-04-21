@@ -7,7 +7,8 @@ pred ignitionOnLock {
 }
 
 pred directionBlinking {
-  PitmanArm . pitmanArmUpDown . pitmanArmDegree = HighDegree
+  some PitmanArmForward . pitmanArmUpDownPosition
+  PitmanArmUpDown . pitmanArmDegree = HighDegree
 }
 
 pred engineOn {
@@ -36,29 +37,29 @@ pred highBlinkRight {
 }
 
 pred blinkingLeft {
-  PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Downward and
-  PitmanArm . pitmanArmUpDown . pitmanArmDegree = HighDegree
+  PitmanArmForward . pitmanArmUpDownPosition = Downward
+  PitmanArmUpDown . pitmanArmDegree = HighDegree
 }
 
 pred blinkingRight {
-  PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Upward and
-  PitmanArm . pitmanArmUpDown . pitmanArmDegree = HighDegree
+  PitmanArmForward . pitmanArmUpDownPosition = Upward
+  PitmanArmUpDown . pitmanArmDegree = HighDegree
 }
 
 pred tipBlinkingLeft {
-  PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Downward and
-  PitmanArm . pitmanArmUpDown . pitmanArmDegree = LowDegree
+  PitmanArmForward . pitmanArmUpDownPosition = Downward
+  PitmanArmUpDown . pitmanArmDegree = LowDegree
 }
 
 pred tipBlinkingRight {
-  PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Upward and
-  PitmanArm . pitmanArmUpDown . pitmanArmDegree = LowDegree
+  PitmanArmForward . pitmanArmUpDownPosition = Upward
+  PitmanArmUpDown . pitmanArmDegree = LowDegree
 }
 
 pred parkingLight {
   Vehicle . keyState in NoKeyInserted
   Vehicle . lightRotarySwitch in On
-  some pitmanArmUpDown
+  some PitmanArmUpDown
 
   ( LowBeamLeft   . level
   & LowBeamRight  . level
@@ -75,11 +76,11 @@ pred overvoltage {
 }
 
 pred pushingPitmanArm {
-  PitmanArm . pitmanArmForthBack in Backward
+  some PitmanArmBackward
 }
 
 pred pullingPitmanArm {
-  PitmanArm . pitmanArmForthBack in Forward
+  some PitmanArmForward
 }
 
 pred adaptiveHighBeam {

@@ -43,11 +43,11 @@ check ELS2 {
 check ELS3 {
   always (
     ( highBlinkLeft and
-      PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Upward
+      PitmanArmUpDown . pitmanArmUpDownPosition = Upward
       => eventually (some BlinkRight and no BlinkLeft) )
     or
     ( highBlinkRight and
-      PitmanArm . pitmanArmUpDown . pitmanArmUpDownPosition = Downward
+      PitmanArmUpDown . pitmanArmUpDownPosition = Downward
       => eventually (some BlinkLeft and no BlinkRight) )
     or
     ( (highBlinkRight or highBlinkLeft) and
@@ -78,7 +78,7 @@ check ELS4 {
 check ELS5 {
   always (
     blinkingRight
-    => 
+    =>
       some BlinkRight and 
       (always eventually some BlinkRight . level) 
           and not (eventually always some BlinkRight . level)
