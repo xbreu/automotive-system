@@ -56,3 +56,7 @@ run Example4 {
 run Example5 {
   parkingLight
 }
+
+run TestExample {
+  eventually Vehicle . brakePedal = Medium
+}
