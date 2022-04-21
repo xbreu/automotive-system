@@ -13,6 +13,7 @@ fact init {
   Vehicle . voltageBattery    = Medium
   Vehicle . currentSpeed      = Low
 
+  no SteeringWheel
   no HazardWarningVehicle
   no PitmanArm
   no ReverseGearVehicle
@@ -83,6 +84,11 @@ fact traces {
     or pitmanArmToForward
     or pitmanArmToBackward
     or (some p: PitmanArmUpDownPosition, d: PitmanArmDegree | pitmanArmToUpDown[p, d])
+
+    mantainSteeringWheel
+    or steeringWheelToNeutral
+    or steeringWheelToLeft
+    or steeringWheelToRight
   }
 }
 
@@ -243,6 +249,36 @@ pred pitmanArmToBackward {
 
   // Effects
   some PitmanArmBackward'
+}
+
+pred mantainSteeringWheel {
+  SteeringWheel' = SteeringWheel
+  SteeringLeft' = SteeringLeft
+  SteeringRight' = SteeringRight
+}
+
+pred steeringWheelToNeutral {
+  // Guards
+  some SteeringLeft + SteeringRight
+
+  // Effects
+  no (SteeringLeft + SteeringRight)'
+}
+
+pred steeringWheelToLeft {
+  // Guards
+  no SteeringLeft
+
+  // Effects
+  some SteeringLeft'
+}
+
+pred steeringWheelToRight {
+  // Guards
+  no SteeringRight
+
+  // Effects
+  some SteeringRight'
 }
 
 // ----------------------------------------------------------------------------
