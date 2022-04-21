@@ -11,17 +11,15 @@ fact init {
   Vehicle . keyState          = NoKeyInserted
   Vehicle . brakePedal        = Low
   Vehicle . voltageBattery    = Medium
-
-  no HazardWarningVehicle
-
   Vehicle . currentSpeed      = Low
 
-  some ClosedDoorsVehicle
+  no HazardWarningVehicle
   no PitmanArm
   no DarknessModeVehicle
   no ReverseGearVehicle
   no OncommingTrafficVehicle
-  no CameraReadyVehicle
+  some ClosedDoorsVehicle
+  some CameraReadyVehicle
 
   no Actuator
   no ActuatorWithLevel
@@ -37,7 +35,7 @@ fact init {
 // low beam headlight also includes parking light.
 fact daytimeLightsBeams {
   always (
-    some daytimeLights => some LowBeamLeft and some LowBeamRight
+    some DaytimeLights => some LowBeamLeft and some LowBeamRight
   )
 }
 
