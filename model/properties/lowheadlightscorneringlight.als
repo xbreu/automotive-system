@@ -21,7 +21,7 @@ check ELS15 {
   always (
     Vehicle . keyState = KeyInserted => (
       Vehicle . lightRotarySwitch = On and
-      (some daytimeLights or no ambientLighting)
+      (some DaytimeLights or no AmbientLighting)
       => mediumLowBeam
     )
   )
@@ -79,7 +79,7 @@ check ELS19 {
 // supresses low beam headlights due to ambient light.
 check ELS21 {
   always (
-    some Vehicle . darknessMode => no Vehicle . ambientLighting
+    some DarknessModeVehicle => no AmbientLighting
   )
 }
 

@@ -8,7 +8,7 @@ open structure/structure
 // not in the lock, the pulse ratio is 1:2.
 check ELS8 {
   always (
-    some hazardWarning => {
+    some HazardWarningVehicle => {
       eventually some Blink
 
       // It is synchronous, which means, no direction blinking is activated
@@ -53,8 +53,8 @@ check ELS11 {
 // On, the direction blinking cycle should be started (see Req. ELS-1).
 check ELS12 {
   always (
-    ((some hazardWarning);
-     (no hazardWarning and directionBlinking and engineOn))
+    ((some HazardWarningVehicle);
+     (no HazardWarningVehicle and directionBlinking and engineOn))
     => always after directionBlinking => (
       eventually some Blink and eventually no Blink
     )
@@ -65,6 +65,6 @@ check ELS12 {
 // or stopped if it was started before.
 check ELS13 {
   always (
-    some hazardWarning => no Blink
+    some HazardWarningVehicle => no Blink
   )
 }
