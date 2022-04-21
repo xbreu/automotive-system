@@ -90,7 +90,9 @@ lone var sig PitmanArmUpDown extends PitmanArm {
   , var pitmanArmDegree: one PitmanArmDegree
 }
 
-lone var sig PitmanArmForward, PitmanArmBackward extends PitmanArm {}
+lone var sig PitmanArmForward
+           , PitmanArmBackward
+     extends PitmanArm {}
 
 enum PitmanArmDegree {
   LowDegree, HighDegree

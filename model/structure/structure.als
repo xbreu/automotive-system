@@ -92,18 +92,33 @@ fact traces {
 
 pred nop {
   // Frame conditions
+  Actuator'                = Actuator
+  BrakeLight'              = BrakeLight
+  ReverseLight'            = ReverseLight
+  HighBeam'                = HighBeam
+  HighRangeHighBeam'       = HighRangeHighBeam
+  HighMotorHighBeam'       = HighMotorHighBeam
+  ActuatorWithLevel'       = ActuatorWithLevel
+  BlinkLeft'               = BlinkLeft
+  BlinkRight'              = BlinkRight
+  LowBeamLeft'             = LowBeamLeft
+  LowBeamRight'            = LowBeamRight
+  CorneringLightLeft'      = CorneringLightLeft
+  CorneringLightRight'     = CorneringLightRight
+  TailLampLeft'            = TailLampLeft
+  TailLampRight'           = TailLampRight
   lightRotarySwitch'       = lightRotarySwitch
-  hazardWarning'           = hazardWarning
   keyState'                = keyState
   brightnessSensor'        = brightnessSensor
   brakePedal'              = brakePedal
   voltageBattery'          = voltageBattery
-  closedDoors'             = closedDoors
-  oncommingTraffic'        = oncommingTraffic
-  cameraReady'             = cameraReady
   currentSpeed'            = currentSpeed
-  reverseGear'             = reverseGear
-  darknessMode'            = darknessMode
+  HazardWarningVehicle'    = HazardWarningVehicle
+  ClosedDoorsVehicle'      = ClosedDoorsVehicle
+  OncommingTrafficVehicle' = OncommingTrafficVehicle
+  CameraReadyVehicle'      = CameraReadyVehicle
+  ReverseGearVehicle'      = ReverseGearVehicle
+  DarknessModeVehicle'     = DarknessModeVehicle
   PitmanArm'               = PitmanArm
   PitmanArmUpDown'         = PitmanArmUpDown
   pitmanArmUpDownPosition' = pitmanArmUpDownPosition
