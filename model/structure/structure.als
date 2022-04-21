@@ -15,7 +15,6 @@ fact init {
 
   no HazardWarningVehicle
   no PitmanArm
-  no DarknessModeVehicle
   no ReverseGearVehicle
   no OncommingTrafficVehicle
   some ClosedDoorsVehicle
@@ -73,9 +72,9 @@ fact traces {
 
     mantainPitmanArm
     or deactivatePitmanArm
-    or some p: PitmanArmUpDownPosition, d: PitmanArmDegree | pitmanArmToUpDown[p, d]
     or pitmanArmToForward
     or pitmanArmToBackward
+    or (some p: PitmanArmUpDownPosition, d: PitmanArmDegree | pitmanArmToUpDown[p, d])
 
     updateActuators
   }
@@ -220,8 +219,8 @@ pred pitmanArmToUpDown[p: PitmanArmUpDownPosition, d: PitmanArmDegree] {
 
   // Effects
   some PitmanArmUpDown'
-  PitmanArmUpDown . pitmanArmUpDownPosition' = p
-  PitmanArmUpDown . pitmanArmDegree' = d
+  (PitmanArmUpDown . pitmanArmUpDownPosition)' = p
+  (PitmanArmUpDown . pitmanArmDegree)' = d
 }
 
 pred pitmanArmToForward {
