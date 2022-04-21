@@ -92,19 +92,19 @@ pred adaptiveHighBeam {
 // ----------------------------------------------------------------------------
 
 pred activeBrakeLight {
-
+  Vehicle . brakePedal = Medium
 }
 
 pred inactiveBrakeLight {
-
+  Vehicle . brakePedal = Low
 }
 
 pred activeReverseLight {
-
+  some ReverseGearVehicle
 }
 
 pred inactiveReverseLight {
-
+  no ReverseGearVehicle
 }
 
 pred activeHighBeam {

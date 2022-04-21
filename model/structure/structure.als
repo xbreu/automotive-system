@@ -310,3 +310,12 @@ pred updateActuators {
   inactiveTailLampRight
   => no TailLampRight
 }
+
+fact {
+  always (
+    Vehicle . brakePedal = High => {
+      eventually some BrakeLight
+      eventually no BrakeLight
+    } until (Vehicle . brakePedal = Low)
+  )
+}
