@@ -25,7 +25,7 @@ check ELS43 {
 // ELS-44 | With subvoltage the ambient light is not available.
 check ELS44 {
   always (
-    subvoltage => no Vehicle . ambientLighting
+    subvoltage => no DaytimeLights
   )
 }
 
