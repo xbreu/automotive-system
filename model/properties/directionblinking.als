@@ -10,10 +10,10 @@ open structure/structure
 check ELS1{
   always (
     blinkingLeft
-    => 
+    =>
       (
-        some BlinkLeft and 
-      (always eventually some BlinkLeft . level) 
+        some BlinkLeft and
+      (always eventually some BlinkLeft . level)
           and not (eventually always some BlinkLeft . level)
       ) until not blinkingLeft
   )
@@ -26,8 +26,8 @@ check ELS2 {
   always (
     historically (tipBlinkingLeft)
     => (
-        eventually highBlinkLeft; eventually lowBlinkLeft; 
-        eventually highBlinkLeft; eventually lowBlinkLeft; 
+        eventually highBlinkLeft; eventually lowBlinkLeft;
+        eventually highBlinkLeft; eventually lowBlinkLeft;
         eventually highBlinkLeft; eventually lowBlinkLeft
     )
   )
@@ -64,10 +64,10 @@ check ELS3 {
 check ELS4 {
   always (
     tipBlinkingLeft
-      => 
+      =>
     (
-      some BlinkLeft and 
-      (always eventually some BlinkLeft . level) 
+      some BlinkLeft and
+      (always eventually some BlinkLeft . level)
         and not (eventually always some BlinkLeft . level)
     ) until not tipBlinkingLeft
   )
@@ -79,8 +79,8 @@ check ELS5 {
   always (
     blinkingRight
     =>
-      some BlinkRight and 
-      (always eventually some BlinkRight . level) 
+      some BlinkRight and
+      (always eventually some BlinkRight . level)
           and not (eventually always some BlinkRight . level)
   )
 }

@@ -56,6 +56,8 @@ fact fairness {
 
 fact traces {
   always {
+    updateActuators
+
     mantainKey
     or removeKey
     or insertKey
@@ -75,8 +77,6 @@ fact traces {
     or pitmanArmToForward
     or pitmanArmToBackward
     or (some p: PitmanArmUpDownPosition, d: PitmanArmDegree | pitmanArmToUpDown[p, d])
-
-    updateActuators
   }
 }
 
@@ -245,19 +245,68 @@ pred pitmanArmToBackward {
 
 pred updateActuators {
   // Frame Conditions
-  Actuator'                = Actuator
-  BrakeLight'              = BrakeLight
-  ReverseLight'            = ReverseLight
-  HighBeam'                = HighBeam
-  HighRangeHighBeam'       = HighRangeHighBeam
-  HighMotorHighBeam'       = HighMotorHighBeam
-  ActuatorWithLevel'       = ActuatorWithLevel
-  BlinkLeft'               = BlinkLeft
-  BlinkRight'              = BlinkRight
-  LowBeamLeft'             = LowBeamLeft
-  LowBeamRight'            = LowBeamRight
-  CorneringLightLeft'      = CorneringLightLeft
-  CorneringLightRight'     = CorneringLightRight
-  TailLampLeft'            = TailLampLeft
-  TailLampRight'           = TailLampRight
+  activeBrakeLight
+  => some BrakeLight
+  inactiveBrakeLight
+  => no BrakeLight
+
+  activeReverseLight
+  => some ReverseLight
+  inactiveReverseLight
+  => no ReverseLight
+
+  activeHighBeam
+  => some HighBeam
+  inactiveHighBeam
+  => no HighBeam
+
+  activeHighRangeHighBeam
+  => some HighRangeHighBeam
+  inactiveHighRangeHighBeam
+  => no HighRangeHighBeam
+
+  activeHighMotorHighBeam
+  => some HighMotorHighBeam
+  inactiveHighMotorHighBeam
+  => no HighMotorHighBeam
+
+  activeBlinkLeft
+  => some BlinkLeft
+  inactiveBlinkLeft
+  => no BlinkLeft
+
+  activeBlinkRight
+  => some BlinkRight
+  inactiveBlinkRight
+  => no BlinkRight
+
+  activeLowBeamLeft
+  => some LowBeamLeft
+  inactiveLowBeamLeft
+  => no LowBeamLeft
+
+  activeLowBeamRight
+  => some LowBeamRight
+  inactiveLowBeamRight
+  => no LowBeamRight
+
+  activeCorneringLightLeft
+  => some CorneringLightLeft
+  inactiveCorneringLightLeft
+  => no CorneringLightLeft
+
+  activeCorneringLightRight
+  => some CorneringLightRight
+  inactiveCorneringLightRight
+  => no CorneringLightRight
+
+  activeTailLampLeft
+  => some TailLampLeft
+  inactiveTailLampLeft
+  => no TailLampLeft
+
+  activeTailLampRight
+  => some TailLampRight
+  inactiveTailLampRight
+  => no TailLampRight
 }
