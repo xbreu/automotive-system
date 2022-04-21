@@ -37,16 +37,18 @@ run Example2 {
   eventually Vehicle . lightRotarySwitch = Auto
   eventually PitmanArmUpDown . pitmanArmUpDownPosition = Downward
   eventually PitmanArmUpDown . pitmanArmDegree = HighDegree
-} for 15 steps
+}
 
 // Hazard warning on
 run Example3 {
-  some HazardWarningVehicle
+  eventually some HazardWarningVehicle
 }
 
 // Direction indicator on, low speed
 run Example4 {
-  no Actuator and no BlinkRight and some BlinkLeft
+  no Actuator
+  no BlinkRight
+  eventually some BlinkLeft
   Vehicle . currentSpeed = Low
 }
 

@@ -86,3 +86,119 @@ pred pullingPitmanArm {
 pred adaptiveHighBeam {
   pushingPitmanArm and some HighBeam
 }
+
+// ----------------------------------------------------------------------------
+// Actuator activation
+// ----------------------------------------------------------------------------
+
+pred activeBrakeLight {
+
+}
+
+pred inactiveBrakeLight {
+
+}
+
+pred activeReverseLight {
+
+}
+
+pred inactiveReverseLight {
+
+}
+
+pred activeHighBeam {
+
+}
+
+pred inactiveHighBeam {
+
+}
+
+pred activeHighRangeHighBeam {
+  activeHighBeam and {
+
+  }
+}
+
+pred inactiveHighRangeHighBeam {
+  inactiveHighBeam or {
+
+  }
+}
+
+pred activeHighMotorHighBeam {
+  activeHighBeam and {
+
+  }
+}
+
+pred inactiveHighMotorHighBeam {
+  inactiveHighBeam or {
+
+  }
+}
+
+pred activeBlinkLeft {
+
+}
+
+pred inactiveBlinkLeft {
+
+}
+
+pred activeBlinkRight {
+
+}
+
+pred inactiveBlinkRight {
+
+}
+
+pred activeLowBeamLeft {
+
+}
+
+pred inactiveLowBeamLeft {
+
+}
+
+pred activeLowBeamRight {
+
+}
+
+pred inactiveLowBeamRight {
+
+}
+
+pred activeCorneringLightLeft {
+
+}
+
+pred inactiveCorneringLightLeft {
+
+}
+
+pred activeCorneringLightRight {
+
+}
+
+pred inactiveCorneringLightRight {
+
+}
+
+pred activeTailLampLeft {
+
+}
+
+pred inactiveTailLampLeft {
+
+}
+
+pred activeTailLampRight {
+
+}
+
+pred inactiveTailLampRight {
+
+}
