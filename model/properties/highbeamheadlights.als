@@ -82,7 +82,7 @@ check ELS37 {
 // beam headlights.
 check ELS38 {
   always (
-  no PitmanArm . pitmanArmForthBack and before some PitmanArm . pitmanArmForthBack =>
+  (no PitmanArm) and before (some PitmanArm) =>
     no HighBeam and some LowBeamLeft + LowBeamRight
   )
 }
