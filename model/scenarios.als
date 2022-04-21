@@ -35,8 +35,8 @@ run Example2 {
   Vehicle . marketCode = Other
   Vehicle . keyState = KeyInIgnitionOnPosition
   Vehicle . lightRotarySwitch = Auto
-  some PitmanArm . pitmanArmUpDown
-  PitmanArmUpDown . pitmanArmDegree = LowDegree
+  PitmanArmUpDown . pitmanArmUpDownPosition = Downward
+  PitmanArmUpDown . pitmanArmDegree = HighDegree
 }
 
 // Hazard warning on
