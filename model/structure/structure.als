@@ -46,6 +46,12 @@ fact directionDependsOnIgnition {
   )
 }
 
+fact corneringLightDependsOnDarknessMode {
+  always (
+    some DarknessModeVehicle => no CorneringLight
+  )
+}
+
 fact fairness {
   //always eventually activateBlinkingLeft // Change this
 }
