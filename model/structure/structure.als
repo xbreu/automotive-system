@@ -284,12 +284,12 @@ pred steeringWheelToRight {
 
 pred updateActuators {
   // Frame Conditions
-  /*activeBrakeLight
+  activeBrakeLight
   => some BrakeLight
   inactiveBrakeLight
   => no BrakeLight
 
-  activeReverseLight
+  /*activeReverseLight
   => some ReverseLight
   inactiveReverseLight
   => no ReverseLight
@@ -353,12 +353,12 @@ pred updateActuators {
 // Brake light cycles when the brake pedal is very deflected, until it is in a
 // neutral position again.
 fact BrakeLightCyclesWhenPedalIsHigh {
-  always (
+  /*always (
     Vehicle . brakePedal = High => {
       eventually some BrakeLight
       eventually no BrakeLight
     } until (Vehicle . brakePedal = Low)
-  )
+  )*/
 }
 
 // High beam is activated when adaptive high beam is active and the vehicle is

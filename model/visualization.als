@@ -7,8 +7,10 @@ open structure/structure
 // ----------------------------------------------------------------------------
 
 abstract sig System {
-  , var component: set univ
+  , var component: set DummyElement
 }
+
+abstract sig DummyElement {}
 
 one sig SensorSystem
       , ActuatorSystem
@@ -16,8 +18,7 @@ extends System {}
 
 fact {
   always {
-    SensorSystem . component = DummySensor
-    ActuatorSystem . component = DummyActuator
+    component in (SensorSystem -> DummySensor + ActuatorSystem -> DummyActuator)
   }
 }
 
@@ -25,54 +26,54 @@ fact {
 // Actuators
 // ----------------------------------------------------------------------------
 
-var abstract sig DummyActuator {}
+abstract sig DummyActuator extends DummyElement {}
 
 // TODO: implement high beam
-var lone sig ActiveBlinkLeft
-           , InactiveBlinkLeft
-           , ActiveBlinkRight
-           , InactiveBlinkRight
-           , ActiveLowBeamLeft
-           , InactiveLowBeamLeft
-           , ActiveLowBeamRight
-           , InactiveLowBeamRight
-           , ActiveCorneringLightLeft
-           , InactiveCorneringLightLeft
-           , ActiveCorneringLightRight
-           , InactiveCorneringLightRight
-           , ActiveBrakeLight
-           , InactiveBrakeLight
-           , ActiveTailLampLeft
-           , InactiveTailLampLeft
-           , ActiveTailLampRight
-           , InactiveTailLampRight
-           , ActiveReverseLight
-           , InactiveReverseLight
-     extends DummyActuator {}
+one sig ActiveBlinkLeft
+      , InactiveBlinkLeft
+      , ActiveBlinkRight
+      , InactiveBlinkRight
+      , ActiveLowBeamLeft
+      , InactiveLowBeamLeft
+      , ActiveLowBeamRight
+      , InactiveLowBeamRight
+      , ActiveCorneringLightLeft
+      , InactiveCorneringLightLeft
+      , ActiveCorneringLightRight
+      , InactiveCorneringLightRight
+      , ActiveBrakeLight
+      , InactiveBrakeLight
+      , ActiveTailLampLeft
+      , InactiveTailLampLeft
+      , ActiveTailLampRight
+      , InactiveTailLampRight
+      , ActiveReverseLight
+      , InactiveReverseLight
+extends DummyActuator {}
 
 fact {
   always {
-    /*one (ActiveBlinkLeft + InactiveBlinkLeft)
-    one (ActiveBlinkRight + InactiveBlinkRight)
-    one (ActiveLowBeamLeft + InactiveLowBeamLeft)
-    one (ActiveLowBeamRight + InactiveLowBeamRight)
-    one (ActiveCorneringLightLeft + InactiveCorneringLightLeft)
-    one (ActiveCorneringLightRight + InactiveCorneringLightRight)
-    one (ActiveBrakeLight + InactiveBrakeLight)
-    one (ActiveTailLampLeft + InactiveTailLampLeft)
-    one (ActiveTailLampRight + InactiveTailLampRight)
-    one (ActiveReverseLight + InactiveReverseLight)*/
+    one component . (ActiveBlinkLeft + InactiveBlinkLeft)
+    one component . (ActiveBlinkRight + InactiveBlinkRight)
+    one component . (ActiveLowBeamLeft + InactiveLowBeamLeft)
+    one component . (ActiveLowBeamRight + InactiveLowBeamRight)
+    one component . (ActiveCorneringLightLeft + InactiveCorneringLightLeft)
+    one component . (ActiveCorneringLightRight + InactiveCorneringLightRight)
+    one component . (ActiveBrakeLight + InactiveBrakeLight)
+    one component . (ActiveTailLampLeft + InactiveTailLampLeft)
+    one component . (ActiveTailLampRight + InactiveTailLampRight)
+    one component . (ActiveReverseLight + InactiveReverseLight)
 
-    some BlinkLeft <=> some ActiveBlinkLeft
-    some BlinkRight <=> some ActiveBlinkRight
-    some LowBeamLeft <=> some ActiveLowBeamLeft
-    some LowBeamRight <=> some ActiveLowBeamRight
-    some CorneringLightLeft <=> some ActiveCorneringLightLeft
-    some CorneringLightRight <=> some ActiveCorneringLightRight
-    some BrakeLight <=> some ActiveBrakeLight
-    some TailLampLeft <=> some ActiveTailLampLeft
-    some TailLampRight <=> some ActiveTailLampRight
-    some ReverseLight <=> some ActiveReverseLight
+    some BlinkLeft <=> some component . ActiveBlinkLeft
+    some BlinkRight <=> some component . ActiveBlinkRight
+    some LowBeamLeft <=> some component . ActiveLowBeamLeft
+    some LowBeamRight <=> some component . ActiveLowBeamRight
+    some CorneringLightLeft <=> some component . ActiveCorneringLightLeft
+    some CorneringLightRight <=> some component . ActiveCorneringLightRight
+    some BrakeLight <=> some component . ActiveBrakeLight
+    some TailLampLeft <=> some component . ActiveTailLampLeft
+    some TailLampRight <=> some component . ActiveTailLampRight
+    some ReverseLight <=> some component . ActiveReverseLight
   }
 }
 
@@ -80,66 +81,67 @@ fact {
 // Sensors
 // ----------------------------------------------------------------------------
 
-var abstract sig DummySensor {}
+abstract sig DummySensor extends DummyElement {}
 
-var lone sig NoKey
-           , KeyInIgnition
-           , EngineOn
-           , EngineOff
-           , LowBrightness
-           , MediumBrightness
-           , HighBrightness
-           , NeutralBrakePedal
-           , DeflectedBrakePedal
-           , VeryDeflectedBrakePedal
-           , LowVoltageBattery
-           , MediumVoltageBattery
-           , HighVoltageBattery
-           , LeftSteeringWheel
-           , NeutralSteeringWheel
-           , RightSteeringWheel
-           , AllDoorsClosed
-           , SomeOpenDoor
-           , OncommingTraffic
-           , NoOncommingTraffic
-           , NotReadyCamera
-           , ReadyCamera
-           , LowSpeed
-           , MediumSpeed
-           , HighSpeed
-           , ReverseGear
-           , ForwardGear
-     extends DummySensor {}
+one sig NoKey
+      , KeyInIgnition
+      , EngineOn
+      , EngineOff
+      , LowBrightness
+      , MediumBrightness
+      , HighBrightness
+      , NeutralBrakePedal
+      , DeflectedBrakePedal
+      , VeryDeflectedBrakePedal
+      , LowVoltageBattery
+      , MediumVoltageBattery
+      , HighVoltageBattery
+      , LeftSteeringWheel
+      , NeutralSteeringWheel
+      , RightSteeringWheel
+      , AllDoorsClosed
+      , SomeOpenDoor
+      , OncommingTraffic
+      , NoOncommingTraffic
+      , NotReadyCamera
+      , ReadyCamera
+      , LowSpeed
+      , MediumSpeed
+      , HighSpeed
+      , ReverseGear
+      , ForwardGear
+extends DummySensor {}
 
 fact {
   always {
-    /*one (NoKey + KeyInIgnition)
-    one (EngineOn + EngineOff)
-    one (AllDoorsClosed + SomeOpenDoor)
-    one (OncommingTraffic + NoOncommingTraffic)
-    one (NotReadyCamera + ReadyCamera)
-    one (LowSpeed + MediumSpeed + HighSpeed)
-    one (ReverseGear + ForwardGear)*/
+    one component . (NoKey + KeyInIgnition)
+    one component . (EngineOn + EngineOff)
+    one component . (AllDoorsClosed + SomeOpenDoor)
+    one component . (OncommingTraffic + NoOncommingTraffic)
+    one component . (NotReadyCamera + ReadyCamera)
+    one component . (ReverseGear + ForwardGear)
 
-    Vehicle . keyState = NoKeyInserted <=> some NoKey
-    Vehicle . keyState = KeyInIgnitionOnPosition <=> some EngineOn
-    Vehicle . brightnessSensor = Low <=> some LowBrightness
-    Vehicle . brightnessSensor = Medium <=> some MediumBrightness
-    Vehicle . brightnessSensor = High <=> some HighBrightness
-    Vehicle . brakePedal = Low <=> some NeutralBrakePedal
-    Vehicle . brakePedal = Medium <=> some DeflectedBrakePedal
-    Vehicle . brakePedal = High <=> some VeryDeflectedBrakePedal
-    /*some SteeringLeft <=> some LeftSteeringWheel
-    no SteeringWheel <=> some NeutralSteeringWheel
-    some SteeringRight <=> some RightSteeringWheel
-    Vehicle . voltageBattery = Low <=> some LowVoltageBattery
-    Vehicle . voltageBattery = Medium <=> some MediumVoltageBattery
-    Vehicle . voltageBattery = High <=> some HighVoltageBattery
-    some ClosedDoorsVehicle <=> some AllDoorsClosed
-    some OncommingTrafficVehicle <=> some OncommingTraffic
-    some CameraReadyVehicle <=> some ReadyCamera
-    Vehicle . currentSpeed = Low <=> some LowSpeed
-    Vehicle . currentSpeed = High <=> some HighSpeed
-    some ReverseGearVehicle <=> some ReverseGear*/
+
+    Vehicle . keyState = NoKeyInserted <=> some component . NoKey
+    Vehicle . keyState = KeyInIgnitionOnPosition <=> some component . EngineOn
+    Vehicle . brightnessSensor = Low <=> some component . LowBrightness
+    Vehicle . brightnessSensor = Medium <=> some component . MediumBrightness
+    Vehicle . brightnessSensor = High <=> some component . HighBrightness
+    Vehicle . brakePedal = Low <=> some component . NeutralBrakePedal
+    Vehicle . brakePedal = Medium <=> some component . DeflectedBrakePedal
+    Vehicle . brakePedal = High <=> some component . VeryDeflectedBrakePedal
+    some SteeringLeft <=> some component . LeftSteeringWheel
+    no SteeringWheel <=> some component . NeutralSteeringWheel
+    some SteeringRight <=> some component . RightSteeringWheel
+    Vehicle . voltageBattery = Low <=> some component . LowVoltageBattery
+    Vehicle . voltageBattery = Medium <=> some component . MediumVoltageBattery
+    Vehicle . voltageBattery = High <=> some component . HighVoltageBattery
+    some ClosedDoorsVehicle <=> some component . AllDoorsClosed
+    some OncommingTrafficVehicle <=> some component . OncommingTraffic
+    some CameraReadyVehicle <=> some component . ReadyCamera
+    Vehicle . currentSpeed = Low <=> some component . LowSpeed
+    Vehicle . currentSpeed = Medium <=> some component . MediumSpeed
+    Vehicle . currentSpeed = High <=> some component . HighSpeed
+    some ReverseGearVehicle <=> some component . ReverseGear
   }
 }
