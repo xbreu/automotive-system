@@ -255,6 +255,7 @@ pred updateActuators {
   inactiveReverseLight
   => no ReverseLight
 
+  /*
   activeHighBeam
   => some HighBeam
   inactiveHighBeam
@@ -308,7 +309,7 @@ pred updateActuators {
   activeTailLampRight
   => some TailLampRight
   inactiveTailLampRight
-  => no TailLampRight
+  => no TailLampRight*/
 }
 
 // Brake light cycles when the brake pedal is very deflected, until it is in a
