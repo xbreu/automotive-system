@@ -40,7 +40,7 @@ run Example4 {
 
 // Parking light active
 run Example5 {
-  parkingLight
+  parkingLights
 }
 
 run TestExample {
