@@ -20,42 +20,6 @@ pred mediumLowBeam {
   LowBeamRight . level = Medium
 }
 
-pred lowBlinkLeft {
-  some BlinkLeft and BlinkLeft . level = Low
-}
-
-pred highBlinkLeft {
-  some BlinkLeft and BlinkLeft . level = High
-}
-
-pred lowBlinkRight {
-  some BlinkRight and BlinkRight . level = Low
-}
-
-pred highBlinkRight {
-  some BlinkRight and BlinkRight . level = High
-}
-
-pred blinkingLeft {
-  PitmanArmUpDown . pitmanArmUpDownPosition = Downward
-  PitmanArmUpDown . pitmanArmDegree = HighDegree
-}
-
-pred blinkingRight {
-  PitmanArmUpDown . pitmanArmUpDownPosition = Upward
-  PitmanArmUpDown . pitmanArmDegree = HighDegree
-}
-
-pred tipBlinkingLeft {
-  PitmanArmUpDown . pitmanArmUpDownPosition = Downward
-  PitmanArmUpDown . pitmanArmDegree = LowDegree
-}
-
-pred tipBlinkingRight {
-  PitmanArmUpDown . pitmanArmUpDownPosition = Upward
-  PitmanArmUpDown . pitmanArmDegree = LowDegree
-}
-
 pred parkingLights {
   ( LowBeamLeft   . level
   & LowBeamRight  . level
@@ -165,6 +129,28 @@ pred inactiveHighMotorHighBeam {
 // Blinking Lights
 // ----------------------------------------------------------------------------
 
+pred blinkingLeft {
+  PitmanArmUpDown . pitmanArmUpDownPosition = Downward
+  PitmanArmUpDown . pitmanArmDegree = HighDegree
+  Vehicle . keyState = KeyInIgnitionOnPosition
+}
+
+pred blinkingRight {
+  PitmanArmUpDown . pitmanArmUpDownPosition = Upward
+  PitmanArmUpDown . pitmanArmDegree = HighDegree
+  Vehicle . keyState = KeyInIgnitionOnPosition
+}
+
+pred tipBlinkingLeft {
+  PitmanArmUpDown . pitmanArmUpDownPosition = Downward
+  PitmanArmUpDown . pitmanArmDegree = LowDegree
+}
+
+pred tipBlinkingRight {
+  PitmanArmUpDown . pitmanArmUpDownPosition = Upward
+  PitmanArmUpDown . pitmanArmDegree = LowDegree
+}
+
 pred activeBlinkLeft {
   blinkingLeft or
   tipBlinkingLeft
@@ -191,6 +177,62 @@ pred inactiveBlinkRight {
 
   // Also should deactivate when other blink action is performed
   blinkingLeft or tipBlinkingLeft
+}
+
+pred blinkLeftLightCycle {
+  eventually no BlinkLeft
+  eventually some BlinkLeft
+}
+
+pred blinkRightLightCycle {
+  eventually no BlinkRight
+  eventually some BlinkRight
+}
+
+pred activateBlinkingLeft {
+  (
+    always
+    blinkLeftLightCycle
+    and blinkingLeft
+  ) or (
+    (
+      blinkLeftLightCycle
+    ) until not blinkingLeft
+  )
+}
+
+pred activateBlinkingRight {
+  (
+    always
+    blinkRightLightCycle
+    and blinkingRight
+  ) or (
+    (
+      blinkRightLightCycle
+    ) until not blinkingRight
+  )
+}
+
+pred blinkLeftThreeTimes {
+  (eventually (some BlinkLeft; eventually (no BlinkLeft;
+  eventually (some BlinkLeft; eventually (no BlinkLeft;
+  eventually (some BlinkLeft; eventually (no BlinkLeft)))))))
+  or eventually (
+    some HazardWarningVehicle
+    or blinkingRight
+    or tipBlinkingRight
+  )
+}
+
+pred blinkRightThreeTimes {
+  (eventually (some BlinkRight; eventually (no BlinkRight;
+  eventually (some BlinkRight; eventually (no BlinkRight;
+  eventually (some BlinkRight; eventually (no BlinkRight)))))))
+  or eventually (
+    some HazardWarningVehicle
+    or blinkingLeft
+    or tipBlinkingLeft
+  )
 }
 
 // ----------------------------------------------------------------------------
@@ -230,8 +272,9 @@ pred activeCorneringLightLeft {
     (
       some ReverseGearVehicle
     )
-  ) and not subvoltage
-  
+  )
+  not subvoltage
+  no DarknessModeVehicle
 }
 
 pred inactiveCorneringLightLeft {
@@ -247,7 +290,9 @@ pred activeCorneringLightRight {
     (
       some ReverseGearVehicle
     )
-  ) and not subvoltage
+  )
+  not subvoltage
+  no DarknessModeVehicle
 }
 
 pred inactiveCorneringLightRight {
