@@ -214,9 +214,7 @@ pred activateBlinkingRight {
 }
 
 pred blinkLeftThreeTimes {
-  (eventually (some BlinkLeft; eventually (no BlinkLeft;
-  eventually (some BlinkLeft; eventually (no BlinkLeft;
-  eventually (some BlinkLeft; eventually (no BlinkLeft)))))))
+  (eventually some BlinkLeft)
   or eventually (
     some HazardWarningVehicle
     or blinkingRight
@@ -225,9 +223,7 @@ pred blinkLeftThreeTimes {
 }
 
 pred blinkRightThreeTimes {
-  (eventually (some BlinkRight; eventually (no BlinkRight;
-  eventually (some BlinkRight; eventually (no BlinkRight;
-  eventually (some BlinkRight; eventually (no BlinkRight)))))))
+  (eventually some BlinkRight)
   or eventually (
     some HazardWarningVehicle
     or blinkingLeft
