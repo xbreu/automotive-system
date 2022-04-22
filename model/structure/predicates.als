@@ -20,42 +20,6 @@ pred mediumLowBeam {
   LowBeamRight . level = Medium
 }
 
-pred lowBlinkLeft {
-  some BlinkLeft and BlinkLeft . level = Low
-}
-
-pred highBlinkLeft {
-  some BlinkLeft and BlinkLeft . level = High
-}
-
-pred lowBlinkRight {
-  some BlinkRight and BlinkRight . level = Low
-}
-
-pred highBlinkRight {
-  some BlinkRight and BlinkRight . level = High
-}
-
-pred blinkingLeft {
-  PitmanArmUpDown . pitmanArmUpDownPosition = Downward
-  PitmanArmUpDown . pitmanArmDegree = HighDegree
-}
-
-pred blinkingRight {
-  PitmanArmUpDown . pitmanArmUpDownPosition = Upward
-  PitmanArmUpDown . pitmanArmDegree = HighDegree
-}
-
-pred tipBlinkingLeft {
-  PitmanArmUpDown . pitmanArmUpDownPosition = Downward
-  PitmanArmUpDown . pitmanArmDegree = LowDegree
-}
-
-pred tipBlinkingRight {
-  PitmanArmUpDown . pitmanArmUpDownPosition = Upward
-  PitmanArmUpDown . pitmanArmDegree = LowDegree
-}
-
 pred parkingLights {
   ( LowBeamLeft   . level
   & LowBeamRight  . level
@@ -165,6 +129,28 @@ pred inactiveHighMotorHighBeam {
 // Blinking Lights
 // ----------------------------------------------------------------------------
 
+pred blinkingLeft {
+  PitmanArmUpDown . pitmanArmUpDownPosition = Downward
+  PitmanArmUpDown . pitmanArmDegree = HighDegree
+  Vehicle . keyState = KeyInIgnitionOnPosition
+}
+
+pred blinkingRight {
+  PitmanArmUpDown . pitmanArmUpDownPosition = Upward
+  PitmanArmUpDown . pitmanArmDegree = HighDegree
+  Vehicle . keyState = KeyInIgnitionOnPosition
+}
+
+pred tipBlinkingLeft {
+  PitmanArmUpDown . pitmanArmUpDownPosition = Downward
+  PitmanArmUpDown . pitmanArmDegree = LowDegree
+}
+
+pred tipBlinkingRight {
+  PitmanArmUpDown . pitmanArmUpDownPosition = Upward
+  PitmanArmUpDown . pitmanArmDegree = LowDegree
+}
+
 pred activeBlinkLeft {
   blinkingLeft or
   tipBlinkingLeft
@@ -193,6 +179,62 @@ pred inactiveBlinkRight {
   blinkingLeft or tipBlinkingLeft
 }
 
+pred blinkLeftLightCycle {
+  eventually no BlinkLeft
+  eventually some BlinkLeft
+}
+
+pred blinkRightLightCycle {
+  eventually no BlinkRight
+  eventually some BlinkRight
+}
+
+pred activateBlinkingLeft {
+  (
+    always
+    blinkLeftLightCycle
+    and blinkingLeft
+  ) or (
+    (
+      blinkLeftLightCycle
+    ) until not blinkingLeft
+  )
+}
+
+pred activateBlinkingRight {
+  (
+    always
+    blinkRightLightCycle
+    and blinkingRight
+  ) or (
+    (
+      blinkRightLightCycle
+    ) until not blinkingRight
+  )
+}
+
+pred blinkLeftThreeTimes {
+  (eventually (some BlinkLeft; eventually (no BlinkLeft;
+  eventually (some BlinkLeft; eventually (no BlinkLeft;
+  eventually (some BlinkLeft; eventually (no BlinkLeft)))))))
+  or eventually (
+    some HazardWarningVehicle
+    or blinkingRight
+    or tipBlinkingRight
+  )
+}
+
+pred blinkRightThreeTimes {
+  (eventually (some BlinkRight; eventually (no BlinkRight;
+  eventually (some BlinkRight; eventually (no BlinkRight;
+  eventually (some BlinkRight; eventually (no BlinkRight)))))))
+  or eventually (
+    some HazardWarningVehicle
+    or blinkingLeft
+    or tipBlinkingLeft
+  )
+}
+
 // ----------------------------------------------------------------------------
 // Low Beam
 // ----------------------------------------------------------------------------
@@ -201,11 +243,11 @@ pred activeLowBeamLeft {
   Vehicle . keyState in KeyInserted + KeyInIgnitionOnPosition and
   (Vehicle . lightRotarySwitch = On or some DaytimeLights)
   or
-  (Vehicle . lightRotarySwitch = Auto and 
+  (Vehicle . lightRotarySwitch = Auto and
     ignitionOnLock and
     Vehicle . brightnessSensor = Low)
   or
-  (some AmbientLighting and 
+  (some AmbientLighting and
     Vehicle . keyState in NoKeyInserted + KeyInserted and
     Vehicle . brightnessSensor = Low)
 }
@@ -214,7 +256,7 @@ pred inactiveLowBeamLeft {
   (Vehicle . keyState != KeyInIgnitionOnPosition and
   Vehicle . lightRotarySwitch = Auto)
   or
-  (Vehicle . lightRotarySwitch = Auto and 
+  (Vehicle . lightRotarySwitch = Auto and
   ignitionOnLock and
   Vehicle . brightnessSensor = High)
 }
@@ -223,11 +265,11 @@ pred activeLowBeamRight {
   Vehicle . keyState in KeyInserted + KeyInIgnitionOnPosition and
   (Vehicle . lightRotarySwitch = On or some DaytimeLights)
   or
-  (Vehicle . lightRotarySwitch = Auto and 
+  (Vehicle . lightRotarySwitch = Auto and
     ignitionOnLock and
     Vehicle . brightnessSensor = Low)
   or
-  (some AmbientLighting and 
+  (some AmbientLighting and
     Vehicle . keyState in NoKeyInserted + KeyInserted and
     Vehicle . brightnessSensor = Low)
 }
@@ -236,7 +278,7 @@ pred inactiveLowBeamRight {
   (Vehicle . keyState != KeyInIgnitionOnPosition and
   Vehicle . lightRotarySwitch = Auto)
   or
-  (Vehicle . lightRotarySwitch = Auto and 
+  (Vehicle . lightRotarySwitch = Auto and
   ignitionOnLock and
   Vehicle . brightnessSensor = High)
 }
@@ -255,7 +297,8 @@ pred activeCorneringLightLeft {
       some ReverseGearVehicle
     )
   )
-  and not subvoltage
+  not subvoltage
+  no DarknessModeVehicle
 }
 
 pred inactiveCorneringLightLeft {
@@ -271,7 +314,9 @@ pred activeCorneringLightRight {
     (
       some ReverseGearVehicle
     )
-  ) and not subvoltage
+  )
+  not subvoltage
+  no DarknessModeVehicle
 }
 
 pred inactiveCorneringLightRight {

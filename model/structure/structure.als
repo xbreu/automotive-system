@@ -36,24 +36,6 @@ fact daytimeLightsBeams {
   )
 }
 
-// Direction blinking is only available when the ignition is on.
-fact directionDependsOnIgnition {
-  always (
-    (highBlinkLeft or highBlinkRight)
-    => Vehicle . keyState = KeyInIgnitionOnPosition
-  )
-}
-
-fact corneringLightDependsOnDarknessMode {
-  always (
-    some DarknessModeVehicle => no CorneringLight
-  )
-}
-
-fact fairness {
-  //always eventually activateBlinkingLeft // Change this
-}
-
 // ----------------------------------------------------------------------------
 // Operations
 // ----------------------------------------------------------------------------
@@ -410,6 +392,25 @@ fact {
 fact {
   always (
     subvoltage => no AmbientLighting
+  )
+}
+
+fact {
+  always {
+    blinkingLeft => activateBlinkingLeft
+    blinkingRight => activateBlinkingRight
+    tipBlinkingLeft => blinkLeftThreeTimes
+    tipBlinkingRight => blinkRightThreeTimes
+  }
+}
+
+fact {
+  always (
+    some NorthAmericanVehicle and some DaytimeLights and ignitionOnLock
+    => {
+      blinkingLeft => LowBeamLeft . level = Medium
+      blinkingRight => LowBeamRight . level = Medium
+    }
   )
 }
 

@@ -7,15 +7,9 @@ open structure/structure
 // left, exterior mirror left, rear left) synchronously with pulse ratio bright
 // to dark 1:1 and a frequency of 1.0 Hz ± 0.1 Hz (i.e. 60 flashes per minute
 // ± 6 flashes).
-check ELS1{
+check ELS1 {
   always (
-    blinkingLeft
-    =>
-      (
-        some BlinkLeft and
-      (always eventually some BlinkLeft . level)
-          and not (eventually always some BlinkLeft . level)
-      ) until not blinkingLeft
+    blinkingLeft => activateBlinkingLeft
   )
 }
 
@@ -24,11 +18,8 @@ check ELS1{
 // (see Req. ELS-1) should flash for three flashing cycles.
 check ELS2 {
   always (
-    historically (tipBlinkingLeft)
-    => (
-        eventually (highBlinkLeft; eventually (lowBlinkLeft; 
-        eventually (highBlinkLeft; eventually (lowBlinkLeft; 
-        eventually (highBlinkLeft; eventually (lowBlinkLeft))))))
+    tipBlinkingLeft => (
+      blinkLeftThreeTimes
     )
   )
 }
@@ -42,17 +33,12 @@ check ELS2 {
 // request).
 check ELS3 {
   always (
-    ( highBlinkLeft and
-      PitmanArmUpDown . pitmanArmUpDownPosition = Upward
-      => eventually (some BlinkRight and no BlinkLeft) )
-    or
-    ( highBlinkRight and
-      PitmanArmUpDown . pitmanArmUpDownPosition = Downward
-      => eventually (some BlinkLeft and no BlinkRight) )
-    or
-    ( (highBlinkRight or highBlinkLeft) and
+    tipBlinkingLeft => blinkLeftThreeTimes
+    or eventually (
       some HazardWarningVehicle
-      => eventually (some HazardWarningVehicle and not (highBlinkLeft and highBlinkLeft) ) )
+      or blinkingRight
+      or tipBlinkingRight
+    )
   )
 }
 
@@ -63,13 +49,14 @@ check ELS3 {
 // leaves the position "tip-blinking left".
 check ELS4 {
   always (
-    tipBlinkingLeft
-      =>
-    (
-      some BlinkLeft and
-      (always eventually some BlinkLeft . level)
-        and not (eventually always some BlinkLeft . level)
-    ) until not tipBlinkingLeft
+    tipBlinkingLeft => (
+      always
+      activateBlinkingLeft
+      and tipBlinkingLeft
+    ) or (
+      activateBlinkingLeft
+      until not tipBlinkingLeft
+    )
   )
 }
 
@@ -77,11 +64,33 @@ check ELS4 {
 // left side (see Req. Req. ELS-1 to Req. ELS-4).
 check ELS5 {
   always (
-    blinkingRight
-    =>
-      some BlinkRight and
-      (always eventually some BlinkRight . level)
-          and not (eventually always some BlinkRight . level)
+    blinkingRight => activateBlinkingRight
+  )
+
+  always (
+    tipBlinkingRight => (
+      blinkRightThreeTimes
+    )
+  )
+
+  always (
+    tipBlinkingRight => blinkRightThreeTimes
+    or eventually (
+      some HazardWarningVehicle
+      or blinkingRight
+      or tipBlinkingRight
+    )
+  )
+
+  always (
+    tipBlinkingRight => (
+      always
+      activateBlinkingRight
+      and tipBlinkingRight
+    ) or (
+      activateBlinkingRight
+      until not tipBlinkingRight
+    )
   )
 }
 
@@ -89,9 +98,11 @@ check ELS5 {
 // dimmed by 50% during direction blinking on the blinking side.
 check ELS6 {
   always (
-    (some NorthAmericanVehicle and some DaytimeLights)
-    =>  (some BlinkLeft => LowBeamLeft . level = Medium)
-    and (some BlinkRight => LowBeamRight . level = Medium)
+    some NorthAmericanVehicle and some DaytimeLights and ignitionOnLock
+    => {
+      blinkingLeft => LowBeamLeft . level = Medium
+      blinkingRight => LowBeamRight . level = Medium
+    }
   )
 }
 
