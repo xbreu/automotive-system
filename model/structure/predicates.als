@@ -56,11 +56,7 @@ pred tipBlinkingRight {
   PitmanArmUpDown . pitmanArmDegree = LowDegree
 }
 
-pred parkingLight {
-  Vehicle . keyState in NoKeyInserted
-  Vehicle . lightRotarySwitch in On
-  some PitmanArmUpDown
-
+pred parkingLights {
   ( LowBeamLeft   . level
   & LowBeamRight  . level
   & TailLampLeft  . level
@@ -169,7 +165,12 @@ pred activeBlinkLeft {
 }
 
 pred inactiveBlinkLeft {
+  // Deactivate normal blink
+  not blinkingLeft
+  // Deactivate tip blink (deactivates by itself after 3 cycles)
 
+  // Also should deactivate when other blink action is performed
+  blinkingRight or tipBlinkingRight
 }
 
 pred activeBlinkRight {
@@ -178,7 +179,12 @@ pred activeBlinkRight {
 }
 
 pred inactiveBlinkRight {
+  // Deactivate normal blink
+  not blinkingRight
+  // Deactivate tip blink (deactivates by itself after 3 cycles)
 
+  // Also should deactivate when other blink action is performed
+  blinkingLeft or tipBlinkingLeft
 }
 
 // ----------------------------------------------------------------------------
