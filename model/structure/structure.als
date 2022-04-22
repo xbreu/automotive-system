@@ -20,9 +20,6 @@ fact init {
   no OncommingTrafficVehicle
   some ClosedDoorsVehicle
   some CameraReadyVehicle
-
-  no Actuator
-  no ActuatorWithLevel
 }
 
 // ----------------------------------------------------------------------------
@@ -287,7 +284,7 @@ pred steeringWheelToRight {
 
 pred updateActuators {
   // Frame Conditions
-  activeBrakeLight
+  /*activeBrakeLight
   => some BrakeLight
   inactiveBrakeLight
   => no BrakeLight
@@ -297,7 +294,6 @@ pred updateActuators {
   inactiveReverseLight
   => no ReverseLight
 
-  /*
   activeHighBeam
   => some HighBeam
   inactiveHighBeam
@@ -383,7 +379,7 @@ fact {
 // priority over Req. ELS-17.
 fact {
   always (
-    some LowBeam and 
+    some LowBeam and
     Vehicle . keyState = KeyInserted and
     no AmbientLighting
     => LowBeam . level = Medium
