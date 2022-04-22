@@ -400,3 +400,9 @@ fact {
     }
   )
 }
+
+fact {
+  always (
+    some HazardWarningVehicle => activateHazardWarning
+  )
+}
