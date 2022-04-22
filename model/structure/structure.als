@@ -20,9 +20,6 @@ fact init {
   no OncommingTrafficVehicle
   some ClosedDoorsVehicle
   some CameraReadyVehicle
-
-  no Actuator
-  no ActuatorWithLevel
 }
 
 // ----------------------------------------------------------------------------
@@ -287,7 +284,7 @@ pred steeringWheelToRight {
 
 pred updateActuators {
   // Frame Conditions
-  activeBrakeLight
+  /*activeBrakeLight
   => some BrakeLight
   inactiveBrakeLight
   => no BrakeLight
@@ -350,7 +347,7 @@ pred updateActuators {
   activeTailLampRight
   => some TailLampRight
   inactiveTailLampRight
-  => no TailLampRight
+  => no TailLampRight*/
 }
 
 // Brake light cycles when the brake pedal is very deflected, until it is in a

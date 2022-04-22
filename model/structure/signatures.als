@@ -49,7 +49,7 @@ lone var sig BlinkLeft
 
 one sig Vehicle {
   , var lightRotarySwitch: one SwitchState
-  , var keyState: one KeyState
+  , var keyState: one KeyStatusAndPosition
   , var brightnessSensor: one Level
   , var brakePedal: one Level
   , var voltageBattery: one Level
@@ -75,7 +75,7 @@ sig ArmoredVehicle extends Vehicle {}
 var sig DarknessModeVehicle
      in ArmoredVehicle {}
 
-enum KeyState {
+enum KeyStatusAndPosition {
   NoKeyInserted, KeyInserted, KeyInIgnitionOnPosition
 }
 
