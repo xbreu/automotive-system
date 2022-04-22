@@ -152,14 +152,27 @@ check ELS25 {
 // not activated, but all other constraints (see Req. ELS-24) are fulfilled and
 // the steering wheel deflection is more than ±10◦.
 check ELS26 {
-  
+  always {
+    (some LowBeam
+      and some SteeringLeft
+      and Vehicle . currentSpeed = Low) and not subvoltage
+    => some CorneringLightLeft
+
+    (some LowBeam
+      and some SteeringRight
+      and Vehicle . currentSpeed = Low) and not subvoltage
+    => some CorneringLightRight
+  }
 }
 
 
 // ELS-27 | If reverse gear is activated, both opposite cornering lights are
 // activated.
 check ELS27 {
-
+  always (
+    some ReverseGearVehicle and not subvoltage
+    => some CorneringLightLeft and some CorneringLightRight
+  )
 }
 
 // ELS-28 | Parking light. The parking light is the low beam and the tail lamp
@@ -171,12 +184,13 @@ check ELS27 {
 // normal low beam lamp and tail lamp. An active ambient light (see
 // Req. ELS-19) delays parking light.
 check ELS28 {
-
+  always (
+    parkingLightCondition => parkingLights
+  )
 }
 
 // ELS-29 | The normal brightness of low beam lamps, brake lights, direction
 // indicators, tail lamps, cornering lights, and reverse light is 100%.
-
 check ELS29 {
-
+  // ambiguous
 }
