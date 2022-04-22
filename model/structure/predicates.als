@@ -126,12 +126,13 @@ pred activeHighBeam {
   } or {
     activeAdaptiveHighBeam
     Vehicle . currentSpeed = High
-    no OncommingTrafficVehicle
   }
+
+  no OncommingTrafficVehicle
 }
 
 pred inactiveHighBeam {
-  some OncommingTrafficVehicle
+  not activeHighBeam
 }
 
 pred activeHighRangeHighBeam {
