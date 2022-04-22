@@ -52,8 +52,8 @@ one sig Vehicle {
   , var keyState: one KeyStatusAndPosition
   , var brightnessSensor: one Level
   , var brakePedal: one Level
-  , var voltageBattery: one Level
-  , var currentSpeed: one Level
+  , var voltageBattery: one Level // 8.5V, 14.5V
+  , var currentSpeed: one Level // 10 km/h, 30 km/h
 }
 
 lone sig DaytimeLights

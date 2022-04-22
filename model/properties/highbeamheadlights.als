@@ -1,6 +1,7 @@
 module properties/highbeamheadlights
 
 open structure/structure
+open visualization
 
 // ELS-30 | The headlamp flasher is activated by pulling the pitman arm, i.e.
 // as long as the pitman arm is pulled 1©, the high beam headlight is
@@ -26,7 +27,7 @@ check ELS31 {
 // beam is activated by moving the pitman arm to the back 4.
 check ELS32 {
   always (
-    Vehicle . lightRotarySwitch = Auto and some PitmanArmForward =>
+    Vehicle . lightRotarySwitch = Auto and some PitmanArmBackward =>
     activeAdaptiveHighBeam
   )
 }
@@ -40,7 +41,7 @@ check ELS33 {
   always (
     {
       activeAdaptiveHighBeam
-      Vehicle . currentSpeed != Low
+      Vehicle . currentSpeed = High
       no OncommingTrafficVehicle
     } => some HighBeam
   )
@@ -81,7 +82,10 @@ check ELS36 {
 // illumination distance is not calculated upon the actual vehicle speed but
 // the target speed provided by the advanced cruise control.
 check ELS37 {
-
+  // This is not useful for our problem because we did not model the cruise
+  // control, as it is only needed for the speed control system. So, the
+  // abstraction was that the current speed is already the right one, that
+  // is maybe calculated by the advanced cruise control.
 }
 
 // ELS-38 | If the pitman arm is moved again in the horizontal neutral
@@ -90,7 +94,14 @@ check ELS37 {
 // beam headlights.
 check ELS38 {
   always (
-  (no PitmanArm) and before (some PitmanArm) =>
-    no HighBeam and some LowBeamLeft + LowBeamRight
+    {
+      no PitmanArm
+      before activeAdaptiveHighBeam
+    } => {
+      not activeAdaptiveHighBeam
+      no HighBeam
+      some LowBeamLeft
+      some LowBeamRight
+    }
   )
 }
