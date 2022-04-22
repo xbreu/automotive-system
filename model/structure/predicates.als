@@ -85,6 +85,9 @@ pred activeAdaptiveHighBeam {
 
 pred activeHighBeam {
   {
+    Vehicle . lightRotarySwitch in Auto
+    some PitmanArmForward
+  } or {
     some PitmanArmForward
   } or {
     Vehicle . lightRotarySwitch = On
@@ -159,7 +162,6 @@ pred activeBlinkLeft {
 pred inactiveBlinkLeft {
   // Deactivate normal blink
   not blinkingLeft
-  // Deactivate tip blink (deactivates by itself after 3 cycles)
 
   // Also should deactivate when other blink action is performed
   blinkingRight or tipBlinkingRight
