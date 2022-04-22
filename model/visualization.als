@@ -78,7 +78,6 @@ fact {
 
 var sig DummySensor {}
 
-// TODO: Add steering wheel angle
 var lone sig NoKey
            , KeyInIgnition
            , EngineOn
@@ -92,6 +91,9 @@ var lone sig NoKey
            , LowVoltageBattery
            , MediumVoltageBattery
            , HighVoltageBattery
+           , LeftSteeringWheel
+           , NeutralSteeringWheel
+           , RightSteeringWheel
            , AllDoorsClosed
            , SomeOpenDoor
            , OncommingTraffic
@@ -110,6 +112,7 @@ fact {
   one (EngineOn + EngineOff)
   one (LowBrightness + MediumBrightness + HighBrightness)
   one (NeutralBrakePedal + DeflectedBrakePedal + VeryDeflectedBrakePedal)
+  one (LeftSteeringWheel + NeutralSteeringWheel + RightSteeringWheel)
   one (LowVoltageBattery + MediumVoltageBattery + HighVoltageBattery)
   one (AllDoorsClosed + SomeOpenDoor)
   one (OncommingTraffic + NoOncommingTraffic)
@@ -125,6 +128,8 @@ fact {
   Vehicle . brakePedal = High <=> some VeryDeflectedBrakePedal
   Vehicle . voltageBattery = Low <=> some LowVoltageBattery
   Vehicle . voltageBattery = High <=> some HighVoltageBattery
+  some SteeringLeft <=> some LeftSteeringWheel
+  some SteeringRight <=> some RightSteeringWheel
   some ClosedDoorsVehicle <=> some AllDoorsClosed
   some OncommingTrafficVehicle <=> some OncommingTraffic
   some CameraReadyVehicle <=> some ReadyCamera
