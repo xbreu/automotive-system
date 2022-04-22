@@ -138,17 +138,8 @@
    <type name="visualization/NotReadyCamera"/>
 </node>
 
-<node label="CameraReady">
-   <set name="visualization/structure/predicates/signatures/CameraReadyVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
-</node>
-
 <node label="ClosedDoors">
    <type name="visualization/SomeOpenDoor"/>
-   <set name="visualization/structure/predicates/signatures/ClosedDoorsVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
-</node>
-
-<node label="DarknessMode">
-   <set name="visualization/structure/predicates/signatures/DarknessModeVehicle" type="visualization/structure/predicates/signatures/ArmoredVehicle"/>
 </node>
 
 <node label="DaytimeLights">
@@ -165,10 +156,6 @@
 
 <node label="False">
    <type name="visualization/boolean/False"/>
-</node>
-
-<node label="HazardWarning">
-   <set name="visualization/structure/predicates/signatures/HazardWarningVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
 </node>
 
 <node label="High">
@@ -219,10 +206,6 @@
    <type name="visualization/structure/predicates/signatures/On"/>
 </node>
 
-<node label="OncommingTraffic">
-   <set name="visualization/structure/predicates/signatures/OncommingTrafficVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
-</node>
-
 <node label="PitmanArm">
    <type name="visualization/structure/predicates/signatures/PitmanArm"/>
 </node>
@@ -237,10 +220,6 @@
 
 <node label="PitmanArmUpDown">
    <type name="visualization/structure/predicates/signatures/PitmanArmUpDown"/>
-</node>
-
-<node label="ReverseGear">
-   <set name="visualization/structure/predicates/signatures/ReverseGearVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
 </node>
 
 <node label="RightHand">
@@ -271,12 +250,36 @@
    <type name="visualization/structure/predicates/signatures/ArmoredVehicle"/>
 </node>
 
-<node style="Dotted" shape="Ellipse" color="Gray" label="Vehicle">
+<node style="Dotted" shape="Box" color="Gray" label="Vehicle">
    <type name="visualization/structure/predicates/signatures/Vehicle"/>
 </node>
 
 <node style="Solid" shape="Dbl Circle">
    <type name="visualization/DummyElement"/>
+</node>
+
+<node style="inherit" label="CameraReady">
+   <set name="visualization/structure/predicates/signatures/CameraReadyVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
+</node>
+
+<node style="inherit" label="ClosedDoors">
+   <set name="visualization/structure/predicates/signatures/ClosedDoorsVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
+</node>
+
+<node style="inherit" label="DarknessMode">
+   <set name="visualization/structure/predicates/signatures/DarknessModeVehicle" type="visualization/structure/predicates/signatures/ArmoredVehicle"/>
+</node>
+
+<node style="inherit" label="HazardWarning">
+   <set name="visualization/structure/predicates/signatures/HazardWarningVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
+</node>
+
+<node style="inherit" label="OncommingTraffic">
+   <set name="visualization/structure/predicates/signatures/OncommingTrafficVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
+</node>
+
+<node style="inherit" label="ReverseGear">
+   <set name="visualization/structure/predicates/signatures/ReverseGearVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
 </node>
 
 <node visible="no">
