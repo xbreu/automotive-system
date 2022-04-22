@@ -1,6 +1,7 @@
 module properties/directionblinking
 
 open structure/structure
+open visualization
 
 // ELS-1 | Direction blinking left: When moving the pitman arm in position
 // "turn left" 3 , the vehicle flashes all left direction indicators (front

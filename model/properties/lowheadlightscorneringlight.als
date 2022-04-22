@@ -1,6 +1,7 @@
 module properties/lowheadlightscorneringlight
 
 open structure/structure
+open visualization
 
 // ELS-14 | If the ignition is On and the light rotary switch is in the
 // position On, then low beam headlights are activated.
@@ -38,7 +39,7 @@ check ELS16 {
   always (
     Vehicle . keyState != KeyInIgnitionOnPosition and
     Vehicle . lightRotarySwitch = Auto =>
-      no LowBeam 
+      no LowBeam
   )
 }
 
@@ -60,12 +61,12 @@ check ELS17 {
 // the low beam headlights remain active at least for 3 seconds.
 check ELS18 {
   always {
-    Vehicle . lightRotarySwitch = Auto and 
+    Vehicle . lightRotarySwitch = Auto and
     ignitionOnLock and
     Vehicle . brightnessSensor = Low
       => some LowBeam
 
-    Vehicle . lightRotarySwitch = Auto and 
+    Vehicle . lightRotarySwitch = Auto and
     ignitionOnLock and
     Vehicle . brightnessSensor = High
       => no LowBeam
@@ -84,7 +85,7 @@ check ELS18 {
 // - Insertion or removal of the ignition key
 check ELS19 {
   always (
-    some AmbientLighting and 
+    some AmbientLighting and
     Vehicle . keyState in NoKeyInserted + KeyInserted and
     Vehicle . brightnessSensor = Low
     => some LowBeam
@@ -130,7 +131,7 @@ check ELS24 {
   always {
     (some LowBeam
       and (blinkingLeft or tipBlinkingLeft or some SteeringLeft)
-      and Vehicle . currentSpeed = Low) 
+      and Vehicle . currentSpeed = Low)
       // ELS 45
       and not subvoltage
       and no DarknessModeVehicle
@@ -163,7 +164,7 @@ check ELS26 {
       and some SteeringLeft
       and Vehicle . currentSpeed = Low) and
       // ELS 45
-      not subvoltage and 
+      not subvoltage and
       no DarknessModeVehicle
     => some CorneringLightLeft
 
