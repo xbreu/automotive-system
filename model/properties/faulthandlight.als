@@ -18,7 +18,8 @@ check ELS42 {
 check ELS43 {
   always (
     (Vehicle . lightRotarySwitch in Auto and
-     some PitmanArmForward)
+    no OncommingTrafficVehicle and
+    some PitmanArmForward)
     => some HighBeam
   )
 }
