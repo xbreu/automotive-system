@@ -302,7 +302,7 @@ pred updateActuators {
   inactiveHighBeam
   => no HighBeam
 
-  /*activeHighRangeHighBeam
+  activeHighRangeHighBeam
   => some HighRangeHighBeam
   inactiveHighRangeHighBeam
   => no HighRangeHighBeam
@@ -350,7 +350,7 @@ pred updateActuators {
   activeTailLampRight
   => some TailLampRight
   inactiveTailLampRight
-  => no TailLampRight*/
+  => no TailLampRight
 }
 
 // High beam is activated when adaptive high beam is active and the vehicle is
@@ -398,5 +398,11 @@ fact {
       some LowBeamLeft
       some LowBeamRight
     }
+  )
+}
+
+fact {
+  always (
+    subvoltage => no AmbientLighting
   )
 }
