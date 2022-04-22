@@ -1,6 +1,7 @@
 module properties/faulthandlight
 
 open structure/structure
+open visualization
 
 // ELS-42 | A subvoltage is present if the voltage in the vehicle electrical
 // system is less than 8.5V. With subvoltage, the adaptive high beam headlight
@@ -25,14 +26,14 @@ check ELS43 {
 // ELS-44 | With subvoltage the ambient light is not available.
 check ELS44 {
   always (
-    subvoltage => no DaytimeLights
+    subvoltage => no AmbientLighting
   )
 }
 
 // ELS-45 | With subvoltage the cornering light is not available.
 check ELS45 {
   always (
-    subvoltage => no (CorneringLightLeft + CorneringLightRight)
+    subvoltage => no (CorneringLight)
   )
 }
 
@@ -40,9 +41,9 @@ check ELS45 {
 check ELS46 {
   always (
     not subvoltage
-    and parkingLight
+    and parkingLightCondition
     and (after subvoltage)
-    => (after not parkingLight)
+    => (after not parkingLights)
   )
 }
 
@@ -69,5 +70,7 @@ check ELS48 {
 // headlights are activated with a fixed illumination area of 220m and 100%
 // luminous strength (i.e. highBeamMotor = 7 and highBeamRange = 100).
 check ELS49 {
-
+  always (
+    no CameraReadyVehicle => not activeAdaptiveHighBeam
+  )
 }

@@ -111,10 +111,10 @@ pred inactiveReverseLight {
 // ----------------------------------------------------------------------------
 
 pred activeAdaptiveHighBeam {
-  {
-    Vehicle . lightRotarySwitch = Auto
-    some PitmanArmBackward
-  }
+  Vehicle . lightRotarySwitch = Auto
+  some PitmanArmBackward
+  not subvoltage
+  some CameraReadyVehicle
 }
 
 pred activeHighBeam {
@@ -219,37 +219,36 @@ pred inactiveLowBeamRight {
 // ----------------------------------------------------------------------------
 
 pred activeCorneringLightLeft {
-  (some LowBeam
-    and (blinkingLeft or tipBlinkingLeft or some SteeringLeft)
-    and Vehicle . currentSpeed = Low)
-  or
   (
-    some ReverseGearVehicle
-  )
+    (some LowBeam
+      and (blinkingLeft or tipBlinkingLeft or some SteeringLeft)
+      and Vehicle . currentSpeed = Low)
+    or
+    (
+      some ReverseGearVehicle
+    )
+  ) and not subvoltage
+  
 }
 
 pred inactiveCorneringLightLeft {
-  not (some LowBeam
-    and (blinkingLeft or tipBlinkingLeft or some SteeringLeft)
-    and Vehicle . currentSpeed = Low) and
-  no ReverseGearVehicle
+  not activeCorneringLightLeft
 }
 
 pred activeCorneringLightRight {
-  (some LowBeam
-    and (blinkingRight or tipBlinkingRight or some SteeringRight)
-    and Vehicle . currentSpeed = Low)
-  or
   (
-    some ReverseGearVehicle
-  )
+    (some LowBeam
+      and (blinkingRight or tipBlinkingRight or some SteeringRight)
+      and Vehicle . currentSpeed = Low)
+    or
+    (
+      some ReverseGearVehicle
+    )
+  ) and not subvoltage
 }
 
 pred inactiveCorneringLightRight {
-  not (some LowBeam
-    and (blinkingRight or tipBlinkingRight or some SteeringRight)
-    and Vehicle . currentSpeed = Low) and
-  no ReverseGearVehicle
+  not activeCorneringLightRight
 }
 
 // ----------------------------------------------------------------------------
