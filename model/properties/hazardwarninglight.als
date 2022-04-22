@@ -1,6 +1,7 @@
 module properties/hazardwarninglight
 
 open structure/structure
+open visualization
 
 // ELS-8 | As long as the hazard warning light switch is pressed (active), all
 // direction indicators flash synchronously. If the ignition key is in the
@@ -8,18 +9,16 @@ open structure/structure
 // not in the lock, the pulse ratio is 1:2.
 check ELS8 {
   always (
-    some HazardWarningVehicle => {
-      eventually some Blink
-
-      // It is synchronous, which means, no direction blinking is activated
-      // or both are activated at the same time.
-      no Blink or (some BlinkLeft and some BlinkRight)
-
-      // Whenever it blinks or stops, the next operation should occur
-      // eventually after it.
-      some Blink => eventually no Blink
-      no Blink => eventually some Blink
-    }
+    some HazardWarningVehicle => (
+      always
+      synchronousBlinkLights
+      and blinkLightCycle
+      and some HazardWarningVehicle
+    ) or (
+      (
+        synchronousBlinkLights and blinkLightCycle
+      ) until no HazardWarningVehicle
+    )
   )
 }
 
@@ -29,7 +28,8 @@ check ELS8 {
 // such that, in case of an emergency situation, the hazard warning light is
 // active as long as possible before the car battery is empty.
 check ELS9 {
-
+  // The ratio was not modelled, because it would require us to remove the time
+  // abstraction of the system.
 }
 
 // ELS-10 | The duration of a flashing cycle is 1 second.
@@ -53,11 +53,12 @@ check ELS11 {
 // On, the direction blinking cycle should be started (see Req. ELS-1).
 check ELS12 {
   always (
-    ((some HazardWarningVehicle);
-     (no HazardWarningVehicle and directionBlinking and engineOn))
-    => always after directionBlinking => (
-      eventually some Blink and eventually no Blink
-    )
+    {
+      before some HazardWarningVehicle
+      no HazardWarningVehicle
+      some PitmanArmUpDown
+      engineOn
+    } => eventually some Blink
   )
 }
 

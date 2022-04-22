@@ -88,7 +88,9 @@ pred brakeLightCycle {
 
 pred activateBrakeLightCycle {
   (
-    always brakeLightCycle
+    always
+    brakeLightCycle
+    and Vehicle . brakePedal != Low
   ) or (
     brakeLightCycle until Vehicle . brakePedal = Low
   )
@@ -306,6 +308,32 @@ pred inactiveTailLampRight {
   Vehicle . brakePedal = Low and
   no LowBeam and
   no HighBeam
+}
+
+// ----------------------------------------------------------------------------
+// Hazard Warning
+// ----------------------------------------------------------------------------
+
+pred blinkLightCycle {
+  eventually no Blink
+  eventually some Blink
+}
+
+pred synchronousBlinkLights {
+  no Blink or (some BlinkLeft and some BlinkRight)
+}
+
+pred activateHazardWarning {
+  (
+    always
+    synchronousBlinkLights
+    and blinkLightCycle
+    and some HazardWarningVehicle
+  ) or (
+    (
+      synchronousBlinkLights and blinkLightCycle
+    ) until no HazardWarningVehicle
+  )
 }
 
 // ----------------------------------------------------------------------------
