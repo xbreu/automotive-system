@@ -7,7 +7,7 @@ open structure/structure
 // is not available.
 check ELS42 {
   always (
-    subvoltage => not adaptiveHighBeam
+    subvoltage => not activeAdaptiveHighBeam
   )
 }
 
