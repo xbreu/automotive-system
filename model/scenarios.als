@@ -3,20 +3,6 @@ module scenarios
 open visualization
 
 // ----------------------------------------------------------------------------
-// Auxiliar Relations
-// ----------------------------------------------------------------------------
-
-one sig Actuators {}
-fun instance : Actuators -> (Actuator + ActuatorWithLevel) {
-  Actuators -> (Actuator + ActuatorWithLevel)
-}
-
-one sig UserInterface {}
-fun component : UserInterface -> PitmanArm {
-  UserInterface -> PitmanArm
-}
-
-// ----------------------------------------------------------------------------
 // Scenarios
 // ----------------------------------------------------------------------------
 
