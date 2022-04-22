@@ -242,21 +242,45 @@ pred blinkRightThreeTimes {
 pred activeLowBeamLeft {
   Vehicle . keyState in KeyInserted + KeyInIgnitionOnPosition and
   (Vehicle . lightRotarySwitch = On or some DaytimeLights)
+  or
+  (Vehicle . lightRotarySwitch = Auto and
+    ignitionOnLock and
+    Vehicle . brightnessSensor = Low)
+  or
+  (some AmbientLighting and
+    Vehicle . keyState in NoKeyInserted + KeyInserted and
+    Vehicle . brightnessSensor = Low)
 }
 
 pred inactiveLowBeamLeft {
-  Vehicle . keyState != KeyInIgnitionOnPosition and
-  Vehicle . lightRotarySwitch = Auto
+  (Vehicle . keyState != KeyInIgnitionOnPosition and
+  Vehicle . lightRotarySwitch = Auto)
+  or
+  (Vehicle . lightRotarySwitch = Auto and
+  ignitionOnLock and
+  Vehicle . brightnessSensor = High)
 }
 
 pred activeLowBeamRight {
   Vehicle . keyState in KeyInserted + KeyInIgnitionOnPosition and
   (Vehicle . lightRotarySwitch = On or some DaytimeLights)
+  or
+  (Vehicle . lightRotarySwitch = Auto and
+    ignitionOnLock and
+    Vehicle . brightnessSensor = Low)
+  or
+  (some AmbientLighting and
+    Vehicle . keyState in NoKeyInserted + KeyInserted and
+    Vehicle . brightnessSensor = Low)
 }
 
 pred inactiveLowBeamRight {
-  Vehicle . keyState != KeyInIgnitionOnPosition and
-  Vehicle . lightRotarySwitch = Auto
+  (Vehicle . keyState != KeyInIgnitionOnPosition and
+  Vehicle . lightRotarySwitch = Auto)
+  or
+  (Vehicle . lightRotarySwitch = Auto and
+  ignitionOnLock and
+  Vehicle . brightnessSensor = High)
 }
 
 // ----------------------------------------------------------------------------
