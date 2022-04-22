@@ -12,32 +12,43 @@
    <type name="String"/>
    <type name="univ"/>
    <type name="seq/Int"/>
-   <type name="visualization/structure/predicates/signatures/Auto"/>
-   <type name="visualization/structure/predicates/signatures/Downward"/>
-   <type name="visualization/structure/predicates/signatures/High"/>
-   <type name="visualization/structure/predicates/signatures/HighDegree"/>
-   <type name="visualization/structure/predicates/signatures/KeyInIgnitionOnPosition"/>
-   <type name="visualization/structure/predicates/signatures/KeyInserted"/>
-   <type name="visualization/structure/predicates/signatures/Low"/>
-   <type name="visualization/structure/predicates/signatures/LowDegree"/>
-   <type name="visualization/structure/predicates/signatures/Medium"/>
-   <type name="visualization/structure/predicates/signatures/NoKeyInserted"/>
-   <type name="visualization/structure/predicates/signatures/Off"/>
-   <type name="visualization/structure/predicates/signatures/On"/>
-   <type name="visualization/structure/predicates/signatures/PitmanArmBackward"/>
-   <type name="visualization/structure/predicates/signatures/PitmanArmForward"/>
-   <type name="visualization/structure/predicates/signatures/PitmanArmUpDown"/>
-   <type name="visualization/structure/predicates/signatures/ReverseLight"/>
-   <type name="visualization/structure/predicates/signatures/SteeringLeft"/>
-   <type name="visualization/structure/predicates/signatures/SteeringRight"/>
-   <type name="visualization/structure/predicates/signatures/Upward"/>
-   <type name="visualization/structure/predicates/signatures/open$3/Ord"/>
-   <type name="visualization/structure/predicates/signatures/open$4/Ord"/>
-   <type name="visualization/structure/predicates/signatures/open$5/Ord"/>
-   <type name="visualization/structure/predicates/signatures/open$6/Ord"/>
-   <type name="visualization/structure/predicates/signatures/ordering/Ord"/>
-   <set name="visualization/structure/predicates/signatures/HighMotorHighBeam" type="visualization/structure/predicates/signatures/HighBeam"/>
-   <set name="visualization/structure/predicates/signatures/HighRangeHighBeam" type="visualization/structure/predicates/signatures/HighBeam"/>
+   <type name="structure/predicates/signatures/Auto"/>
+   <type name="structure/predicates/signatures/BlinkLeft"/>
+   <type name="structure/predicates/signatures/BlinkRight"/>
+   <type name="structure/predicates/signatures/BrakeLight"/>
+   <type name="structure/predicates/signatures/CorneringLightLeft"/>
+   <type name="structure/predicates/signatures/CorneringLightRight"/>
+   <type name="structure/predicates/signatures/Downward"/>
+   <type name="structure/predicates/signatures/High"/>
+   <type name="structure/predicates/signatures/HighBeam"/>
+   <type name="structure/predicates/signatures/HighDegree"/>
+   <type name="structure/predicates/signatures/KeyInIgnitionOnPosition"/>
+   <type name="structure/predicates/signatures/KeyInserted"/>
+   <type name="structure/predicates/signatures/Low"/>
+   <type name="structure/predicates/signatures/LowBeamLeft"/>
+   <type name="structure/predicates/signatures/LowBeamRight"/>
+   <type name="structure/predicates/signatures/LowDegree"/>
+   <type name="structure/predicates/signatures/Medium"/>
+   <type name="structure/predicates/signatures/NoKeyInserted"/>
+   <type name="structure/predicates/signatures/Off"/>
+   <type name="structure/predicates/signatures/On"/>
+   <type name="structure/predicates/signatures/PitmanArmBackward"/>
+   <type name="structure/predicates/signatures/PitmanArmForward"/>
+   <type name="structure/predicates/signatures/PitmanArmUpDown"/>
+   <type name="structure/predicates/signatures/ReverseLight"/>
+   <type name="structure/predicates/signatures/SteeringLeft"/>
+   <type name="structure/predicates/signatures/SteeringRight"/>
+   <type name="structure/predicates/signatures/SteeringWheel"/>
+   <type name="structure/predicates/signatures/TailLampLeft"/>
+   <type name="structure/predicates/signatures/TailLampRight"/>
+   <type name="structure/predicates/signatures/Upward"/>
+   <type name="structure/predicates/signatures/open$3/Ord"/>
+   <type name="structure/predicates/signatures/open$4/Ord"/>
+   <type name="structure/predicates/signatures/open$5/Ord"/>
+   <type name="structure/predicates/signatures/open$6/Ord"/>
+   <type name="structure/predicates/signatures/ordering/Ord"/>
+   <set name="structure/predicates/signatures/HighMotorHighBeam" type="structure/predicates/signatures/HighBeam"/>
+   <set name="structure/predicates/signatures/HighRangeHighBeam" type="structure/predicates/signatures/HighBeam"/>
 </node>
 
 <node color="Green" label="BlinkLeft">
@@ -132,131 +143,98 @@
    <type name="visualization/DummySensor"/>
 </node>
 
-<node label="&#x00b4;BrakeLight">
-   <type name="visualization/structure/predicates/signatures/BrakeLight"/>
-</node>
-
 <node label="AmbientLighting">
-   <set name="visualization/structure/predicates/signatures/AmbientLighting" type="visualization/structure/predicates/signatures/Vehicle"/>
-</node>
-
-<node label="BlinkLeft">
-   <type name="visualization/structure/predicates/signatures/BlinkLeft"/>
-</node>
-
-<node label="BlinkRight">
-   <type name="visualization/structure/predicates/signatures/BlinkRight"/>
+   <set name="structure/predicates/signatures/AmbientLighting" type="structure/predicates/signatures/Vehicle"/>
 </node>
 
 <node label="Camera">
    <type name="visualization/NotReadyCamera"/>
 </node>
 
+<node label="CameraReadyVehicle">
+   <set name="structure/predicates/signatures/CameraReadyVehicle" type="structure/predicates/signatures/Vehicle"/>
+</node>
+
 <node label="ClosedDoors">
    <type name="visualization/SomeOpenDoor"/>
 </node>
 
-<node label="CorneringLightLeft">
-   <type name="visualization/structure/predicates/signatures/CorneringLightLeft"/>
+<node label="ClosedDoorsVehicle">
+   <set name="structure/predicates/signatures/ClosedDoorsVehicle" type="structure/predicates/signatures/Vehicle"/>
 </node>
 
-<node label="CorneringLightRight">
-   <type name="visualization/structure/predicates/signatures/CorneringLightRight"/>
+<node label="DarknessModeVehicle">
+   <set name="structure/predicates/signatures/DarknessModeVehicle" type="structure/predicates/signatures/ArmoredVehicle"/>
 </node>
 
 <node label="DaytimeLights">
-   <set name="visualization/structure/predicates/signatures/DaytimeLights" type="visualization/structure/predicates/signatures/Vehicle"/>
+   <set name="structure/predicates/signatures/DaytimeLights" type="structure/predicates/signatures/Vehicle"/>
 </node>
 
 <node label="Engine">
    <type name="visualization/EngineOff"/>
 </node>
 
-<node label="HighBeam">
-   <type name="visualization/structure/predicates/signatures/HighBeam"/>
+<node label="HazardWarningVehicle">
+   <set name="structure/predicates/signatures/HazardWarningVehicle" type="structure/predicates/signatures/Vehicle"/>
 </node>
 
 <node label="Key">
    <type name="visualization/NoKey"/>
 </node>
 
-<node label="LowBeamLeft">
-   <type name="visualization/structure/predicates/signatures/LowBeamLeft"/>
-</node>
-
-<node label="LowBeamRight">
-   <type name="visualization/structure/predicates/signatures/LowBeamRight"/>
-</node>
-
 <node label="NorthAmericanVehicle">
-   <set name="visualization/structure/predicates/signatures/NorthAmericanVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
+   <set name="structure/predicates/signatures/NorthAmericanVehicle" type="structure/predicates/signatures/Vehicle"/>
+</node>
+
+<node label="OncommingTrafficVehicle">
+   <set name="structure/predicates/signatures/OncommingTrafficVehicle" type="structure/predicates/signatures/Vehicle"/>
+</node>
+
+<node label="ReverseGearVehicle">
+   <set name="structure/predicates/signatures/ReverseGearVehicle" type="structure/predicates/signatures/Vehicle"/>
 </node>
 
 <node label="RightHandVehicle">
-   <set name="visualization/structure/predicates/signatures/RightHandVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
+   <set name="structure/predicates/signatures/RightHandVehicle" type="structure/predicates/signatures/Vehicle"/>
 </node>
 
 <node label="System">
    <type name="visualization/System"/>
 </node>
 
-<node label="TailLampLeft">
-   <type name="visualization/structure/predicates/signatures/TailLampLeft"/>
-</node>
-
-<node label="TailLampRight">
-   <type name="visualization/structure/predicates/signatures/TailLampRight"/>
-</node>
-
 <node shape="Ellipse" color="Gray" label="Actuators">
    <type name="visualization/ActuatorSystem"/>
-</node>
-
-<node shape="Ellipse" color="Gray" label="PitmanArm">
-   <type name="visualization/structure/predicates/signatures/PitmanArm"/>
 </node>
 
 <node shape="Ellipse" color="Gray" label="Sensors">
    <type name="visualization/SensorSystem"/>
 </node>
 
+<node style="Bold" label="ArmoredVehicle">
+   <type name="structure/predicates/signatures/ArmoredVehicle"/>
+</node>
+
 <node style="Dotted" shape="Ellipse" color="Gray" label="Vehicle">
-   <type name="visualization/structure/predicates/signatures/Vehicle"/>
+   <type name="structure/predicates/signatures/Vehicle"/>
 </node>
 
 <node style="Solid" shape="Dbl Circle">
    <type name="visualization/DummyElement"/>
 </node>
 
-<node style="inherit" label="CameraReadyVehicle">
-   <set name="visualization/structure/predicates/signatures/CameraReadyVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
-</node>
-
-<node style="inherit" label="ClosedDoorsVehicle">
-   <set name="visualization/structure/predicates/signatures/ClosedDoorsVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
-</node>
-
-<node style="inherit" label="DarknessModeVehicle">
-   <set name="visualization/structure/predicates/signatures/DarknessModeVehicle" type="visualization/structure/predicates/signatures/ArmoredVehicle"/>
-</node>
-
-<node style="inherit" label="HazardWarningVehicle">
-   <set name="visualization/structure/predicates/signatures/HazardWarningVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
-</node>
-
-<node style="inherit" label="OncommingTrafficVehicle">
-   <set name="visualization/structure/predicates/signatures/OncommingTrafficVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
-</node>
-
-<node style="inherit" label="everseGearVehicle">
-   <set name="visualization/structure/predicates/signatures/ReverseGearVehicle" type="visualization/structure/predicates/signatures/Vehicle"/>
+<node style="Solid" shape="Ellipse" color="Gray">
+   <type name="structure/predicates/signatures/PitmanArm"/>
 </node>
 
 <node visible="no">
-   <type name="visualization/structure/predicates/signatures/PitmanArmDegree"/>
-   <type name="visualization/structure/predicates/signatures/PitmanArmUpDownPosition"/>
-   <type name="visualization/structure/predicates/signatures/SteeringWheel"/>
-   <type name="visualization/structure/predicates/signatures/SwitchState"/>
+   <type name="structure/predicates/signatures/Actuator"/>
+   <type name="structure/predicates/signatures/ActuatorWithLevel"/>
+   <type name="structure/predicates/signatures/KeyStatusAndPosition"/>
+   <type name="structure/predicates/signatures/Level"/>
+   <type name="structure/predicates/signatures/PitmanArmDegree"/>
+   <type name="structure/predicates/signatures/PitmanArmUpDownPosition"/>
+   <type name="structure/predicates/signatures/SwitchState"/>
 </node>
 
 <node visible="no" color="Green" label="Camera">
@@ -277,11 +255,6 @@
 
 <node visible="no" color="Yellow" label="VoltageBattery">
    <type name="visualization/MediumVoltageBattery"/>
-</node>
-
-<node visible="no" label="Actuator">
-   <type name="visualization/structure/predicates/signatures/Actuator"/>
-   <type name="visualization/structure/predicates/signatures/ActuatorWithLevel"/>
 </node>
 
 <node visible="no" label="BlinkLeft">
@@ -310,14 +283,6 @@
 
 <node visible="no" label="ForwardGear">
    <type name="visualization/ForwardGear"/>
-</node>
-
-<node visible="no" label="KeyStatusAndPosition">
-   <type name="visualization/structure/predicates/signatures/KeyStatusAndPosition"/>
-</node>
-
-<node visible="no" label="Level">
-   <type name="visualization/structure/predicates/signatures/Level"/>
 </node>
 
 <node visible="no" label="LowBeamLeft">
@@ -352,10 +317,6 @@
    <type name="visualization/InactiveTailLampRight"/>
 </node>
 
-<node visible="no" style="Bold" label="ArmoredVehicle">
-   <type name="visualization/structure/predicates/signatures/ArmoredVehicle"/>
-</node>
-
 <node visible="yes" label="Brightness">
    <type name="visualization/LowBrightness"/>
 </node>
@@ -369,15 +330,15 @@
 </edge>
 
 <edge visible="no" attribute="yes">
-   <relation name="brakePedal"> <type name="visualization/structure/predicates/signatures/Vehicle"/> <type name="visualization/structure/predicates/signatures/Level"/> </relation>
-   <relation name="brightnessSensor"> <type name="visualization/structure/predicates/signatures/Vehicle"/> <type name="visualization/structure/predicates/signatures/Level"/> </relation>
-   <relation name="currentSpeed"> <type name="visualization/structure/predicates/signatures/Vehicle"/> <type name="visualization/structure/predicates/signatures/Level"/> </relation>
-   <relation name="keyState"> <type name="visualization/structure/predicates/signatures/Vehicle"/> <type name="visualization/structure/predicates/signatures/KeyStatusAndPosition"/> </relation>
-   <relation name="level"> <type name="visualization/structure/predicates/signatures/ActuatorWithLevel"/> <type name="visualization/structure/predicates/signatures/Level"/> </relation>
-   <relation name="lightRotarySwitch"> <type name="visualization/structure/predicates/signatures/Vehicle"/> <type name="visualization/structure/predicates/signatures/SwitchState"/> </relation>
-   <relation name="pitmanArmDegree"> <type name="visualization/structure/predicates/signatures/PitmanArmUpDown"/> <type name="visualization/structure/predicates/signatures/PitmanArmDegree"/> </relation>
-   <relation name="pitmanArmUpDownPosition"> <type name="visualization/structure/predicates/signatures/PitmanArmUpDown"/> <type name="visualization/structure/predicates/signatures/PitmanArmUpDownPosition"/> </relation>
-   <relation name="voltageBattery"> <type name="visualization/structure/predicates/signatures/Vehicle"/> <type name="visualization/structure/predicates/signatures/Level"/> </relation>
+   <relation name="brakePedal"> <type name="structure/predicates/signatures/Vehicle"/> <type name="structure/predicates/signatures/Level"/> </relation>
+   <relation name="brightnessSensor"> <type name="structure/predicates/signatures/Vehicle"/> <type name="structure/predicates/signatures/Level"/> </relation>
+   <relation name="currentSpeed"> <type name="structure/predicates/signatures/Vehicle"/> <type name="structure/predicates/signatures/Level"/> </relation>
+   <relation name="keyState"> <type name="structure/predicates/signatures/Vehicle"/> <type name="structure/predicates/signatures/KeyStatusAndPosition"/> </relation>
+   <relation name="level"> <type name="structure/predicates/signatures/ActuatorWithLevel"/> <type name="structure/predicates/signatures/Level"/> </relation>
+   <relation name="lightRotarySwitch"> <type name="structure/predicates/signatures/Vehicle"/> <type name="structure/predicates/signatures/SwitchState"/> </relation>
+   <relation name="pitmanArmDegree"> <type name="structure/predicates/signatures/PitmanArmUpDown"/> <type name="structure/predicates/signatures/PitmanArmDegree"/> </relation>
+   <relation name="pitmanArmUpDownPosition"> <type name="structure/predicates/signatures/PitmanArmUpDown"/> <type name="structure/predicates/signatures/PitmanArmUpDownPosition"/> </relation>
+   <relation name="voltageBattery"> <type name="structure/predicates/signatures/Vehicle"/> <type name="structure/predicates/signatures/Level"/> </relation>
 </edge>
 
 </view>
