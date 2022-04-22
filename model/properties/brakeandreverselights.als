@@ -19,7 +19,16 @@ check ELS39 {
 // only when the brake pedal is in its neutral position again
 // (i.e. brakePedal = 0).
 check ELS40 {
-
+  always (
+    Vehicle . brakePedal = High =>
+    (always {
+      eventually some BrakeLight
+      eventually no BrakeLight
+    }) or ({
+      eventually some BrakeLight
+      eventually no BrakeLight
+    } until (Vehicle . brakePedal = Low))
+  )
 }
 
 // ELS-41 | The reverse light is activated whenever the reverse gear is
