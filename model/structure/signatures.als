@@ -50,7 +50,7 @@ lone var sig BlinkLeft
 one sig Vehicle {
   , var lightRotarySwitch: one SwitchState
   , var keyState: one KeyStatusAndPosition
-  , var brightnessSensor: one Level
+  , var brightnessSensor: one Level // 200lx, 250lx
   , var brakePedal: one Level
   , var voltageBattery: one Level // 8.5V, 14.5V
   , var currentSpeed: one Level // 10 km/h, 30 km/h

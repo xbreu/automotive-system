@@ -406,3 +406,9 @@ fact {
     subvoltage => no AmbientLighting
   )
 }
+
+fact {
+  always (
+    some DarknessModeVehicle => no AmbientLighting
+  )
+}
