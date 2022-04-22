@@ -32,9 +32,15 @@ check ELS31 {
 // beam is activated by moving the pitman arm to the back 4.
 check ELS32 {
   always (
-    Vehicle . lightRotarySwitch = Auto and some PitmanArmBackward =>
+    Vehicle . lightRotarySwitch = Auto and
+    some PitmanArmBackward and 
+    // ELS 42
+    not subvoltage and
+    // ELS 49
+    some CameraReadyVehicle
+    =>
     activeAdaptiveHighBeam
-  )
+  ) 
 }
 
 // ELS-33 | If adaptive high beam headlight is activated and the vehicle drives

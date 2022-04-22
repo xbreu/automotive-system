@@ -131,6 +131,7 @@ check ELS24 {
     (some LowBeam
       and (blinkingLeft or tipBlinkingLeft or some SteeringLeft)
       and Vehicle . currentSpeed = Low) 
+      // ELS 45
       and not subvoltage
       and no DarknessModeVehicle
     => some CorneringLightLeft
@@ -138,6 +139,7 @@ check ELS24 {
     (some LowBeam
       and (blinkingRight or tipBlinkingRight or some SteeringRight)
       and Vehicle . currentSpeed = Low)
+      // ELS 45
       and not subvoltage
       and no DarknessModeVehicle
     => some CorneringLightRight
@@ -159,7 +161,8 @@ check ELS26 {
   always {
     (some LowBeam
       and some SteeringLeft
-      and Vehicle . currentSpeed = Low) and 
+      and Vehicle . currentSpeed = Low) and
+      // ELS 45
       not subvoltage and 
       no DarknessModeVehicle
     => some CorneringLightLeft
@@ -167,6 +170,7 @@ check ELS26 {
     (some LowBeam
       and some SteeringRight
       and Vehicle . currentSpeed = Low)
+      // ELS 45
       and not subvoltage
       and no DarknessModeVehicle
     => some CorneringLightRight
@@ -179,6 +183,7 @@ check ELS26 {
 check ELS27 {
   always (
     some ReverseGearVehicle
+    // ELS 45
     and not subvoltage
     and no DarknessModeVehicle
     => some CorneringLightLeft and some CorneringLightRight
