@@ -353,12 +353,15 @@ pred updateActuators {
 // Brake light cycles when the brake pedal is very deflected, until it is in a
 // neutral position again.
 fact BrakeLightCyclesWhenPedalIsHigh {
-  always (
-    Vehicle . brakePedal = High => {
+  always Vehicle . brakePedal = High => {
+    (always {
       eventually some BrakeLight
       eventually no BrakeLight
-    } until (Vehicle . brakePedal = Low)
-  )
+    }) or ({
+      eventually some BrakeLight
+      eventually no BrakeLight
+    } until (Vehicle . brakePedal = Low))
+  }
 }
 
 // High beam is activated when adaptive high beam is active and the vehicle is
@@ -379,7 +382,7 @@ fact {
 // priority over Req. ELS-17.
 fact {
   always {
-    some LowBeam and 
+    some LowBeam and
     Vehicle . keyState = KeyInserted and
     no AmbientLighting
     => LowBeam . level = Medium
@@ -391,7 +394,7 @@ fact {
     Vehicle . keyState in NoKeyInserted and
     Vehicle . lightRotarySwitch in On and
     some PitmanArmUpDown
-    => 
+    =>
     parkingLights
   }
 }

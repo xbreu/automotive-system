@@ -1,12 +1,15 @@
 module properties/brakeandreverselights
 
 open structure/structure
+open visualization
 
 // ELS-39 | If the brake pedal is deflected more than 3, all brake lamps have
 // to be activated until the deflection is lower than 1 again.
 check ELS39 {
   always (
-    Vehicle . brakePedal = High => some BrakeLight until Vehicle . brakePedal = Low
+    Vehicle . brakePedal = Medium =>
+    ((some BrakeLight) until (Vehicle . brakePedal != Medium))
+    or (always some BrakeLight)
   )
 }
 
