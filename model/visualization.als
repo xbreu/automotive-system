@@ -1,6 +1,7 @@
 module visualization
 
 open structure/structure
+open util/boolean
 
 // ----------------------------------------------------------------------------
 // Aggregator Signatures
@@ -28,7 +29,6 @@ fact {
 
 abstract sig DummyActuator extends DummyElement {}
 
-// TODO: implement high beam
 one sig ActiveBlinkLeft
       , InactiveBlinkLeft
       , ActiveBlinkRight
@@ -37,6 +37,7 @@ one sig ActiveBlinkLeft
       , InactiveLowBeamLeft
       , ActiveLowBeamRight
       , InactiveLowBeamRight
+      , InactiveHighBeam
       , ActiveCorneringLightLeft
       , InactiveCorneringLightLeft
       , ActiveCorneringLightRight
@@ -51,11 +52,18 @@ one sig ActiveBlinkLeft
       , InactiveReverseLight
 extends DummyActuator {}
 
+one sig ActiveHighBeam
+extends DummyActuator {
+  , highRange: one Bool
+  , highMotor: one Bool
+}
+
 fact {
   always {
     one component . (ActiveBlinkLeft + InactiveBlinkLeft)
     one component . (ActiveBlinkRight + InactiveBlinkRight)
-    one component . (ActiveLowBeamLeft + InactiveLowBeamLeft)
+    one component . (ActiveLowBeamLeft + InactiveHighBeam)
+    one component . (ActiveHighBeam + InactiveLowBeamLeft)
     one component . (ActiveLowBeamRight + InactiveLowBeamRight)
     one component . (ActiveCorneringLightLeft + InactiveCorneringLightLeft)
     one component . (ActiveCorneringLightRight + InactiveCorneringLightRight)
@@ -68,12 +76,16 @@ fact {
     some BlinkRight <=> some component . ActiveBlinkRight
     some LowBeamLeft <=> some component . ActiveLowBeamLeft
     some LowBeamRight <=> some component . ActiveLowBeamRight
+    some HighBeam <=> some component . ActiveHighBeam
     some CorneringLightLeft <=> some component . ActiveCorneringLightLeft
     some CorneringLightRight <=> some component . ActiveCorneringLightRight
     some BrakeLight <=> some component . ActiveBrakeLight
     some TailLampLeft <=> some component . ActiveTailLampLeft
     some TailLampRight <=> some component . ActiveTailLampRight
     some ReverseLight <=> some component . ActiveReverseLight
+
+    some HighRangeHighBeam <=> ActiveHighBeam . highRange = True
+    some HighMotorHighBeam <=> ActiveHighBeam . highMotor = True
   }
 }
 
@@ -145,3 +157,7 @@ fact {
     some ReverseGearVehicle <=> some component . ReverseGear
   }
 }
+
+// ----------------------------------------------------------------------------
+// User Interface
+// ----------------------------------------------------------------------------
