@@ -413,3 +413,9 @@ fact {
     }
   )
 }
+
+fact {
+  always (
+    some DarknessModeVehicle => no AmbientLighting
+  )
+}
