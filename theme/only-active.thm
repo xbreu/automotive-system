@@ -79,6 +79,10 @@
    <type name="visualization/ActiveCorneringLightRight"/>
 </node>
 
+<node color="Green" label="HighBeam">
+   <type name="visualization/ActiveHighBeam"/>
+</node>
+
 <node color="Green" label="LeftSteeringWheel">
    <type name="visualization/LeftSteeringWheel"/>
 </node>
@@ -175,6 +179,10 @@
    <type name="visualization/EngineOff"/>
 </node>
 
+<node label="False">
+   <type name="visualization/boolean/False"/>
+</node>
+
 <node label="HazardWarningVehicle">
    <set name="structure/predicates/signatures/HazardWarningVehicle" type="structure/predicates/signatures/Vehicle"/>
 </node>
@@ -203,6 +211,10 @@
    <type name="visualization/System"/>
 </node>
 
+<node label="True">
+   <type name="visualization/boolean/True"/>
+</node>
+
 <node shape="Ellipse" color="Gray" label="Actuators">
    <type name="visualization/ActuatorSystem"/>
 </node>
@@ -228,6 +240,7 @@
 </node>
 
 <node visible="no">
+   <type name="visualization/boolean/Bool"/>
    <type name="structure/predicates/signatures/Actuator"/>
    <type name="structure/predicates/signatures/ActuatorWithLevel"/>
    <type name="structure/predicates/signatures/KeyStatusAndPosition"/>
@@ -285,6 +298,10 @@
    <type name="visualization/ForwardGear"/>
 </node>
 
+<node visible="no" label="HighBeam">
+   <type name="visualization/InactiveHighBeam"/>
+</node>
+
 <node visible="no" label="LowBeamLeft">
    <type name="visualization/InactiveLowBeamLeft"/>
 </node>
@@ -333,6 +350,8 @@
    <relation name="brakePedal"> <type name="structure/predicates/signatures/Vehicle"/> <type name="structure/predicates/signatures/Level"/> </relation>
    <relation name="brightnessSensor"> <type name="structure/predicates/signatures/Vehicle"/> <type name="structure/predicates/signatures/Level"/> </relation>
    <relation name="currentSpeed"> <type name="structure/predicates/signatures/Vehicle"/> <type name="structure/predicates/signatures/Level"/> </relation>
+   <relation name="highMotor"> <type name="visualization/ActiveHighBeam"/> <type name="visualization/boolean/Bool"/> </relation>
+   <relation name="highRange"> <type name="visualization/ActiveHighBeam"/> <type name="visualization/boolean/Bool"/> </relation>
    <relation name="keyState"> <type name="structure/predicates/signatures/Vehicle"/> <type name="structure/predicates/signatures/KeyStatusAndPosition"/> </relation>
    <relation name="level"> <type name="structure/predicates/signatures/ActuatorWithLevel"/> <type name="structure/predicates/signatures/Level"/> </relation>
    <relation name="lightRotarySwitch"> <type name="structure/predicates/signatures/Vehicle"/> <type name="structure/predicates/signatures/SwitchState"/> </relation>
