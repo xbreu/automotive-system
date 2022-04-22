@@ -403,6 +403,12 @@ fact {
 
 fact {
   always (
+    some HazardWarningVehicle => activateHazardWarning
+  )
+}
+
+fact {
+  always (
     subvoltage => no AmbientLighting
   )
 }
