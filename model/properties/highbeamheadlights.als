@@ -8,7 +8,10 @@ open visualization
 // activated.
 check ELS30 {
   always (
-    some PitmanArmForward => some HighBeam
+    some PitmanArmForward and not {
+      // ELS34
+      some OncommingTrafficVehicle
+    } => some HighBeam
   )
 }
 
@@ -18,8 +21,10 @@ check ELS30 {
 // (i.e. highBeamMotor = 7 and highBeamRange = 100).
 check ELS31 {
   always (
-    Vehicle . lightRotarySwitch = On and some PitmanArmForward
-    => some HighBeam
+    Vehicle . lightRotarySwitch = On and some PitmanArmForward and not {
+      // ELS34
+      some OncommingTrafficVehicle
+    } => some HighBeam
   )
 }
 
@@ -43,6 +48,9 @@ check ELS33 {
       activeAdaptiveHighBeam
       Vehicle . currentSpeed = High
       no OncommingTrafficVehicle
+    } and not {
+      // ELS34
+      some OncommingTrafficVehicle
     } => some HighBeam
   )
 }
@@ -100,8 +108,6 @@ check ELS38 {
     } => {
       not activeAdaptiveHighBeam
       no HighBeam
-      some LowBeamLeft
-      some LowBeamRight
     }
   )
 }
