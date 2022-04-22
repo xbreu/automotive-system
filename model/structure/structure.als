@@ -381,11 +381,20 @@ fact {
 // With additionally activated daytime running light, Req. ELS-15 has
 // priority over Req. ELS-17.
 fact {
-  always (
+  always {
     some LowBeam and 
     Vehicle . keyState = KeyInserted and
     no AmbientLighting
     => LowBeam . level = Medium
-    else LowBeam . level = High
-  )
+  }
+}
+
+fact {
+  always {
+    Vehicle . keyState in NoKeyInserted and
+    Vehicle . lightRotarySwitch in On and
+    some PitmanArmUpDown
+    => 
+    parkingLights
+  }
 }
