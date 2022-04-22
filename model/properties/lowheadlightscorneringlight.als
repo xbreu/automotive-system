@@ -38,7 +38,7 @@ check ELS16 {
   always (
     Vehicle . keyState != KeyInIgnitionOnPosition and
     Vehicle . lightRotarySwitch = Auto =>
-      after no LowBeamLeft + LowBeamRight 
+      no LowBeam 
   )
 }
 
@@ -48,7 +48,9 @@ check ELS16 {
 // or KeyInIgnitionOnPosition). With additionally activated ambient light,
 // ambient light control (Req. ELS-19) has priority over daytime running light.
 check ELS17 {
-
+  always (
+    some DaytimeLights and ignitionOnLock => some LowBeam
+  )
 }
 
 // ELS-18 | If the light rotary switch is in position Auto and the ignition is
@@ -57,7 +59,17 @@ check ELS17 {
 // threshold of 250 lx, the low beam headlights are deactivated. In any case,
 // the low beam headlights remain active at least for 3 seconds.
 check ELS18 {
+  always {
+    Vehicle . lightRotarySwitch = Auto and 
+    ignitionOnLock and
+    Vehicle . brightnessSensor = Low
+      => some LowBeam
 
+    Vehicle . lightRotarySwitch = Auto and 
+    ignitionOnLock and
+    Vehicle . brightnessSensor = High
+      => no LowBeam
+  }
 }
 
 // ELS-19 | Ambient light prolongs (keeps low beam headlamps at 100% if they
@@ -71,7 +83,12 @@ check ELS18 {
 // - Opening or closing a door
 // - Insertion or removal of the ignition key
 check ELS19 {
-
+  always (
+    some AmbientLighting and 
+    Vehicle . keyState in NoKeyInserted + KeyInserted and
+    Vehicle . brightnessSensor = Low
+    => some LowBeam
+  )
 }
 
 // ELS-21 | With activated darkness switch (only armored vehicles) the ambient
@@ -96,7 +113,9 @@ check ELS22 {
 // lamps. In case of direction blinking or hazard blinking, blinking has
 // preference against normal tail lights.
 check ELS23 {
-
+  // The way the systems was modelled, we are not able to verify this check.
+  // It happens because the Blink actuators already has the role of the tail lamp (C)
+  // when it its activated
 }
 
 // ELS-24 | Cornering light: If the low beam headlights are activated and
@@ -108,18 +127,56 @@ check ELS23 {
 // the left cornering light is activated. If driving to the right is indicated,
 // the right cornering light shall be activated.
 check ELS24 {
+  always {
+    (some LowBeam
+      and (blinkingLeft or tipBlinkingLeft or some SteeringLeft)
+      and Vehicle . currentSpeed = Low) and not subvoltage
+    => some CorneringLightLeft
 
+    (some LowBeam
+      and (blinkingRight or tipBlinkingRight or some SteeringRight)
+      and Vehicle . currentSpeed = Low) and not subvoltage
+    => some CorneringLightRight
+  }
 }
 
 // ELS-25 | With activated darkness switch (only armored vehicles) the
 // cornering light is not activated.
 check ELS25 {
-
+  always (
+    some DarknessModeVehicle => no CorneringLight
+  )
 }
 
 // ELS-26 | The cornering light is also activated, if the direction blinking is
 // not activated, but all other constraints (see Req. ELS-24) are fulfilled and
 // the steering wheel deflection is more than ±10◦.
 check ELS26 {
+  
+}
+
+
+// ELS-27 | If reverse gear is activated, both opposite cornering lights are
+// activated.
+check ELS27 {
+
+}
+
+// ELS-28 | Parking light. The parking light is the low beam and the tail lamp
+// on the left or right side of the vehicle to illuminate the vehicle if it is
+// parked on a dark road at night. The parking light is activated, if the
+// key is not inserted, the light switch is in position On, and the pitman
+// arm is engaged in position left or right (2 /3 ). To save battery
+// charge, the parking light is activated with only 10% brightness of the
+// normal low beam lamp and tail lamp. An active ambient light (see
+// Req. ELS-19) delays parking light.
+check ELS28 {
+
+}
+
+// ELS-29 | The normal brightness of low beam lamps, brake lights, direction
+// indicators, tail lamps, cornering lights, and reverse light is 100%.
+
+check ELS29 {
 
 }
