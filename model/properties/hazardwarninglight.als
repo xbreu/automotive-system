@@ -66,6 +66,6 @@ check ELS12 {
 // or stopped if it was started before.
 check ELS13 {
   always (
-    some HazardWarningVehicle => no Blink
+    some HazardWarningVehicle => not (tipBlinkingLeft or tipBlinkingRight)
   )
 }
