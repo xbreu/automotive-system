@@ -164,7 +164,8 @@ pred inactiveHighMotorHighBeam {
 // ----------------------------------------------------------------------------
 
 pred activeBlinkLeft {
-
+  blinkingLeft or
+  tipBlinkingLeft
 }
 
 pred inactiveBlinkLeft {
@@ -172,57 +173,104 @@ pred inactiveBlinkLeft {
 }
 
 pred activeBlinkRight {
-
+  blinkingRight or
+  tipBlinkingRight
 }
 
 pred inactiveBlinkRight {
 
 }
 
-pred activeLowBeamLeft {
+// ----------------------------------------------------------------------------
+// Low Beam
+// ----------------------------------------------------------------------------
 
+pred activeLowBeamLeft {
+  Vehicle . keyState in KeyInserted + KeyInIgnitionOnPosition and
+  (Vehicle . lightRotarySwitch = On or some DaytimeLights)
 }
 
 pred inactiveLowBeamLeft {
-
+  Vehicle . keyState != KeyInIgnitionOnPosition and
+  Vehicle . lightRotarySwitch = Auto
 }
 
 pred activeLowBeamRight {
-
+  Vehicle . keyState in KeyInserted + KeyInIgnitionOnPosition and
+  (Vehicle . lightRotarySwitch = On or some DaytimeLights)
 }
 
 pred inactiveLowBeamRight {
-
+  Vehicle . keyState != KeyInIgnitionOnPosition and
+  Vehicle . lightRotarySwitch = Auto
 }
 
-pred activeCorneringLightLeft {
+// ----------------------------------------------------------------------------
+// Cornering Light
+// ----------------------------------------------------------------------------
 
+pred activeCorneringLightLeft {
+  (some LowBeam 
+    and (blinkingLeft or tipBlinkingLeft or some SteeringLeft) 
+    and Vehicle . currentSpeed = Low)
+  or
+  (
+    some ReverseGearVehicle
+  )
 }
 
 pred inactiveCorneringLightLeft {
-
+  not (some LowBeam 
+    and (blinkingLeft or tipBlinkingLeft or some SteeringLeft) 
+    and Vehicle . currentSpeed = Low) and
+  no ReverseGearVehicle
 }
 
 pred activeCorneringLightRight {
-
+  (some LowBeam 
+    and (blinkingRight or tipBlinkingRight or some SteeringRight) 
+    and Vehicle . currentSpeed = Low)
+  or
+  (
+    some ReverseGearVehicle
+  )
 }
 
 pred inactiveCorneringLightRight {
-
+  not (some LowBeam 
+    and (blinkingRight or tipBlinkingRight or some SteeringRight) 
+    and Vehicle . currentSpeed = Low) and
+  no ReverseGearVehicle
 }
 
+// ----------------------------------------------------------------------------
+// Tail Lamp
+// ----------------------------------------------------------------------------
+
 pred activeTailLampLeft {
-  parkingLightCondition or Vehicle . brakePedal != Low
+  parkingLightCondition or 
+  Vehicle . brakePedal != Low or
+  some LowBeam or
+  some HighBeam
 }
 
 pred inactiveTailLampLeft {
-  not parkingLightCondition and Vehicle . brakePedal = Low
+  not parkingLightCondition and 
+  Vehicle . brakePedal = Low and
+  no LowBeam and
+  no HighBeam
 }
 
 pred activeTailLampRight {
-  parkingLightCondition or Vehicle . brakePedal != Low
+  parkingLightCondition or
+  Vehicle . brakePedal != Low or
+  some LowBeam or
+  some HighBeam
 }
 
 pred inactiveTailLampRight {
-  not parkingLightCondition and Vehicle . brakePedal = Low
+  not parkingLightCondition and
+  Vehicle . brakePedal = Low and
+  no LowBeam and
+  no HighBeam
 }

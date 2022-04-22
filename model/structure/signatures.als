@@ -103,9 +103,27 @@ enum PitmanArmUpDownPosition {
 }
 
 // ----------------------------------------------------------------------------
+// Steering Wheel
+// ----------------------------------------------------------------------------
+
+lone var abstract sig SteeringWheel {}
+
+lone var sig SteeringLeft
+          ,  SteeringRight
+    extends  SteeringWheel {}
+
+// ----------------------------------------------------------------------------
 // Aggregations of Signatures
 // ----------------------------------------------------------------------------
 
 fun Blink : (BlinkLeft + BlinkRight) {
   BlinkLeft + BlinkRight
+}
+
+fun LowBeam : (LowBeamLeft + LowBeamRight) {
+  LowBeamLeft + LowBeamRight
+}
+
+fun CorneringLight : (CorneringLightLeft + CorneringLightRight) {
+  CorneringLightLeft + CorneringLightRight
 }

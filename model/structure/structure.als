@@ -13,6 +13,7 @@ fact init {
   Vehicle . voltageBattery    = Medium
   Vehicle . currentSpeed      = Low
 
+  no SteeringWheel
   no HazardWarningVehicle
   no PitmanArm
   no ReverseGearVehicle
@@ -43,6 +44,12 @@ fact directionDependsOnIgnition {
   always (
     (highBlinkLeft or highBlinkRight)
     => Vehicle . keyState = KeyInIgnitionOnPosition
+  )
+}
+
+fact corneringLightDependsOnDarknessMode {
+  always (
+    some DarknessModeVehicle => no CorneringLight
   )
 }
 
@@ -77,6 +84,11 @@ fact traces {
     or pitmanArmToForward
     or pitmanArmToBackward
     or (some p: PitmanArmUpDownPosition, d: PitmanArmDegree | pitmanArmToUpDown[p, d])
+
+    mantainSteeringWheel
+    or steeringWheelToNeutral
+    or steeringWheelToLeft
+    or steeringWheelToRight
   }
 }
 
@@ -239,6 +251,36 @@ pred pitmanArmToBackward {
   some PitmanArmBackward'
 }
 
+pred mantainSteeringWheel {
+  SteeringWheel' = SteeringWheel
+  SteeringLeft' = SteeringLeft
+  SteeringRight' = SteeringRight
+}
+
+pred steeringWheelToNeutral {
+  // Guards
+  some SteeringLeft + SteeringRight
+
+  // Effects
+  no (SteeringLeft + SteeringRight)'
+}
+
+pred steeringWheelToLeft {
+  // Guards
+  no SteeringLeft
+
+  // Effects
+  some SteeringLeft'
+}
+
+pred steeringWheelToRight {
+  // Guards
+  no SteeringRight
+
+  // Effects
+  some SteeringRight'
+}
+
 // ----------------------------------------------------------------------------
 // Auxiliary Predicates
 // ----------------------------------------------------------------------------
@@ -331,4 +373,20 @@ fact {
     Vehicle . currentSpeed = Medium
     no OncommingTrafficVehicle
   } => after some HighBeam
+}
+
+// While the ignition is in position KeyInserted: if the light rotary switch
+// is turned to the position On, the low beam headlights are activated
+// with 50% (to save power). With additionally activated ambient light,
+// ambient light control (Req. ELS-19) has priority over Req. ELS-15.
+// With additionally activated daytime running light, Req. ELS-15 has
+// priority over Req. ELS-17.
+fact {
+  always (
+    some LowBeam and 
+    Vehicle . keyState = KeyInserted and
+    no AmbientLighting
+    => LowBeam . level = Medium
+    else LowBeam . level = High
+  )
 }
