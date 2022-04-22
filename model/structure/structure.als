@@ -161,7 +161,10 @@ pred increaseBrakePedal {
   Vehicle . brakePedal = Low
   => Vehicle . brakePedal' = Medium
   Vehicle . brakePedal = Medium
-  => Vehicle . brakePedal' = High
+  => {
+    Vehicle . brakePedal' = High
+    activateBrakeLightCycle
+  }
 }
 
 pred decreaseBrakePedal {
@@ -350,21 +353,6 @@ pred updateActuators {
   => no TailLampRight*/
 }
 
-// Brake light cycles when the brake pedal is very deflected, until it is in a
-// neutral position again.
-fact BrakeLightCyclesWhenPedalIsHigh {
-  always (
-    Vehicle . brakePedal = High =>
-    (always {
-      eventually some BrakeLight
-      eventually no BrakeLight
-    }) or ({
-      eventually some BrakeLight
-      eventually no BrakeLight
-    } until (Vehicle . brakePedal = Low))
-  )
-}
-
 // High beam is activated when adaptive high beam is active and the vehicle is
 // driving fast in a road without oncoming traffic.
 fact {
@@ -398,4 +386,17 @@ fact {
     =>
     parkingLights
   }
+}
+
+fact {
+  always (
+    {
+      some OncommingTrafficVehicle
+      before some HighBeam
+    } => {
+      no HighBeam
+      some LowBeam
+      some LowBeamRight
+    }
+  )
 }

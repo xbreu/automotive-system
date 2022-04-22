@@ -69,26 +69,6 @@ pred parkingLightCondition {
   some PitmanArmUpDown
 }
 
-pred subvoltage {
-  Vehicle . voltageBattery in Low
-}
-
-pred overvoltage {
-  Vehicle . voltageBattery in High
-}
-
-pred pushingPitmanArm {
-  some PitmanArmBackward
-}
-
-pred pullingPitmanArm {
-  some PitmanArmForward
-}
-
-pred adaptiveHighBeam {
-  pushingPitmanArm and some HighBeam
-}
-
 // ----------------------------------------------------------------------------
 // Brake Light
 // ----------------------------------------------------------------------------
@@ -99,6 +79,19 @@ pred activeBrakeLight {
 
 pred inactiveBrakeLight {
   Vehicle . brakePedal = Low
+}
+
+pred brakeLightCycle {
+  eventually some BrakeLight
+  eventually no BrakeLight
+}
+
+pred activateBrakeLightCycle {
+  (
+    always brakeLightCycle
+  ) or (
+    brakeLightCycle until Vehicle . brakePedal = Low
+  )
 }
 
 // ----------------------------------------------------------------------------
@@ -118,17 +111,27 @@ pred inactiveReverseLight {
 // ----------------------------------------------------------------------------
 
 pred activeAdaptiveHighBeam {
-  Vehicle . lightRotarySwitch = Auto
-  and some PitmanArmBackward
+  {
+    Vehicle . lightRotarySwitch = Auto
+    some PitmanArmBackward
+  }
 }
 
 pred activeHighBeam {
-  (some PitmanArmForward)
-  or (some PitmanArmBackward)
+  {
+    some PitmanArmForward
+  } or {
+    Vehicle . lightRotarySwitch = On
+    some PitmanArmBackward
+  } or {
+    activeAdaptiveHighBeam
+    Vehicle . currentSpeed != Low
+    no OncommingTrafficVehicle
+  }
 }
 
 pred inactiveHighBeam {
-
+  some OncommingTrafficVehicle
 }
 
 pred activeHighRangeHighBeam {
@@ -216,8 +219,8 @@ pred inactiveLowBeamRight {
 // ----------------------------------------------------------------------------
 
 pred activeCorneringLightLeft {
-  (some LowBeam 
-    and (blinkingLeft or tipBlinkingLeft or some SteeringLeft) 
+  (some LowBeam
+    and (blinkingLeft or tipBlinkingLeft or some SteeringLeft)
     and Vehicle . currentSpeed = Low)
   or
   (
@@ -226,15 +229,15 @@ pred activeCorneringLightLeft {
 }
 
 pred inactiveCorneringLightLeft {
-  not (some LowBeam 
-    and (blinkingLeft or tipBlinkingLeft or some SteeringLeft) 
+  not (some LowBeam
+    and (blinkingLeft or tipBlinkingLeft or some SteeringLeft)
     and Vehicle . currentSpeed = Low) and
   no ReverseGearVehicle
 }
 
 pred activeCorneringLightRight {
-  (some LowBeam 
-    and (blinkingRight or tipBlinkingRight or some SteeringRight) 
+  (some LowBeam
+    and (blinkingRight or tipBlinkingRight or some SteeringRight)
     and Vehicle . currentSpeed = Low)
   or
   (
@@ -243,8 +246,8 @@ pred activeCorneringLightRight {
 }
 
 pred inactiveCorneringLightRight {
-  not (some LowBeam 
-    and (blinkingRight or tipBlinkingRight or some SteeringRight) 
+  not (some LowBeam
+    and (blinkingRight or tipBlinkingRight or some SteeringRight)
     and Vehicle . currentSpeed = Low) and
   no ReverseGearVehicle
 }
@@ -254,14 +257,14 @@ pred inactiveCorneringLightRight {
 // ----------------------------------------------------------------------------
 
 pred activeTailLampLeft {
-  parkingLightCondition or 
+  parkingLightCondition or
   Vehicle . brakePedal != Low or
   some LowBeam or
   some HighBeam
 }
 
 pred inactiveTailLampLeft {
-  not parkingLightCondition and 
+  not parkingLightCondition and
   Vehicle . brakePedal = Low and
   no LowBeam and
   no HighBeam
@@ -279,4 +282,16 @@ pred inactiveTailLampRight {
   Vehicle . brakePedal = Low and
   no LowBeam and
   no HighBeam
+}
+
+// ----------------------------------------------------------------------------
+// Fault Handling
+// ----------------------------------------------------------------------------
+
+pred subvoltage {
+  Vehicle . voltageBattery in Low
+}
+
+pred overvoltage {
+  Vehicle . voltageBattery in High
 }

@@ -7,7 +7,7 @@ open structure/structure
 // activated.
 check ELS30 {
   always (
-    pullingPitmanArm => some HighBeam
+    some PitmanArmForward => some HighBeam
   )
 }
 
@@ -17,8 +17,8 @@ check ELS30 {
 // (i.e. highBeamMotor = 7 and highBeamRange = 100).
 check ELS31 {
   always (
-    Vehicle . lightRotarySwitch = On and pullingPitmanArm =>
-      some HighMotorHighBeam and some HighRangeHighBeam
+    Vehicle . lightRotarySwitch = On and some PitmanArmForward
+    => some HighBeam
   )
 }
 
@@ -26,8 +26,8 @@ check ELS31 {
 // beam is activated by moving the pitman arm to the back 4.
 check ELS32 {
   always (
-    Vehicle . lightRotarySwitch = Auto and pullingPitmanArm =>
-      adaptiveHighBeam
+    Vehicle . lightRotarySwitch = Auto and some PitmanArmForward =>
+    activeAdaptiveHighBeam
   )
 }
 
@@ -37,7 +37,13 @@ check ELS32 {
 // the characteristic curve in Fig. 7 (for light illumination distance) and
 // Fig. 8 (for luminous strength).
 check ELS33 {
-  
+  always (
+    {
+      activeAdaptiveHighBeam
+      Vehicle . currentSpeed != Low
+      no OncommingTrafficVehicle
+    } => some HighBeam
+  )
 }
 
 // ELS-34 | If the camera recognizes the lights of an advancing vehicle, an
@@ -47,19 +53,21 @@ check ELS33 {
 // to 30%.
 check ELS34 {
   always (
-    some OncommingTrafficVehicle and some HighBeam =>
-      no HighRangeHighBeam and no HighMotorHighBeam
+    {
+      some OncommingTrafficVehicle
+      before some HighBeam
+    } => {
+      no HighBeam
+      some LowBeamLeft
+      some LowBeamRight
+    }
   )
 }
 
 // ELS-35 | If no advancing vehicle is recognized any more, the high beam
 // illumination is restored after 2 seconds.
 check ELS35 {
-  always (
-    (historically some OncommingTrafficVehicle and some HighBeam) and 
-      no OncommingTrafficVehicle => 
-        some HighMotorHighBeam and some HighRangeHighBeam
-  )
+
 }
 
 // ELS-36 | The light illumination distance of the high beam headlight is
