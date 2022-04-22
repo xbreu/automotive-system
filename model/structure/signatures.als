@@ -4,13 +4,13 @@ module structure/signatures
 // Auxiliary
 // ----------------------------------------------------------------------------
 
-enum SwitchState {
-  Off, Auto, On
-}
+abstract sig SwitchState {}
+one sig Off, Auto, On
+extends SwitchState {}
 
-enum Level {
-  Low, Medium, High
-}
+abstract sig Level {}
+one sig Low, Medium, High
+extends Level {}
 
 // ----------------------------------------------------------------------------
 // Actuators
@@ -75,9 +75,9 @@ sig ArmoredVehicle extends Vehicle {}
 var sig DarknessModeVehicle
      in ArmoredVehicle {}
 
-enum KeyStatusAndPosition {
-  NoKeyInserted, KeyInserted, KeyInIgnitionOnPosition
-}
+abstract sig KeyStatusAndPosition {}
+one sig NoKeyInserted, KeyInserted, KeyInIgnitionOnPosition
+extends KeyStatusAndPosition {}
 
 // ----------------------------------------------------------------------------
 // Pitman Arm
@@ -94,13 +94,13 @@ lone var sig PitmanArmForward
            , PitmanArmBackward
      extends PitmanArm {}
 
-enum PitmanArmDegree {
-  LowDegree, HighDegree
-}
+abstract sig PitmanArmDegree {}
+one sig LowDegree, HighDegree
+extends PitmanArmDegree {}
 
-enum PitmanArmUpDownPosition {
-  Downward, Upward
-}
+abstract sig PitmanArmUpDownPosition {}
+one sig Downward, Upward
+extends PitmanArmUpDownPosition {}
 
 // ----------------------------------------------------------------------------
 // Steering Wheel
