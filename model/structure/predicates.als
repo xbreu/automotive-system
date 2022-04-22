@@ -125,7 +125,7 @@ pred activeHighBeam {
     some PitmanArmBackward
   } or {
     activeAdaptiveHighBeam
-    Vehicle . currentSpeed != Low
+    Vehicle . currentSpeed = High
     no OncommingTrafficVehicle
   }
 }

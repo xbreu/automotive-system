@@ -297,12 +297,12 @@ pred updateActuators {
   inactiveReverseLight
   => no ReverseLight
 
-  /*activeHighBeam
+  activeHighBeam
   => some HighBeam
   inactiveHighBeam
   => no HighBeam
 
-  activeHighRangeHighBeam
+  /*activeHighRangeHighBeam
   => some HighRangeHighBeam
   inactiveHighRangeHighBeam
   => no HighRangeHighBeam
@@ -395,7 +395,7 @@ fact {
       before some HighBeam
     } => {
       no HighBeam
-      some LowBeam
+      some LowBeamLeft
       some LowBeamRight
     }
   )
