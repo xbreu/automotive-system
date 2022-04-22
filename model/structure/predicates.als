@@ -248,17 +248,29 @@ pred inactiveCorneringLightRight {
 // ----------------------------------------------------------------------------
 
 pred activeTailLampLeft {
-  parkingLightCondition or Vehicle . brakePedal != Low
+  parkingLightCondition or 
+  Vehicle . brakePedal != Low or
+  some LowBeam or
+  some HighBeam
 }
 
 pred inactiveTailLampLeft {
-  not parkingLightCondition and Vehicle . brakePedal = Low
+  not parkingLightCondition and 
+  Vehicle . brakePedal = Low and
+  no LowBeam and
+  no HighBeam
 }
 
 pred activeTailLampRight {
-  parkingLightCondition or Vehicle . brakePedal != Low
+  parkingLightCondition or
+  Vehicle . brakePedal != Low or
+  some LowBeam or
+  some HighBeam
 }
 
 pred inactiveTailLampRight {
-  not parkingLightCondition and Vehicle . brakePedal = Low
+  not parkingLightCondition and
+  Vehicle . brakePedal = Low and
+  no LowBeam and
+  no HighBeam
 }
