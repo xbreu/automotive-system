@@ -46,6 +46,7 @@ class {:autocontracts} VehicleFriend {
 	
 	method changeVehicle(vehicle : Vehicle)
 		modifies vehicle
+		requires vehicle.Valid()
 		ensures vehicle.dummy == 1
 		ensures vehicle.dummy2 == 0
 		ensures vehicle.dummy + vehicle.dummy2 > 0
