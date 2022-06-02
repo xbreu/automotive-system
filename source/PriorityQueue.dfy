@@ -76,3 +76,20 @@ class {:autocontracts} PriorityQueue<T> {
 		x := item.1;
 	}
 }
+
+method TestPriorityQueue()
+{
+	var x := new PriorityQueue<nat>();
+	x.add(1, 3);
+	x.add(2, 5);
+	x.add(1, 4);
+	x.add(2, 3);
+	var y := x.pop();
+	assert y == 3;
+	y := x.pop();
+	assert y == 4;
+	y := x.pop();
+	assert y == 5;
+	y := x.pop();
+	assert y == 3;
+}

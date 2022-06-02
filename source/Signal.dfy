@@ -47,3 +47,21 @@ class {:autocontracts} SignalQueue {
 		x := queue.peek();
 	}
 }
+
+
+method TestSignalQueue()
+{
+	var x := new SignalQueue();
+	x.add(Voltage(2));
+	x.add(Brake(3));
+	x.add(Voltage(1));
+	x.add(Brake(4));
+	var y := x.pop();
+	assert y == Voltage(2);
+	y := x.pop();
+	assert y == Voltage(1);
+	y := x.pop();
+	assert y == Brake(3);
+	y := x.pop();
+	assert y == Brake(4);
+}
