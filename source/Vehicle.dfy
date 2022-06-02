@@ -1,34 +1,29 @@
-datatype Signal = Brake(int) // Deflection
-	| Reverse(bool) // Activation
-	| Voltage(int) // Volt level
-	| Beam(int) // Luminosity
+include "PriorityQueue.dfy"
+include "Signal.dfy"
 
 // Vehicle class
 class {:autocontracts} Vehicle {
-	var dummy : nat;
-	var dummy2 : nat;
-	var queue : seq<Signal>;
+	var queue : SignalQueue;
 
 	predicate Valid()
 	{
-		dummy + dummy2 > 0
+		true
 	}
-	
+
 	constructor()
 	{
-		dummy := 0;
-		dummy2 := 1;
+		queue := new SignalQueue();
 	}
 
 	method addSignal(signal : Signal)
-		modifies this
 	{
-		queue := queue + [signal];
+		queue.add(signal);
 	}
-	
+
 	method processFirst()
+		requires !queue.empty()
 	{
 		// Get the first element from the queue
-		
+		var element := queue.pop();
 	}
 }
