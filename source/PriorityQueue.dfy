@@ -9,13 +9,12 @@ class {:autocontracts} PriorityQueue<T> {
 	predicate Valid()
 	{
 		// The priorities follow an order
-		true
-		// isOrdered()
+		forall i, j :: 0 <= i < j < |sequence| ==> sequence[i].0 <= sequence[j].0
 	}
 
-	predicate isOrdered() 
+	predicate isOrdered(sequence : seq<(nat, T)>)
 	{
-		forall i, j :: 0 <= i < j < size() ==> sequence[i].0 <= sequence[j].0
+		forall i, j :: 0 <= i < j < |sequence| ==> sequence[i].0 <= sequence[j].0
 	}
 
 	function method size() : nat
@@ -29,15 +28,16 @@ class {:autocontracts} PriorityQueue<T> {
 	}
 	
 	method add(priority : nat, element : T)
-	requires isOrdered()
-	ensures isOrdered()
+	requires isOrdered(sequence)
+	ensures isOrdered(sequence)
 	ensures size() == old(size()) + 1
 	{
 		var i := 0;
 		while i < size()
-		invariant 0 <= i <= size()
-		invariant isOrdered()
-		decreases size() - i
+			invariant 0 <= i <= size()
+			invariant forall j :: 0 <= j < i ==> sequence[j].0 <= priority
+			invariant isOrdered(sequence)
+			decreases size() - i
 		{
 			if priority < sequence[i].0
 			{
@@ -46,16 +46,23 @@ class {:autocontracts} PriorityQueue<T> {
 			}
 			i := i + 1;
 		}
-    	sequence :=  sequence + [(priority, element)];
+    sequence :=  sequence + [(priority, element)];
 	}
 
-	method pop()
+	method pop() returns (x : T)
+		requires !empty()
+		ensures size() == old(size()) - 1
+		ensures sequence == old(sequence[1..])
 	{
-		
+		x := peek();
+		sequence := sequence[1..];
 	}
 
-	method peek()
+	method peek() returns (x : T)
+		requires !empty()
+		ensures sequence == old(sequence)
 	{
-		
+		var item := sequence[0];
+		x := item.1;
 	}
 }
