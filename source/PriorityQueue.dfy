@@ -66,6 +66,7 @@ class {:autocontracts} PriorityQueue<T>
 	method push(value : T, priority : nat)
 		requires 0 < priority <= maxPriority
 		ensures sequences[index(priority)] == old(sequences[index(priority)]) + [value]
+		ensures size() == old(size()) + 1
 		ensures forall k :: 0 <= k < |sequences| && k != index(priority)
 		==> sequences[k] == old(sequences[k])
 
@@ -73,6 +74,7 @@ class {:autocontracts} PriorityQueue<T>
 		requires !empty()
 		ensures result == old(sequences[index(minPriority())][0])
 		ensures sequences[old(index(minPriority()))] == old(sequences[index(minPriority())][1..])
+		ensures size() == old(size()) - 1
 		ensures forall k :: 0 <= k < |sequences| && k != old(index(minPriority()))
 		==> sequences[k] == old(sequences[k])
 }
@@ -85,4 +87,8 @@ method TestPriorityQueue()
 	q.push(5, 2);
 	var y := q.pop();
 	assert y == 2;
+	y := q.pop();
+	assert y == 5;
+	y := q.pop();
+	assert y == -3;
 }
