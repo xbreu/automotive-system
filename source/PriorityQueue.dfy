@@ -1,3 +1,20 @@
+predicate isSortedSub<T>(sequence : seq<(nat, T)>, start : nat, end : nat)
+	requires end <= |sequence|
+{
+	forall i, j :: start <= i < j < end ==> sequence[i].0 <= sequence[j].0
+}
+
+predicate isSorted<T>(sequence : seq<(nat, T)>)
+{
+	isSortedSub<T>(sequence, 0, |sequence|)
+}
+
+predicate allLessPriority<T>(sequence : seq<(nat, T)>, start : nat, end : nat, priority : nat)
+	requires end <= |sequence|
+{
+	forall j :: start <= j < end ==> sequence[j].0 <= priority
+}
+
 class {:autocontracts} PriorityQueue<T> {
 	var sequence : seq<(nat, T)>;
 
@@ -9,12 +26,7 @@ class {:autocontracts} PriorityQueue<T> {
 	predicate Valid()
 	{
 		// The priorities follow an order
-		forall i, j :: 0 <= i < j < |sequence| ==> sequence[i].0 <= sequence[j].0
-	}
-
-	predicate isOrdered(sequence : seq<(nat, T)>)
-	{
-		forall i, j :: 0 <= i < j < |sequence| ==> sequence[i].0 <= sequence[j].0
+		isSorted(sequence)
 	}
 
 	function method size() : nat
@@ -28,15 +40,13 @@ class {:autocontracts} PriorityQueue<T> {
 	}
 	
 	method add(priority : nat, element : T)
-	requires isOrdered(sequence)
-	ensures isOrdered(sequence)
-	ensures size() == old(size()) + 1
+		ensures size() == old(size()) + 1
 	{
 		var i := 0;
 		while i < size()
 			invariant 0 <= i <= size()
-			invariant forall j :: 0 <= j < i ==> sequence[j].0 <= priority
-			invariant isOrdered(sequence)
+			invariant allLessPriority(sequence, 0, i, priority)
+			invariant isSorted(sequence)
 			decreases size() - i
 		{
 			if priority < sequence[i].0
