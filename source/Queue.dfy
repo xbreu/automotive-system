@@ -7,6 +7,7 @@ class {:autocontracts} Queue<T>
 	
 	constructor(default : T)
 		ensures |elemSeq| == 0
+		ensures elemSeq == []
 		ensures used == 0
 	{
 		initializer := (_) => default;
@@ -72,6 +73,15 @@ class {:autocontracts} Queue<T>
 			elements[i] := oldArray[i + 1];
 		}
 		elemSeq := elemSeq[1..];
+	}
+
+	static method create(default : T) returns (instance : Queue<T>)
+		ensures fresh(instance)
+		ensures |instance.elemSeq| == 0
+		ensures instance.used == 0
+		ensures instance.Valid()
+	{
+		instance := new Queue<T>(default);
 	}
 }
 
