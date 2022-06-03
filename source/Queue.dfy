@@ -85,7 +85,7 @@ class {:autocontracts} Queue<T>
 	}
 }
 
-method TestQueue()
+method Main()
 {
 	var x := new Queue<int>(0);
 	x.push(2);
@@ -93,9 +93,11 @@ method TestQueue()
 	x.push(3);
 	// assert x.size() == 2;
 	var y := x.pop();
+	print y, "\n";
 	// assert x.size() == 1;
 	// assert y == 2;
 	y := x.pop();
+	print y, "\n";
 	assert x.size() == 0;
 	assert y == 3;
 }
