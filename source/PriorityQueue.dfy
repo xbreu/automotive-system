@@ -181,6 +181,19 @@ class {:autocontracts} PriorityQueue
 		ensures size() == old(size()) + 1
 		ensures forall k :: 0 <= k < |sequences| && k != index(priority)
 		==> sequences[k] == old(sequences[k])
+	{
+		var queueIndex := index(priority);
+		if queueIndex == 0 {
+			queue0.push(value);
+		} else if queueIndex == 1 {
+			queue1.push(value);
+		} else if queueIndex == 2 {
+			queue2.push(value);
+		}
+
+		elements := elements + 1;
+		sequences := addTo(sequences, priority, value);
+	}
 
 	method pop() returns (result : Signal)
 		requires !empty()
