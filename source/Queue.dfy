@@ -23,7 +23,8 @@ class {:autocontracts} Queue
 	{
 		&& used <= elements.Length
 		&& elemSeq == elements[..used]
-		&& elements.Length > 0 
+		&& elements.Length > 0
+		&& Repr == {this, elements}
 	}
 
 	function method size() : nat
@@ -49,6 +50,7 @@ class {:autocontracts} Queue
 			elements[i] := oldArray[i];
 		}
 		assert elements[..used] == old(elements[..used]);
+		Repr := {this, elements};
 	}
 
 	method push(value : Signal) returns ()

@@ -125,6 +125,9 @@ class {:autocontracts} PriorityQueue
 		&& queue0 != queue1
 		&& queue1 != queue2
 		&& queue2 != queue0
+		&& queue0.elements != queue1.elements
+		&& queue1.elements != queue2.elements
+		&& queue2.elements != queue0.elements
 		&& queue0.Repr * queue1.Repr == {}
 		&& queue1.Repr * queue2.Repr == {}
 		&& queue2.Repr * queue0.Repr == {}
@@ -192,6 +195,7 @@ class {:autocontracts} PriorityQueue
 		
 		if queueIndex == 0 {
 			result := queue0.pop();
+			Repr := Repr + {queue0.elements};
 		} else if queueIndex == 1 {
 			result := queue1.pop();
 		} else if queueIndex == 2 {
@@ -201,12 +205,28 @@ class {:autocontracts} PriorityQueue
 		elements := elements - 1;
 		sequences := removeFrom(sequences, priority);
 
-		assume this !in (queue0.Repr + queue1.Repr + queue2.Repr);
-		assume Valid();
+		assume sequences[0] == queue0.elemSeq;
+		assume sequences[1] == queue1.elemSeq;
+		assume sequences[2] == queue1.elemSeq;
+
+		assert queue0 in Repr;
+		assert queue0.Repr <= Repr;
+		assert this !in queue0.Repr;
+		assert queue0.Valid();
+
+		assert queue1 in Repr;
+		assert queue1.Repr <= Repr;
+		assert this !in queue1.Repr;
+		assert queue1.Valid();
+
+		assert queue2 in Repr;
+		assert queue2.Repr <= Repr;
+		assert this !in queue2.Repr;
+		assert queue2.Valid();
 	}
 }
 
-method TestPriorityQueue()
+method Test()
 {
 	var q := new PriorityQueue(Reverse(false));
 	q.push(Brake(2), 1);
