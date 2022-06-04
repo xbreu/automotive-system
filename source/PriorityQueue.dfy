@@ -208,7 +208,6 @@ class {:autocontracts} PriorityQueue
 		
 		if queueIndex == 0 {
 			result := queue0.pop();
-			Repr := Repr + {queue0.elements};
 		} else if queueIndex == 1 {
 			result := queue1.pop();
 		} else if queueIndex == 2 {
@@ -220,7 +219,7 @@ class {:autocontracts} PriorityQueue
 	}
 }
 
-method Test()
+method TestPriorityQueue()
 {
 	var q := new PriorityQueue(Reverse(false));
 	q.push(Brake(2), 1);
