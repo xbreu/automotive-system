@@ -217,6 +217,23 @@ class {:autocontracts} PriorityQueue
 		elements := elements - 1;
 		sequences := removeFrom(sequences, priority);
 	}
+
+	method peek() returns (result : Signal)
+		requires !empty()
+		ensures result == old(sequences[index(minPriorityFunc())][0])
+		ensures sequences == old(sequences)
+	{
+		var priority := minPriority();
+		var queueIndex := index(priority);
+		
+		if queueIndex == 0 {
+			result := queue0.peek();
+		} else if queueIndex == 1 {
+			result := queue1.peek();
+		} else if queueIndex == 2 {
+			result := queue2.peek();
+		}
+	}
 }
 
 method TestPriorityQueue()
@@ -227,6 +244,8 @@ method TestPriorityQueue()
 	q.push(Brake(5), 2);
 	var y := q.pop();
 	assert y == Brake(2);
+	y := q.peek();
+	assert y == Brake(5);
 	y := q.pop();
 	assert y == Brake(5);
 	y := q.pop();
