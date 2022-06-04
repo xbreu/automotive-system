@@ -78,6 +78,12 @@ class {:autocontracts} Queue
 		}
 		elemSeq := elemSeq[1..];
 	}
+
+	function method peek() : Signal
+		requires !empty()
+	{
+		elements[0]
+	}
 }
 
 method TestQueue()
@@ -91,6 +97,8 @@ method TestQueue()
 	print y, "\n";
 	// assert x.size() == 1;
 	// assert y == 2;
+	y := x.peek();
+	assert y == Voltage(5);
 	y := x.pop();
 	print y, "\n";
 	assert x.size() == 0;
