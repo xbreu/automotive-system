@@ -80,7 +80,7 @@ class {:autocontracts} Queue
 	}
 }
 
-method Main()
+method TestQueue()
 {
 	var x := new Queue(Reverse(false));
 	x.push(Brake(2));
