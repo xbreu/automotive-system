@@ -5,7 +5,7 @@ include "Signal.dfy"
 class {:autocontracts} Vehicle {
 	var queue   : PriorityQueue;
 	var lights  : array<nat>;
-	var voltage : nat; // < 8.5 ==> subvoltage; > 14.5 overvoltage
+	var voltage : int; // < 8.5 ==> subvoltage; > 14.5 overvoltage
 	var brake   : nat;
 	var reverse : bool;
 
@@ -87,6 +87,12 @@ class {:autocontracts} Vehicle {
 		var element := queue.pop();
 
 		// Process element
+		match element
+			case Reverse(_) => { this.reverse := element.active; }
+			case Beam(_) => {}
+			case Brake(_) => {this.brake := element.deflection;}
+			case Voltage(_) => {this.voltage := element.level;}
+
 	}
 
 	function method getFirst() : Signal
