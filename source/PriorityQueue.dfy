@@ -125,8 +125,9 @@ class {:autocontracts} PriorityQueue
 		&& queue0 != queue1
 		&& queue1 != queue2
 		&& queue2 != queue0
-		&& queue1.Repr * queue0.Repr == {}
-		&& queue1 !in queue0.Repr
+		&& queue0.Repr * queue1.Repr == {}
+		&& queue1.Repr * queue2.Repr == {}
+		&& queue2.Repr * queue0.Repr == {}
 		&& sequences[0] == queue0.elemSeq
 		&& sequences[1] == queue1.elemSeq
 		&& sequences[2] == queue1.elemSeq	
@@ -191,33 +192,14 @@ class {:autocontracts} PriorityQueue
 		
 		if queueIndex == 0 {
 			result := queue0.pop();
-			assume queue1 == old(queue1);
-			assume queue2 == old(queue2);
-			assume queue1.Valid();
-			assume queue2.Valid();
 		} else if queueIndex == 1 {
 			result := queue1.pop();
-			assume queue0 == old(queue0);
-			assume queue2 == old(queue2);
-			assume queue0.Valid();
-			assume queue2.Valid();
 		} else if queueIndex == 2 {
 			result := queue2.pop();
-			assume queue0 == old(queue0);
-			assume queue1 == old(queue1);
-			assume queue0.Valid();
-			assume queue1.Valid();
 		}
 
 		elements := elements - 1;
 		sequences := removeFrom(sequences, priority);
-
-		assert priority == 0 ==> sequences[0] == old(sequences[0][1..]);
-		assert priority == 0 ==> sequences[1] == old(sequences[1]);
-
-		assume sequences[0] == queue0.elemSeq
-		&& sequences[1] == queue1.elemSeq
-		&& sequences[2] == queue1.elemSeq;
 
 		assume this !in (queue0.Repr + queue1.Repr + queue2.Repr);
 		assume Valid();
