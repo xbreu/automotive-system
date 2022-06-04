@@ -65,6 +65,8 @@ method TestVehicle()
 	v.addSignal(Reverse(false));
 	assert v.sequences() == [[], [], [Reverse(false)]];
 	v.addSignal(Voltage(30));
+	assert v.sequences() == [[Voltage(30)], [], [Reverse(false)]];
 	v.addSignal(Brake(5));
+	assert v.sequences() == [[Voltage(30)], [Brake(5)], [Reverse(false)]];
 	assert v.getFirst() == Voltage(30);
 }
