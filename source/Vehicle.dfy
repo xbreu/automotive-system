@@ -4,6 +4,7 @@ include "Signal.dfy"
 // Vehicle class
 class {:autocontracts} Vehicle {
 	var queue : PriorityQueue;
+	//var lights : array<int>;
 
 	predicate Valid()
 	{
@@ -56,9 +57,16 @@ class {:autocontracts} Vehicle {
 	
 	method processFirst()
 		requires !queue.empty()
-	{
+		ensures queueSize() == old(queueSize()) - 1
+		ensures sequences()[old(index(firstNonEmptyPriority()))] 
+			== old(sequences()[index(firstNonEmptyPriority())][1..])
+		ensures forall k :: (0 <= k < |sequences()| && k != old(index(firstNonEmptyPriority())))
+			==> sequences()[k] == old(sequences()[k])
+		{
 		// Get the first element from the queue
 		var element := queue.pop();
+
+		// Process element
 	}
 
 	function method getFirst() : Signal
@@ -105,4 +113,10 @@ method TestVehicle()
 	var s := v.getFirst();
 
 	assert s == Voltage(30);
+
+	v.processFirst();
+	assert v.queueSize() == 2;
+	assert v.sequences()[0] == [];
+	assert v.sequences()[1] == [Brake(5)];
+	assert v.sequences()[2] == [Reverse(false)];
 }
