@@ -158,21 +158,20 @@ class {:autocontracts} PriorityQueue
 		priority(firstNonEmpty(sequences))
 	}
 
-	method minPriority() returns (min : nat)
+	function method minPriority() : nat
 		requires !empty()
-		ensures min == minPriorityFunc()
-		ensures 0 < min <= maxPriority
-		ensures |sequences[index(min)]| > 0
+		ensures minPriority() == minPriorityFunc()
+		ensures 0 < minPriority() <= maxPriority
+		ensures |sequences[index(minPriority())]| > 0
 		ensures forall k :: 0 <= k < |sequences| && sequences[k] != []
-		==> index(min) <= k
+		==> index(minPriority()) <= k
 	{
-		if queue0.size() > 0 {
-			min := 1;
-		} else if queue1.size() > 0 {
-			min := 2;
-		} else {
-			min := 3;
-		}
+		if queue0.size() > 0 then
+			1
+		else if queue1.size() > 0 then
+			2
+		else
+			3
 	}
 	
 	method push(value : Signal, priority : nat)
@@ -218,21 +217,19 @@ class {:autocontracts} PriorityQueue
 		sequences := removeFrom(sequences, priority);
 	}
 
-	method peek() returns (result : Signal)
+	function method peek() : Signal
 		requires !empty()
-		ensures result == old(sequences[index(minPriorityFunc())][0])
-		ensures sequences == old(sequences)
+		ensures peek() == sequences[index(minPriorityFunc())][0]
 	{
 		var priority := minPriority();
 		var queueIndex := index(priority);
 		
-		if queueIndex == 0 {
-			result := queue0.peek();
-		} else if queueIndex == 1 {
-			result := queue1.peek();
-		} else if queueIndex == 2 {
-			result := queue2.peek();
-		}
+		if queueIndex == 0 then
+			queue0.peek()
+		else if queueIndex == 1 then
+			queue1.peek()
+		else
+			queue2.peek()
 	}
 }
 
