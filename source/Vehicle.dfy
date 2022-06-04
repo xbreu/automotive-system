@@ -33,18 +33,29 @@ class {:autocontracts} Vehicle {
 		queue.empty()
 	}
 
+	function firstNonEmptyPriority() : nat
+		requires !emptyQueue()
+		ensures 0 < firstNonEmptyPriority() <= maxPriority
+		ensures |sequences()[index(firstNonEmptyPriority())]| > 0
+		ensures forall k :: 0 <= k < |sequences()| && sequences()[k] != []
+		==> index(firstNonEmptyPriority()) <= k 
+	{
+		priority(firstNonEmpty(sequences()))
+	}
+	
 	method addSignal(signal : Signal)
 		ensures sequences()[index(getPriority(signal))]
 		== old(sequences()[index(getPriority(signal))]) + [signal]
 		ensures forall k :: 0 <= k < |sequences()| && k != index(getPriority(signal))
 		==> sequences()[k] == old(sequences()[k])
 		ensures queueSize() == old(queueSize()) + 1
+		ensures |sequences()| == maxPriority
 	{
 		queue.push(signal, getPriority(signal));
 	}
 	
 	method processFirst()
-		requires !queue.empty()		
+		requires !queue.empty()
 	{
 		// Get the first element from the queue
 		var element := queue.pop();
@@ -61,12 +72,37 @@ class {:autocontracts} Vehicle {
 method TestVehicle()
 {
 	var v := new Vehicle();
+
 	assert v.sequences() == [[], [], []];
+
 	v.addSignal(Reverse(false));
+
+	assert index(getPriority(Reverse(false))) == 2;
+	assert v.sequences()[0] == [];
+	assert v.sequences()[1] == [];
+	assert v.sequences()[2] == [Reverse(false)];
+	assert |v.sequences()| == 3;
 	assert v.sequences() == [[], [], [Reverse(false)]];
+
 	v.addSignal(Voltage(30));
+	
+	assert index(getPriority(Voltage(30))) == 0;
+	assert v.sequences()[0] == [Voltage(30)];
+	assert v.sequences()[1] == [];
+	assert v.sequences()[2] == [Reverse(false)];
+	assert |v.sequences()| == 3;
 	assert v.sequences() == [[Voltage(30)], [], [Reverse(false)]];
+
 	v.addSignal(Brake(5));
+
+	assert index(getPriority(Brake(5))) == 1;
+	assert v.sequences()[0] == [Voltage(30)];
+	assert v.sequences()[1] == [Brake(5)];
+	assert v.sequences()[2] == [Reverse(false)];
+	assert |v.sequences()| == 3;
 	assert v.sequences() == [[Voltage(30)], [Brake(5)], [Reverse(false)]];
-	assert v.getFirst() == Voltage(30);
+
+	var s := v.getFirst();
+
+	assert s == Voltage(30);
 }
