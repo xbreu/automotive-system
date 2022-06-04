@@ -133,7 +133,7 @@ class {:autocontracts} PriorityQueue
 		&& queue2.Repr * queue0.Repr == {}
 		&& sequences[0] == queue0.elemSeq
 		&& sequences[1] == queue1.elemSeq
-		&& sequences[2] == queue1.elemSeq	
+		&& sequences[2] == queue2.elemSeq	
 	}
 	
 	function method size() : nat
@@ -204,25 +204,6 @@ class {:autocontracts} PriorityQueue
 
 		elements := elements - 1;
 		sequences := removeFrom(sequences, priority);
-
-		assume sequences[0] == queue0.elemSeq;
-		assume sequences[1] == queue1.elemSeq;
-		assume sequences[2] == queue1.elemSeq;
-
-		assert queue0 in Repr;
-		assert queue0.Repr <= Repr;
-		assert this !in queue0.Repr;
-		assert queue0.Valid();
-
-		assert queue1 in Repr;
-		assert queue1.Repr <= Repr;
-		assert this !in queue1.Repr;
-		assert queue1.Valid();
-
-		assert queue2 in Repr;
-		assert queue2.Repr <= Repr;
-		assert this !in queue2.Repr;
-		assert queue2.Valid();
 	}
 }
 
