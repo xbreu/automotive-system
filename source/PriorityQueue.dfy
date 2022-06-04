@@ -1,98 +1,137 @@
+include "Signal.dfy"
 include "Queue.dfy"
 
-function emptyLists<T>(size : nat) : seq<seq<T>>
-	ensures |emptyLists<T>(size)| == size
-	ensures forall i :: 0 <= i < size ==> emptyLists<T>(size)[i] == []
-	ensures flatten(emptyLists<T>(size)) == []
+const maxPriority := 3;
+
+function emptyLists<T>() : seq<seq<T>>
+	ensures |emptyLists<T>()| == maxPriority
+	ensures forall i :: 0 <= i < maxPriority ==> emptyLists<T>()[i] == []
+	ensures flatten(emptyLists<T>()) == []
 {
-	if size == 0 then
-		[]
-	else
-		[[]] + emptyLists(size - 1)
+	[[], [], []]
 }
 
 function flatten<T>(sequences : seq<seq<T>>) : seq<T>
+	requires |sequences| == maxPriority
 {
-	if sequences == [] then
-		[]
-	else
-		sequences[0] + flatten(sequences[1..])
-}
-
-lemma flattenNonEmptyImpliesSomeElement<T>(sequences : seq<seq<T>>)
-	ensures flatten(sequences) != [] <==> exists i :: 0 <= i < |sequences| && sequences[i] != []
-{
-	if flatten(sequences) == [] {
-		assert forall i :: 0 <= i < |sequences| ==> sequences[i] == [];
-	} else if sequences[0] == [] {
-		flattenNonEmptyImpliesSomeElement(sequences[1..]);
-	} else {
-		assert sequences[0] != [];
-	}
+	sequences[0] + sequences[1] + sequences[2]
 }
 
 function firstNonEmpty<T>(sequences : seq<seq<T>>) : nat
-	requires flatten<T>(sequences) != []
-	requires |sequences| > 0
+	requires |sequences| == maxPriority
+	requires flatten(sequences) != []
 	ensures 0 <= firstNonEmpty(sequences) < |sequences|
 	ensures |sequences[firstNonEmpty(sequences)]| > 0
 	ensures forall k :: 0 <= k < |sequences| && sequences[k] != []
 	==> firstNonEmpty(sequences) <= k
-	decreases |sequences|
 {
+	assert sequences[0] != [] || sequences[1] != [] || sequences[2] != [];
 	if sequences[0] != [] then
 		0
+	else if sequences[1] != [] then
+		1
 	else
-		1 + firstNonEmpty(sequences[1..])
+		2
 }
 
-const maxPriority := 3;
-
-class {:autocontracts} PriorityQueue<T>
+function addTo<T>(sequences : seq<seq<T>>, priority : nat, value : T) : seq<seq<T>>
+	requires 0 < priority <= maxPriority
+	requires |sequences| == maxPriority
+	ensures |addTo(sequences, priority, value)| == maxPriority
+	ensures forall i :: 0 <= i < maxPriority && i != index(priority) ==> addTo(sequences, priority, value)[i] == sequences[i]
+	ensures addTo(sequences, priority, value)[index(priority)] == sequences[index(priority)] + [value] 
 {
-	// const maxPriority : nat;
-	var queues : array<Queue<T>>;
-	var elements : nat;
-	ghost var sequences : seq<seq<T>>;
+	var changeIndex := index(priority);
+	var seq0 := if changeIndex == 0 then
+		sequences[0] + [value]
+	else
+		sequences[0];
+		var seq1 := if changeIndex == 1 then
+			sequences[1] + [value]
+		else
+			sequences[1];
+			var seq2 := if changeIndex == 2 then
+				sequences[2] + [value]
+	else
+		sequences[2];
+		[seq0, seq1, seq2]
+}
 
-	constructor(default : T)
-		// ensures this.maxPriority == maxPriority
-		ensures sequences == emptyLists(maxPriority)
+function removeFrom<T>(sequences : seq<seq<T>>, priority : nat) : seq<seq<T>>
+	requires 0 < priority <= maxPriority
+	requires |sequences| == maxPriority
+	requires |sequences[index(priority)]| > 0 
+	ensures |removeFrom(sequences, priority)| == maxPriority
+	ensures forall i :: 0 <= i < maxPriority && i != index(priority) ==> removeFrom(sequences, priority)[i] == sequences[i]
+	ensures removeFrom(sequences, priority)[index(priority)] == sequences[index(priority)][1..]
+{
+	var changeIndex := index(priority);
+	var seq0 := if changeIndex == 0 then
+		sequences[0][1..]
+	else
+		sequences[0];
+		var seq1 := if changeIndex == 1 then
+			sequences[1][1..]
+	else
+		sequences[1];
+		var seq2 := if changeIndex == 2 then
+			sequences[2][1..]
+	else
+		sequences[2];
+		[seq0, seq1, seq2]
+}
+
+function method index(priority : nat) : nat
+	requires 0 < priority <= maxPriority
+	ensures 0 <= index(priority) < maxPriority
+{
+	priority - 1
+}
+
+function priority(index : nat) : nat
+	requires 0 <= index < maxPriority
+	ensures 0 < priority(index) <= maxPriority
+{
+	index + 1
+}
+
+
+class {:autocontracts} PriorityQueue
+{
+	var queue0 : Queue;
+	var queue1 : Queue;
+	var queue2 : Queue;
+	var elements : nat;
+	ghost var sequences : seq<seq<Signal>>;
+
+	constructor(default : Signal)
+		ensures sequences == emptyLists()
 		ensures flatten(sequences) == []
-		ensures queues.Length == maxPriority
 	{
-		// this.maxPriority := maxPriority;
-		new;
 		this.elements := 0;
-		var initializer := new Queue<T>(default);
-		this.queues := new Queue<T>[maxPriority]((_) => initializer);
-		this.sequences := emptyLists(maxPriority);
-		// this.Repr := {this, queues[0], queues[1], queues[2]};
+		this.queue0 := new Queue(default);
+		this.queue1 := new Queue(default);
+		this.queue2 := new Queue(default);
+		this.sequences := emptyLists();
 	} 
 
 	predicate Valid()
 	{
 		&& |sequences| == maxPriority
-		&& queues.Length == maxPriority
 		&& elements == |flatten(sequences)|
-		&& forall i :: 0 <= i < maxPriority ==> queues[i].Valid()
-		&& forall i :: 0 <= i < maxPriority ==> sequences[i] == queues[i].elemSeq	
+		&& queue0.Valid()
+		&& queue1.Valid()
+		&& queue2.Valid()
+		&& queue0 != queue1
+		&& queue1 != queue2
+		&& queue2 != queue0
+		&& queue1.Repr * queue0.Repr == {}
+		&& queue1 !in queue0.Repr
+		&& sequences[0] == queue0.elemSeq
+		&& sequences[1] == queue1.elemSeq
+		&& sequences[2] == queue1.elemSeq	
 	}
-
-	function index(priority : nat) : nat
-		requires 0 < priority <= maxPriority
-		ensures 0 <= index(priority) < |sequences|
-	{
-		priority - 1
-	}
-
-	function priority(index : nat) : nat
-		requires 0 <= index < |sequences|
-		ensures 0 < priority(index) <= maxPriority
-	{
-		index + 1
-	}
-
+	
 	function method size() : nat
 		ensures size() == |flatten(sequences)|
 	{
@@ -123,36 +162,23 @@ class {:autocontracts} PriorityQueue<T>
 		ensures forall k :: 0 <= k < |sequences| && sequences[k] != []
 		==> index(min) <= k
 	{
-		var i := 0;
-		assert !empty();
-		assert flatten(sequences) != [];
-		assert exists i :: 0 <= i < maxPriority && sequences[i] != [];
-		while i < maxPriority
-			invariant 0 <= i < maxPriority
-			invariant forall j :: 0 <= j < i ==> sequences[j] == []
-			invariant exists j :: i <= j < maxPriority && sequences[j] != []
-		{
-			if (queues[i].size() > 0)
-			{
-				break;
-			}
-			i := i + 1;
+		if queue0.size() > 0 {
+			min := 1;
+		} else if queue1.size() > 0 {
+			min := 2;
+		} else {
+			min := 3;
 		}
-		min := i;
 	}
-
-	method push(value : T, priority : nat)
+	
+	method push(value : Signal, priority : nat)
 		requires 0 < priority <= maxPriority
 		ensures sequences[index(priority)] == old(sequences[index(priority)]) + [value]
 		ensures size() == old(size()) + 1
 		ensures forall k :: 0 <= k < |sequences| && k != index(priority)
 		==> sequences[k] == old(sequences[k])
-	{
-		queues[index(priority)].push(value);
-		sequences[index(priority)] := sequences[index(priority)] + [value]; 
-	}
 
-	method pop() returns (result : T)
+	method pop() returns (result : Signal)
 		requires !empty()
 		ensures result == old(sequences[index(minPriorityFunc())][0])
 		ensures sequences[old(index(minPriorityFunc()))] == old(sequences[index(minPriorityFunc())][1..])
@@ -161,21 +187,53 @@ class {:autocontracts} PriorityQueue<T>
 		==> sequences[k] == old(sequences[k])
 	{
 		var priority := minPriority();
-		result := queues[priority].pop();
-		sequences[priority] := sequences[priority][1..];
+		var queueIndex := index(priority);
+		
+		if queueIndex == 0 {
+			result := queue0.pop();
+			assume queue1 == old(queue1);
+			assume queue2 == old(queue2);
+			assume queue1.Valid();
+			assume queue2.Valid();
+		} else if queueIndex == 1 {
+			result := queue1.pop();
+			assume queue0 == old(queue0);
+			assume queue2 == old(queue2);
+			assume queue0.Valid();
+			assume queue2.Valid();
+		} else if queueIndex == 2 {
+			result := queue2.pop();
+			assume queue0 == old(queue0);
+			assume queue1 == old(queue1);
+			assume queue0.Valid();
+			assume queue1.Valid();
+		}
+
+		elements := elements - 1;
+		sequences := removeFrom(sequences, priority);
+
+		assert priority == 0 ==> sequences[0] == old(sequences[0][1..]);
+		assert priority == 0 ==> sequences[1] == old(sequences[1]);
+
+		assume sequences[0] == queue0.elemSeq
+		&& sequences[1] == queue1.elemSeq
+		&& sequences[2] == queue1.elemSeq;
+
+		assume this !in (queue0.Repr + queue1.Repr + queue2.Repr);
+		assume Valid();
 	}
 }
 
 method TestPriorityQueue()
 {
-	var q := new PriorityQueue<int>(0);
-	q.push(2, 1);
-	q.push(-3, 3);
-	q.push(5, 2);
+	var q := new PriorityQueue(Reverse(false));
+	q.push(Brake(2), 1);
+	q.push(Beam(20), 3);
+	q.push(Brake(5), 2);
 	var y := q.pop();
-	assert y == 2;
+	assert y == Brake(2);
 	y := q.pop();
-	assert y == 5;
+	assert y == Brake(5);
 	y := q.pop();
-	assert y == -3;
+	assert y == Beam(20);
 }

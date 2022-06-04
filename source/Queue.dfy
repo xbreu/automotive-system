@@ -1,11 +1,13 @@
-class {:autocontracts} Queue<T>
+include "Signal.dfy"
+
+class {:autocontracts} Queue
 {
-	const initializer : nat -> T;
-	ghost var elemSeq : seq<T>;
-	var elements : array<T>;
+	const initializer : nat -> Signal;
+	ghost var elemSeq : seq<Signal>;
+	var elements : array<Signal>;
 	var used : nat;
 	
-	constructor(default : T)
+	constructor(default : Signal)
 		ensures |elemSeq| == 0
 		ensures elemSeq == []
 		ensures used == 0
@@ -14,7 +16,7 @@ class {:autocontracts} Queue<T>
 		elemSeq := [];
 		used := 0;
 		new;
-		elements := new T[1](initializer);
+		elements := new Signal[1](initializer);
 	}
 
 	predicate Valid()
@@ -41,7 +43,7 @@ class {:autocontracts} Queue<T>
 		ensures elements.Length > old(elements.Length)
 	{
 		var oldArray := elements;
-		elements := new T[2 * elements.Length + 1](initializer);
+		elements := new Signal[2 * elements.Length + 1](initializer);
 		forall i | 0 <= i < used
 		{
 			elements[i] := oldArray[i];
@@ -49,7 +51,7 @@ class {:autocontracts} Queue<T>
 		assert elements[..used] == old(elements[..used]);
 	}
 
-	method push(value : T) returns ()
+	method push(value : Signal) returns ()
 		ensures elemSeq == old(elemSeq) + [value]
 	{
 		if used == elements.Length {
@@ -60,7 +62,7 @@ class {:autocontracts} Queue<T>
 		elemSeq := elemSeq + [value];
 	}
 
-	method pop() returns (value : T)
+	method pop() returns (value : Signal)
 		requires !empty()
 		ensures value == old(elemSeq[0])
 		ensures elemSeq == old(elemSeq[1..])
@@ -74,23 +76,14 @@ class {:autocontracts} Queue<T>
 		}
 		elemSeq := elemSeq[1..];
 	}
-
-	static method create(default : T) returns (instance : Queue<T>)
-		ensures fresh(instance)
-		ensures |instance.elemSeq| == 0
-		ensures instance.used == 0
-		ensures instance.Valid()
-	{
-		instance := new Queue<T>(default);
-	}
 }
 
 method Main()
 {
-	var x := new Queue<int>(0);
-	x.push(2);
+	var x := new Queue(Reverse(false));
+	x.push(Brake(2));
 	// assert x.size() == 1;
-	x.push(3);
+	x.push(Voltage(5));
 	// assert x.size() == 2;
 	var y := x.pop();
 	print y, "\n";
@@ -99,5 +92,5 @@ method Main()
 	y := x.pop();
 	print y, "\n";
 	assert x.size() == 0;
-	assert y == 3;
+	assert y == Voltage(5);
 }
