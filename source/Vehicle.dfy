@@ -3,12 +3,25 @@ include "Signal.dfy"
 
 // Vehicle class
 class {:autocontracts} Vehicle {
-	var queue : PriorityQueue;
-	//var lights : array<int>;
+	var queue   : PriorityQueue;
+	var lights  : array<nat>;
+	var voltage : nat; // < 8.5 ==> subvoltage; > 14.5 overvoltage
+	var brake   : nat;
+	var reverse : bool;
 
 	predicate Valid()
 	{
 		queue.Valid()
+	}
+
+	predicate subvoltage()
+	{
+		voltage <= 8
+	}
+
+	predicate overvoltage()
+	{
+		voltage >= 15
 	}
 
 	function sequences() : seq<seq<Signal>>
@@ -18,8 +31,15 @@ class {:autocontracts} Vehicle {
 
 	constructor()
 		ensures sequences() == emptyLists()
+		ensures voltage == 10
+		ensures brake == 0
+		ensures reverse == false
 	{
-		queue := new PriorityQueue(Reverse(false));
+		queue   := new PriorityQueue(Reverse(false));
+		lights  := new nat[5](_ => 0);
+		voltage := 10;
+		brake   := 0;
+		reverse := false;
 	}
 
 	function method queueSize() : nat
@@ -82,6 +102,7 @@ method TestVehicle()
 	var v := new Vehicle();
 
 	assert v.sequences() == [[], [], []];
+	assert v.voltage == 10;
 
 	v.addSignal(Reverse(false));
 
@@ -118,5 +139,11 @@ method TestVehicle()
 	assert v.queueSize() == 2;
 	assert v.sequences()[0] == [];
 	assert v.sequences()[1] == [Brake(5)];
+	assert v.sequences()[2] == [Reverse(false)];
+
+	v.processFirst();
+	assert v.queueSize() == 1;
+	assert v.sequences()[0] == [];
+	assert v.sequences()[1] == [];
 	assert v.sequences()[2] == [Reverse(false)];
 }
