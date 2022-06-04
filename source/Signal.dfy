@@ -1,7 +1,7 @@
-datatype Signal = Brake(int) // Deflection
+datatype Signal = Brake(nat) // Deflection
 	| Reverse(bool) // Activation
 	| Voltage(int) // Volt level
-	| Beam(int) // Luminosity
+	| Beam(nat) // Luminosity
 
 function method getPriority(signal : Signal) : nat
 {
