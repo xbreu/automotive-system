@@ -2,20 +2,22 @@ include "PriorityQueue.dfy"
 include "Signal.dfy"
 
 datatype SwitchPosition = On | Off | Auto
-
+datatype KeyPosition = NoKeyInserted | KeyInserted | KeyInIgnitionOnPosition
+	
 // Vehicle class
 class {:autocontracts} Vehicle {
 	// Primitive attributes
-	var ignition        : bool;
-	var reverse         : bool;
-	var lightRotary     : SwitchPosition;
-	var voltage         : int;
-	var brake           : nat;
-	var frontLights     : nat;
-	var rearLights      : nat;
-	var centerRearLight : nat;
+	var keyStatus          : KeyPosition;
+	var lightRotary        : SwitchPosition;
+	var reverse            : bool;
+	var voltage            : int;
+	var brake              : nat;
+	var frontLights        : nat;
+	var rearLights         : nat;
+	var centerRearLight    : nat;
+	var exteriorBrightness : nat;
 	// Implementation attributes
-	var queue           : PriorityQueue;
+	var queue              : PriorityQueue;
 
 	// --------------------------------------------------------------------------------
 	// Constructor and valid predicate
@@ -28,9 +30,9 @@ class {:autocontracts} Vehicle {
 		ensures reverse == false
 	{
 		queue           := new PriorityQueue(Reverse(false));
-		ignition        := false;
-		reverse         := false;
+		keyStatus       := NoKeyInserted;
 		lightRotary     := Off;
+		reverse         := false;
 		voltage         := 10;
 		brake           := 0;
 		frontLights     := 0;
@@ -57,6 +59,22 @@ class {:autocontracts} Vehicle {
 		voltage >= 15
 	}
 
+	predicate ignitionOn()
+	{
+		keyStatus == KeyInIgnitionOnPosition
+	}
+
+	predicate lowBeams()
+	{
+		|| (ignitionOn() && lightRotary == On)
+		|| (ignitionOn() && lightRotary == Auto && exteriorBrightness <= 200)
+	}
+
+	predicate powerSaving()
+	{
+		keyStatus == KeyInserted && lightRotary == On
+	}
+	
 	// --------------------------------------------------------------------------------
 	// Attribute functions
 	// --------------------------------------------------------------------------------
