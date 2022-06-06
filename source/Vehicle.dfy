@@ -1,19 +1,52 @@
 include "PriorityQueue.dfy"
 include "Signal.dfy"
 
+datatype SwitchPosition = On | Off | Auto
+
 // Vehicle class
 class {:autocontracts} Vehicle {
-	var queue   : PriorityQueue;
-	var lights  : array<nat>;
-	var voltage : int; // < 8.5 ==> subvoltage; > 14.5 overvoltage
-	var brake   : nat;
-	var reverse : bool;
+	// Primitive attributes
+	var ignition        : bool;
+	var reverse         : bool;
+	var lightRotary     : SwitchPosition;
+	var voltage         : int;
+	var brake           : nat;
+	var frontLights     : nat;
+	var rearLights      : nat;
+	var centerRearLight : nat;
+	// Implementation attributes
+	var queue           : PriorityQueue;
 
+	// --------------------------------------------------------------------------------
+	// Constructor and valid predicate
+	// --------------------------------------------------------------------------------
+
+	constructor()
+		ensures sequences() == emptyLists()
+		ensures voltage == 10
+		ensures brake == 0
+		ensures reverse == false
+	{
+		queue           := new PriorityQueue(Reverse(false));
+		ignition        := false;
+		reverse         := false;
+		lightRotary     := Off;
+		voltage         := 10;
+		brake           := 0;
+		frontLights     := 0;
+		rearLights      := 0;
+		centerRearLight := 0;
+	}
+	
 	predicate Valid()
 	{
-		queue.Valid()
+		&& queue.Valid()
 	}
 
+	// --------------------------------------------------------------------------------
+	// Activation predicates
+	// --------------------------------------------------------------------------------
+	
 	predicate subvoltage()
 	{
 		voltage <= 8
@@ -24,24 +57,19 @@ class {:autocontracts} Vehicle {
 		voltage >= 15
 	}
 
+	// --------------------------------------------------------------------------------
+	// Attribute functions
+	// --------------------------------------------------------------------------------
+	
 	function sequences() : seq<seq<Signal>>
 	{
 		queue.sequences
 	}
 
-	constructor()
-		ensures sequences() == emptyLists()
-		ensures voltage == 10
-		ensures brake == 0
-		ensures reverse == false
-	{
-		queue   := new PriorityQueue(Reverse(false));
-		lights  := new nat[5](_ => 0);
-		voltage := 10;
-		brake   := 0;
-		reverse := false;
-	}
-
+	// --------------------------------------------------------------------------------
+	// Queue state
+	// --------------------------------------------------------------------------------
+	
 	function method queueSize() : nat
 		ensures queueSize() == |flatten(sequences())|
 	{
@@ -74,6 +102,17 @@ class {:autocontracts} Vehicle {
 	{
 		queue.push(signal, getPriority(signal));
 	}
+
+	function method getFirst() : Signal
+		requires !emptyQueue()
+		ensures getFirst() == sequences()[index(priority(firstNonEmpty(sequences())))][0]
+	{
+		queue.peek()
+	}
+
+	// --------------------------------------------------------------------------------
+	// Processing
+	// --------------------------------------------------------------------------------
 	
 	method processFirst()
 		requires !queue.empty()
@@ -88,18 +127,11 @@ class {:autocontracts} Vehicle {
 
 		// Process element
 		match element
-			case Reverse(_) => { this.reverse := element.active; }
-			case Beam(_) => {}
-			case Brake(_) => {this.brake := element.deflection;}
-			case Voltage(_) => {this.voltage := element.level;}
+			case Reverse(activation) => { this.reverse := activation; }
+			case Beam(level) => {}
+			case Brake(deflection) => { this.brake := deflection; }
+			case Voltage(level) => { this.voltage := level; }
 
-	}
-
-	function method getFirst() : Signal
-		requires !emptyQueue()
-		ensures getFirst() == sequences()[index(priority(firstNonEmpty(sequences())))][0]
-	{
-		queue.peek()
 	}
 }
 
