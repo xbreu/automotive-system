@@ -50,12 +50,12 @@ class {:autocontracts} Vehicle {
 	// Activation predicates
 	// --------------------------------------------------------------------------------
 	
-	predicate subvoltage()
+	predicate method subvoltage()
 	{
 		voltage <= 8
 	}
 
-	predicate overvoltage()
+	predicate method overvoltage()
 	{
 		voltage >= 15
 	}
@@ -149,6 +149,8 @@ class {:autocontracts} Vehicle {
 		modifies this`reverse
 		modifies this`brake
 		modifies this`voltage
+		modifies this`rearLights
+		modifies this`frontLights
 		requires !queue.empty()
 		ensures queue == old(queue)
 		ensures queueSize() == old(queueSize()) - 1
@@ -163,30 +165,71 @@ class {:autocontracts} Vehicle {
 
 		// Process element
 		match element
-			case Reverse(activation) => { this.reverse := activation; }
-			case Beam(level) => {}
-			case Brake(deflection) => { this.brake := deflection; }
+			case Reverse(activation) => 
+			{ 
+				executeReverse(activation); 
+			}
+			case Beam(luminosity) => 
+			{
+				executeBeam(luminosity);
+			}
+			case Brake(deflection) => 
+			{ 
+				this.brake := deflection; 
+			}
 			case Voltage(level) => 
-				{ 
-					executeVoltage(level); 
-					assert voltage == level;
-				}
+			{ 
+				executeVoltage(level); 
+				assert this.voltage == level;
+			}
+
+	}
+
+	method executeReverse(activation : bool)
+		modifies this`reverse
+		modifies this`rearLights
+		ensures queue.elements == old(queue.elements)
+		ensures queue.sequences == old(queue.sequences)
+		ensures this.brake == old(this.brake)
+		ensures this.voltage == old(this.voltage)
+		ensures queueSize() == old(queueSize())
+		ensures sequences() == old(sequences())
+		ensures queue == old(queue)
+		ensures this.reverse == activation
+		ensures this.rearLights == 100
+	{
+		this.reverse := activation;
+		this.rearLights := 100;
+	}
+
+	method executeBeam(luminosity : nat)
+		modifies this`frontLights
+		ensures queue.elements == old(queue.elements)
+		ensures queue.sequences == old(queue.sequences)
+		ensures this.brake == old(this.brake)
+		ensures this.voltage == old(this.voltage)
+		ensures this.reverse == old(this.reverse)
+		ensures this.rearLights == old(this.rearLights)
+		ensures queueSize() == old(queueSize())
+		ensures sequences() == old(sequences())
+		ensures queue == old(queue)
+	{
+		if !subvoltage()
+		{
+			if overvoltage()
+			{
+				this.frontLights := 100 - (this.voltage - 14) * 20;
+			}
+			else
+			{
+				this.frontLights := luminosity;
+			}
+		}
 
 	}
 
 	method executeVoltage(level : int)
 		modifies this`voltage
-		ensures queue.queue0.elements == old(queue.queue0.elements)
-		ensures queue.queue0.used == old(queue.queue0.used)
-		ensures queue.queue0.elemSeq == old(queue.queue0.elemSeq)
-		ensures queue.queue1.elements == old(queue.queue1.elements)
-		ensures queue.queue1.used == old(queue.queue1.used)
-		ensures queue.queue1.elemSeq == old(queue.queue1.elemSeq)
-		ensures queue.queue2.elements == old(queue.queue2.elements)
-		ensures queue.queue2.used == old(queue.queue2.used)
-		ensures queue.queue2.elemSeq == old(queue.queue2.elemSeq)
-		ensures queue.elements == old(queue.elements)
-		ensures queue.sequences == old(queue.sequences)
 		ensures this.reverse == old(this.reverse)
 		ensures this.brake == old(this.brake)
 		ensures queueSize() == old(queueSize())
@@ -212,6 +255,8 @@ class {:autocontracts} Vehicle {
 		modifies this`reverse
 		modifies this`brake
 		modifies this`voltage
+		modifies this`rearLights
+		modifies this`frontLights
 		ensures queueSize() == 0
 		ensures sequences() == emptyLists()
 		ensures queue == old(queue)
@@ -288,11 +333,11 @@ method TestVehicle()
 	assert s == Voltage(30);
 
 	v.processFirst();
-	assert v.voltage == 30;
 	assert v.queueSize() == 2;
 	assert v.sequences()[0] == [];
 	assert v.sequences()[1] == [Brake(5)];
 	assert v.sequences()[2] == [Reverse(false)];
+	assert v.voltage == 30;
 
 	v.processFirst();
 	assert v.queueSize() == 1;
