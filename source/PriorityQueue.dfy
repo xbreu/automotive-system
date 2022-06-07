@@ -201,6 +201,7 @@ class {:autocontracts} PriorityQueue
 		ensures size() == old(size()) - 1
 		ensures forall k :: 0 <= k < |sequences| && k != old(index(minPriorityFunc()))
 		==> sequences[k] == old(sequences[k])
+		ensures Repr == old(Repr)
 	{
 		var priority := minPriority();
 		var queueIndex := index(priority);

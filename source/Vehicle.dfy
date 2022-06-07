@@ -28,6 +28,7 @@ class {:autocontracts} Vehicle {
 		ensures voltage == 10
 		ensures brake == 0
 		ensures reverse == false
+		ensures fresh(queue)
 	{
 		queue           := new PriorityQueue(Reverse(false));
 		keyStatus       := NoKeyInserted;
@@ -109,6 +110,13 @@ class {:autocontracts} Vehicle {
 	{
 		priority(firstNonEmpty(sequences()))
 	}
+
+	function method getFirst() : Signal
+		requires !emptyQueue()
+		ensures getFirst() == sequences()[index(priority(firstNonEmpty(sequences())))][0]
+	{
+		queue.peek()
+	}
 	
 	method addSignal(signal : Signal)
 		ensures sequences()[index(getPriority(signal))]
@@ -117,28 +125,24 @@ class {:autocontracts} Vehicle {
 		==> sequences()[k] == old(sequences()[k])
 		ensures queueSize() == old(queueSize()) + 1
 		ensures |sequences()| == maxPriority
+		ensures queue == old(queue)
 	{
 		queue.push(signal, getPriority(signal));
 	}
-
-	function method getFirst() : Signal
-		requires !emptyQueue()
-		ensures getFirst() == sequences()[index(priority(firstNonEmpty(sequences())))][0]
-	{
-		queue.peek()
-	}
-
+	
 	// --------------------------------------------------------------------------------
 	// Processing
 	// --------------------------------------------------------------------------------
 	
 	method processFirst()
 		requires !queue.empty()
+		ensures queue == old(queue)
 		ensures queueSize() == old(queueSize()) - 1
 		ensures sequences()[old(index(firstNonEmptyPriority()))] 
 			== old(sequences()[index(firstNonEmptyPriority())][1..])
 		ensures forall k :: (0 <= k < |sequences()| && k != old(index(firstNonEmptyPriority())))
-			==> sequences()[k] == old(sequences()[k])
+		  ==> sequences()[k] == old(sequences()[k])
+		ensures queue == old(queue)
 		{
 		// Get the first element from the queue
 		var element := queue.pop();
@@ -150,6 +154,43 @@ class {:autocontracts} Vehicle {
 			case Brake(deflection) => { this.brake := deflection; }
 			case Voltage(level) => { this.voltage := level; }
 
+	}
+
+	method processAll()
+		ensures queueSize() == 0
+		ensures sequences() == emptyLists()
+		ensures queue == old(queue)
+	{
+		assert queue.Valid();
+		assert Valid();
+		var oldSize := queueSize();
+		var size := oldSize;
+
+		while size > 0
+			decreases size
+			invariant queue == old(queue)
+			invariant 0 <= size <= oldSize
+			invariant queue.Valid()
+			invariant Valid()
+			invariant size == queueSize()
+		{
+			assert queue.Valid();
+			assert Valid();
+			processFirst();
+			assert queue.Valid();
+			assert Valid();
+			size := size - 1;
+		}
+
+		assert this in Repr;
+		assert null !in Repr;
+    assert queue in Repr;
+		assert queue.Repr <= Repr;
+		assert this !in queue.Repr;
+		assert queue.Valid();
+		assert Valid();
+		assert queue == old(queue);
+		assume fresh(Repr - old(Repr));
 	}
 }
 

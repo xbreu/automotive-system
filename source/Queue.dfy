@@ -68,6 +68,7 @@ class {:autocontracts} Queue
 		requires !empty()
 		ensures value == old(elemSeq[0])
 		ensures elemSeq == old(elemSeq[1..])
+		ensures Repr == old(Repr)
 	{
 		value := elements[0];
 		used := used - 1;
