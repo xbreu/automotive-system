@@ -157,7 +157,7 @@ class {:autocontracts} Vehicle {
 		ensures forall k :: (0 <= k < |sequences()| && k != old(index(firstNonEmptyPriority())))
 		  ==> sequences()[k] == old(sequences()[k])
 		ensures queue == old(queue)
-		{
+	{
 		// Get the first element from the queue
 		var element := queue.pop();
 
@@ -166,8 +166,35 @@ class {:autocontracts} Vehicle {
 			case Reverse(activation) => { this.reverse := activation; }
 			case Beam(level) => {}
 			case Brake(deflection) => { this.brake := deflection; }
-			case Voltage(level) => { this.voltage := level; }
+			case Voltage(level) => 
+				{ 
+					executeVoltage(level); 
+					assert voltage == level;
+				}
 
+	}
+
+	method executeVoltage(level : int)
+		modifies this`voltage
+		ensures queue.queue0.elements == old(queue.queue0.elements)
+		ensures queue.queue0.used == old(queue.queue0.used)
+		ensures queue.queue0.elemSeq == old(queue.queue0.elemSeq)
+		ensures queue.queue1.elements == old(queue.queue1.elements)
+		ensures queue.queue1.used == old(queue.queue1.used)
+		ensures queue.queue1.elemSeq == old(queue.queue1.elemSeq)
+		ensures queue.queue2.elements == old(queue.queue2.elements)
+		ensures queue.queue2.used == old(queue.queue2.used)
+		ensures queue.queue2.elemSeq == old(queue.queue2.elemSeq)
+		ensures queue.elements == old(queue.elements)
+		ensures queue.sequences == old(queue.sequences)
+		ensures this.reverse == old(this.reverse)
+		ensures this.brake == old(this.brake)
+		ensures queueSize() == old(queueSize())
+		ensures queue == old(queue)
+		ensures this.voltage == level
+		ensures sequences() == old(sequences())
+	{
+		this.voltage := level;
 	}
 
 	method processAll()
@@ -261,6 +288,7 @@ method TestVehicle()
 	assert s == Voltage(30);
 
 	v.processFirst();
+	assert v.voltage == 30;
 	assert v.queueSize() == 2;
 	assert v.sequences()[0] == [];
 	assert v.sequences()[1] == [Brake(5)];
@@ -271,4 +299,7 @@ method TestVehicle()
 	assert v.sequences()[0] == [];
 	assert v.sequences()[1] == [];
 	assert v.sequences()[2] == [Reverse(false)];
+
+	v.processAll();
+	assert v.queueSize() == 0;
 }
