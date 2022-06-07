@@ -195,6 +195,17 @@ class {:autocontracts} PriorityQueue
 	}
 
 	method pop() returns (result : Signal)
+		modifies queue0.elements
+		modifies queue0`used
+		modifies queue0`elemSeq
+		modifies queue1.elements
+		modifies queue1`used
+		modifies queue1`elemSeq
+		modifies queue2.elements
+		modifies queue2`used
+		modifies queue2`elemSeq
+		modifies this`elements
+		modifies this`sequences
 		requires !empty()
 		ensures result == old(sequences[index(minPriorityFunc())][0])
 		ensures sequences[old(index(minPriorityFunc()))] == old(sequences[index(minPriorityFunc())][1..])
