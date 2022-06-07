@@ -213,19 +213,20 @@ class {:autocontracts} Vehicle {
 		ensures queueSize() == old(queueSize())
 		ensures sequences() == old(sequences())
 		ensures queue == old(queue)
+		ensures !subvoltage() && !overvoltage() ==> this.frontLights == luminosity
+		ensures overvoltage() ==> this.frontLights == (100 - (this.voltage - 14) * 20) % 100
 	{
 		if !subvoltage()
 		{
 			if overvoltage()
 			{
-				this.frontLights := 100 - (this.voltage - 14) * 20;
+				this.frontLights := (100 - (this.voltage - 14) * 20) % 100;
 			}
 			else
 			{
 				this.frontLights := luminosity;
 			}
 		}
-
 	}
 
 	method executeVoltage(level : int)
