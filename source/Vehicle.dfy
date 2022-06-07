@@ -135,6 +135,20 @@ class {:autocontracts} Vehicle {
 	// --------------------------------------------------------------------------------
 	
 	method processFirst()
+		modifies queue.queue0.elements
+		modifies queue.queue0`used
+		modifies queue.queue0`elemSeq
+		modifies queue.queue1.elements
+		modifies queue.queue1`used
+		modifies queue.queue1`elemSeq
+		modifies queue.queue2.elements
+		modifies queue.queue2`used
+		modifies queue.queue2`elemSeq
+		modifies queue`elements
+		modifies queue`sequences
+		modifies this`reverse
+		modifies this`brake
+		modifies this`voltage
 		requires !queue.empty()
 		ensures queue == old(queue)
 		ensures queueSize() == old(queueSize()) - 1
@@ -157,6 +171,20 @@ class {:autocontracts} Vehicle {
 	}
 
 	method processAll()
+		modifies queue.queue0.elements
+		modifies queue.queue0`used
+		modifies queue.queue0`elemSeq
+		modifies queue.queue1.elements
+		modifies queue.queue1`used
+		modifies queue.queue1`elemSeq
+		modifies queue.queue2.elements
+		modifies queue.queue2`used
+		modifies queue.queue2`elemSeq
+		modifies queue`elements
+		modifies queue`sequences
+		modifies this`reverse
+		modifies this`brake
+		modifies this`voltage
 		ensures queueSize() == 0
 		ensures sequences() == emptyLists()
 		ensures queue == old(queue)
@@ -190,7 +218,7 @@ class {:autocontracts} Vehicle {
 		assert queue.Valid();
 		assert Valid();
 		assert queue == old(queue);
-		assume fresh(Repr - old(Repr));
+		assert fresh(Repr - old(Repr));
 	}
 }
 

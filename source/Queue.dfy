@@ -65,6 +65,9 @@ class {:autocontracts} Queue
 	}
 
 	method pop() returns (value : Signal)
+		modifies this.elements
+		modifies this`used
+		modifies this`elemSeq
 		requires !empty()
 		ensures value == old(elemSeq[0])
 		ensures elemSeq == old(elemSeq[1..])
