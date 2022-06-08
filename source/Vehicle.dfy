@@ -25,9 +25,14 @@ class {:autocontracts} Vehicle {
 
 	constructor()
 		ensures sequences() == emptyLists()
+		ensures keyStatus == NoKeyInserted
+		ensures lightRotary == Off
 		ensures voltage == 10
 		ensures brake == 0
 		ensures reverse == false
+		ensures frontLights     == 0;
+		ensures rearLights      == 0;
+		ensures centerRearLight == 0;
 		ensures fresh(queue)
 	{
 		queue           := new PriorityQueue(Reverse(false));
@@ -83,6 +88,36 @@ class {:autocontracts} Vehicle {
 	function sequences() : seq<seq<Signal>>
 	{
 		queue.sequences
+	}
+
+	// --------------------------------------------------------------------------------
+	// 
+	// --------------------------------------------------------------------------------
+
+	method changeKeyStatus(status : KeyPosition)
+		ensures this.keyStatus == status
+		ensures queue.elements == old(queue.elements)
+		ensures queue.sequences == old(queue.sequences)
+		ensures this.brake == old(this.brake)
+		ensures this.voltage == old(this.voltage)
+		ensures queueSize() == old(queueSize())
+		ensures sequences() == old(sequences())
+		ensures queue == old(queue)
+	{
+		this.keyStatus := status;
+	}
+
+	method changeLightRotary(status : SwitchPosition)
+		ensures this.lightRotary == status
+		ensures queue.elements == old(queue.elements)
+		ensures queue.sequences == old(queue.sequences)
+		ensures this.brake == old(this.brake)
+		ensures this.voltage == old(this.voltage)
+		ensures queueSize() == old(queueSize())
+		ensures sequences() == old(sequences())
+		ensures queue == old(queue)
+	{
+		this.lightRotary := status;
 	}
 
 	// --------------------------------------------------------------------------------
@@ -151,6 +186,7 @@ class {:autocontracts} Vehicle {
 		modifies this`voltage
 		modifies this`rearLights
 		modifies this`frontLights
+		modifies this`centerRearLight
 		requires !queue.empty()
 		ensures queue == old(queue)
 		ensures queueSize() == old(queueSize()) - 1
@@ -174,8 +210,8 @@ class {:autocontracts} Vehicle {
 				executeBeam(luminosity);
 			}
 			case Brake(deflection) => 
-			{ 
-				this.brake := deflection; 
+			{
+				executeBrake(deflection);
 			}
 			case Voltage(level) => 
 			{ 
@@ -229,6 +265,22 @@ class {:autocontracts} Vehicle {
 		}
 	}
 
+	method executeBrake(deflection : nat)
+		modifies this`brake
+		modifies this`rearLights
+		modifies this`centerRearLight
+		ensures this.reverse == old(this.reverse)
+		ensures this.voltage == old(this.voltage)
+		ensures queueSize() == old(queueSize())
+		ensures queue == old(queue)
+		ensures sequences() == old(sequences())
+		ensures this.brake == deflection
+	{
+		this.brake := deflection;
+		this.rearLights := 100;
+		this.centerRearLight := 100;
+	}
+
 	method executeVoltage(level : int)
 		modifies this`voltage
 		ensures this.reverse == old(this.reverse)
@@ -258,6 +310,7 @@ class {:autocontracts} Vehicle {
 		modifies this`voltage
 		modifies this`rearLights
 		modifies this`frontLights
+		modifies this`centerRearLight
 		ensures queueSize() == 0
 		ensures sequences() == emptyLists()
 		ensures queue == old(queue)
@@ -300,7 +353,16 @@ method TestVehicle()
 	var v := new Vehicle();
 
 	assert v.sequences() == [[], [], []];
+	assert v.keyStatus == NoKeyInserted;
 	assert v.voltage == 10;
+
+	v.changeKeyStatus(KeyInserted);
+	assert v.keyStatus == KeyInserted;
+
+	v.changeLightRotary(On);
+	assert v.lightRotary == On;
+
+	// Test add signal
 
 	v.addSignal(Reverse(false));
 
@@ -329,9 +391,14 @@ method TestVehicle()
 	assert |v.sequences()| == 3;
 	assert v.sequences() == [[Voltage(30)], [Brake(5)], [Reverse(false)]];
 
+
+	// Test get first
+
 	var s := v.getFirst();
 
 	assert s == Voltage(30);
+
+	// Test process
 
 	v.processFirst();
 	assert v.queueSize() == 2;
