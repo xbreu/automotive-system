@@ -1,26 +1,94 @@
 include "PriorityQueue.dfy"
 include "Signal.dfy"
 
+datatype SwitchPosition = On | Off | Auto
+datatype KeyPosition = NoKeyInserted | KeyInserted | KeyInIgnitionOnPosition
+	
 // Vehicle class
 class {:autocontracts} Vehicle {
-	var queue : PriorityQueue;
+	// Primitive attributes
+	var keyStatus          : KeyPosition;
+	var lightRotary        : SwitchPosition;
+	var reverse            : bool;
+	var voltage            : int;
+	var brake              : nat;
+	var frontLights        : nat;
+	var rearLights         : nat;
+	var centerRearLight    : nat;
+	var exteriorBrightness : nat;
+	// Implementation attributes
+	var queue              : PriorityQueue;
 
+	// --------------------------------------------------------------------------------
+	// Constructor and valid predicate
+	// --------------------------------------------------------------------------------
+
+	constructor()
+		ensures sequences() == emptyLists()
+		ensures voltage == 10
+		ensures brake == 0
+		ensures reverse == false
+		ensures fresh(queue)
+	{
+		queue           := new PriorityQueue(Reverse(false));
+		keyStatus       := NoKeyInserted;
+		lightRotary     := Off;
+		reverse         := false;
+		voltage         := 10;
+		brake           := 0;
+		frontLights     := 0;
+		rearLights      := 0;
+		centerRearLight := 0;
+	}
+	
 	predicate Valid()
 	{
-		queue.Valid()
+		&& queue.Valid()
 	}
 
+	// --------------------------------------------------------------------------------
+	// Activation predicates
+	// --------------------------------------------------------------------------------
+	
+	predicate subvoltage()
+	{
+		voltage <= 8
+	}
+
+	predicate overvoltage()
+	{
+		voltage >= 15
+	}
+
+	predicate ignitionOn()
+	{
+		keyStatus == KeyInIgnitionOnPosition
+	}
+
+	predicate lowBeams()
+	{
+		|| (ignitionOn() && lightRotary == On)
+		|| (ignitionOn() && lightRotary == Auto && exteriorBrightness <= 200)
+	}
+
+	predicate powerSaving()
+	{
+		keyStatus == KeyInserted && lightRotary == On
+	}
+	
+	// --------------------------------------------------------------------------------
+	// Attribute functions
+	// --------------------------------------------------------------------------------
+	
 	function sequences() : seq<seq<Signal>>
 	{
 		queue.sequences
 	}
 
-	constructor()
-		ensures sequences() == emptyLists()
-	{
-		queue := new PriorityQueue(Reverse(false));
-	}
-
+	// --------------------------------------------------------------------------------
+	// Queue state
+	// --------------------------------------------------------------------------------
+	
 	function method queueSize() : nat
 		ensures queueSize() == |flatten(sequences())|
 	{
@@ -42,6 +110,13 @@ class {:autocontracts} Vehicle {
 	{
 		priority(firstNonEmpty(sequences()))
 	}
+
+	function method getFirst() : Signal
+		requires !emptyQueue()
+		ensures getFirst() == sequences()[index(priority(firstNonEmpty(sequences())))][0]
+	{
+		queue.peek()
+	}
 	
 	method addSignal(signal : Signal)
 		ensures sequences()[index(getPriority(signal))]
@@ -50,22 +125,100 @@ class {:autocontracts} Vehicle {
 		==> sequences()[k] == old(sequences()[k])
 		ensures queueSize() == old(queueSize()) + 1
 		ensures |sequences()| == maxPriority
+		ensures queue == old(queue)
 	{
 		queue.push(signal, getPriority(signal));
 	}
 	
+	// --------------------------------------------------------------------------------
+	// Processing
+	// --------------------------------------------------------------------------------
+	
 	method processFirst()
+		modifies queue.queue0.elements
+		modifies queue.queue0`used
+		modifies queue.queue0`elemSeq
+		modifies queue.queue1.elements
+		modifies queue.queue1`used
+		modifies queue.queue1`elemSeq
+		modifies queue.queue2.elements
+		modifies queue.queue2`used
+		modifies queue.queue2`elemSeq
+		modifies queue`elements
+		modifies queue`sequences
+		modifies this`reverse
+		modifies this`brake
+		modifies this`voltage
 		requires !queue.empty()
-	{
+		ensures queue == old(queue)
+		ensures queueSize() == old(queueSize()) - 1
+		ensures sequences()[old(index(firstNonEmptyPriority()))] 
+			== old(sequences()[index(firstNonEmptyPriority())][1..])
+		ensures forall k :: (0 <= k < |sequences()| && k != old(index(firstNonEmptyPriority())))
+		  ==> sequences()[k] == old(sequences()[k])
+		ensures queue == old(queue)
+		{
 		// Get the first element from the queue
 		var element := queue.pop();
+
+		// Process element
+		match element
+			case Reverse(activation) => { this.reverse := activation; }
+			case Beam(level) => {}
+			case Brake(deflection) => { this.brake := deflection; }
+			case Voltage(level) => { this.voltage := level; }
+
 	}
 
-	function method getFirst() : Signal
-		requires !emptyQueue()
-		ensures getFirst() == sequences()[index(priority(firstNonEmpty(sequences())))][0]
+	method processAll()
+		modifies queue.queue0.elements
+		modifies queue.queue0`used
+		modifies queue.queue0`elemSeq
+		modifies queue.queue1.elements
+		modifies queue.queue1`used
+		modifies queue.queue1`elemSeq
+		modifies queue.queue2.elements
+		modifies queue.queue2`used
+		modifies queue.queue2`elemSeq
+		modifies queue`elements
+		modifies queue`sequences
+		modifies this`reverse
+		modifies this`brake
+		modifies this`voltage
+		ensures queueSize() == 0
+		ensures sequences() == emptyLists()
+		ensures queue == old(queue)
 	{
-		queue.peek()
+		assert queue.Valid();
+		assert Valid();
+		var oldSize := queueSize();
+		var size := oldSize;
+
+		while size > 0
+			decreases size
+			invariant queue == old(queue)
+			invariant 0 <= size <= oldSize
+			invariant queue.Valid()
+			invariant Valid()
+			invariant size == queueSize()
+		{
+			assert queue.Valid();
+			assert Valid();
+			processFirst();
+			assert queue.Valid();
+			assert Valid();
+			size := size - 1;
+		}
+
+		assert this in Repr;
+		assert null !in Repr;
+    assert queue in Repr;
+		assert queue.Repr <= Repr;
+		assert this !in queue.Repr;
+		assert queue.Valid();
+		assert Valid();
+		assert queue == old(queue);
+		assert fresh(Repr - old(Repr));
 	}
 }
 
@@ -74,6 +227,7 @@ method TestVehicle()
 	var v := new Vehicle();
 
 	assert v.sequences() == [[], [], []];
+	assert v.voltage == 10;
 
 	v.addSignal(Reverse(false));
 
@@ -105,4 +259,16 @@ method TestVehicle()
 	var s := v.getFirst();
 
 	assert s == Voltage(30);
+
+	v.processFirst();
+	assert v.queueSize() == 2;
+	assert v.sequences()[0] == [];
+	assert v.sequences()[1] == [Brake(5)];
+	assert v.sequences()[2] == [Reverse(false)];
+
+	v.processFirst();
+	assert v.queueSize() == 1;
+	assert v.sequences()[0] == [];
+	assert v.sequences()[1] == [];
+	assert v.sequences()[2] == [Reverse(false)];
 }
