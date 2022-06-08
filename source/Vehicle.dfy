@@ -232,10 +232,18 @@ class {:autocontracts} Vehicle {
 		ensures sequences() == old(sequences())
 		ensures queue == old(queue)
 		ensures this.reverse == activation
-		ensures this.rearLights == 100
+		ensures activation && !subvoltage() ==> this.rearLights == 100
+		ensures !activation ==> this.rearLights == 0
 	{
 		this.reverse := activation;
-		this.rearLights := 100;
+		if activation && !subvoltage()
+		{
+			this.rearLights := 100;
+		}
+		else
+		{
+			this.rearLights := 0;
+		}
 	}
 
 	method executeBeam(luminosity : nat)
@@ -275,10 +283,21 @@ class {:autocontracts} Vehicle {
 		ensures queue == old(queue)
 		ensures sequences() == old(sequences())
 		ensures this.brake == deflection
+		ensures this.brake > 0 ==> (this.rearLights == 100 && this.rearLights == 100)
+		ensures this.brake == 0 ==> (this.rearLights == 0 && this.rearLights == 0)
 	{
 		this.brake := deflection;
-		this.rearLights := 100;
-		this.centerRearLight := 100;
+
+		if this.brake > 0
+		{
+			this.rearLights := 100;
+			this.centerRearLight := 100;
+		}
+		else
+		{
+			this.rearLights := 0;
+			this.centerRearLight := 0;
+		}
 	}
 
 	method executeVoltage(level : int)
