@@ -36,6 +36,7 @@ function firstNonEmpty<T>(sequences : seq<seq<T>>) : nat
 function addTo<T>(sequences : seq<seq<T>>, priority : nat, value : T) : seq<seq<T>>
 	requires 0 < priority <= |sequences|
 	ensures |addTo(sequences, priority, value)| == |sequences|
+	ensures |flatten(addTo(sequences, priority, value))| == |flatten(sequences)| + 1
 	ensures forall i :: 0 <= i < |sequences| && i != index(priority) ==> addTo(sequences, priority, value)[i] == sequences[i]
 	ensures addTo(sequences, priority, value)[index(priority)] == sequences[index(priority)] + [value] 
 {
@@ -50,6 +51,7 @@ function removeFrom<T>(sequences : seq<seq<T>>, priority : nat) : seq<seq<T>>
 	requires 0 < priority <= |sequences|
 	requires |sequences[index(priority)]| > 0 
 	ensures |removeFrom(sequences, priority)| == |sequences|
+	ensures |flatten(removeFrom(sequences, priority))| == |flatten(sequences)| - 1
 	ensures forall i :: 0 <= i < |sequences| && i != index(priority) ==> removeFrom(sequences, priority)[i] == sequences[i]
 	ensures removeFrom(sequences, priority)[index(priority)] == sequences[index(priority)][1..]
 {
@@ -86,6 +88,9 @@ class {:autocontracts} PriorityQueue
 		ensures sequences == emptyLists(maxPriority)
 		ensures flatten(sequences) == []
 		ensures this.maxPriority == maxPriority
+		ensures fresh(queues)
+		ensures forall i :: 0 <= i < maxPriority ==> fresh(queues[i])
+		ensures forall i :: 0 <= i < maxPriority ==> fresh(queues[i].elements)
 	{
 		this.maxPriority := maxPriority;
 		new;
@@ -96,6 +101,8 @@ class {:autocontracts} PriorityQueue
 			invariant 0 <= i <= maxPriority
 			invariant forall j :: 0 <= j < i ==> queuesI[j].Valid()
 			invariant forall j :: 0 <= j < i ==> queuesI[j].elemSeq == []
+			invariant forall j :: 0 <= j < i ==> fresh(queuesI[j])
+			invariant forall j :: 0 <= j < i ==> fresh(queuesI[j].elements)
 			invariant forall j, k :: 0 <= j < k < i ==> queuesI[j] != queuesI[k]
 			invariant forall j, k :: 0 <= j < k < i ==> queuesI[j].elements != queuesI[k].elements
 		{
@@ -105,15 +112,20 @@ class {:autocontracts} PriorityQueue
 		queues := queuesI;
 		this.elements := 0;
 		this.sequences := emptyLists(maxPriority);
-		assert |sequences| == maxPriority;
-		assert elements == |flatten(sequences)|;
-		assert forall i :: 0 <= i < maxPriority ==> queues[i].Valid();
-		assert forall i, j :: 0 <= i < j < maxPriority ==> queues[i] != queues[j];
-		assert forall i :: 0 <= i < maxPriority ==> sequences[i] == queues[i].elemSeq;
-		assert forall i, j :: 0 <= i < j < maxPriority ==> queues[i].elements != queues[j].elements;
+		// assert |sequences| == maxPriority;
+		// assert elements == |flatten(sequences)|;
+		// assert forall i :: 0 <= i < maxPriority ==> queues[i].Valid();
+		// assert forall i, j :: 0 <= i < j < maxPriority ==> queues[i] != queues[j];
+		// assert forall i :: 0 <= i < maxPriority ==> sequences[i] == queues[i].elemSeq;
+		// assert forall i, j :: 0 <= i < j < maxPriority ==> queues[i].elements != queues[j].elements;
 	}
 
 	predicate Valid()
+		reads this.queues
+		reads set i | 0 <= i < queues.Length :: queues[i]
+		reads set i | 0 <= i < queues.Length :: queues[i].elements
+		reads set i | 0 <= i < queues.Length :: queues[i]`used
+		reads set x, y | y in (set i | 0 <= i < queues.Length :: queues[i].Repr) && x in y :: x
 	{
 		&& |sequences| == maxPriority
 		&& queues.Length == maxPriority
@@ -126,18 +138,42 @@ class {:autocontracts} PriorityQueue
 	}
 	
 	function method size() : nat
+		reads this`elements
+		reads this`sequences
+		reads this.queues
+		reads this.Repr
+		reads set i | 0 <= i < queues.Length :: queues[i]
+		reads set i | 0 <= i < queues.Length :: queues[i].elements
+		reads set i | 0 <= i < queues.Length :: queues[i]`used
+		reads set x, y | y in (set i | 0 <= i < queues.Length :: queues[i].Repr) && x in y :: x
 		ensures size() == |flatten(sequences)|
 	{
 		elements
 	}
 		
 	predicate method empty()
+		reads this`elements
+		reads this`sequences
+		reads this.queues
+		reads this.Repr
+		reads set i | 0 <= i < queues.Length :: queues[i]
+		reads set i | 0 <= i < queues.Length :: queues[i].elements
+		reads set i | 0 <= i < queues.Length :: queues[i]`used
+		reads set x, y | y in (set i | 0 <= i < queues.Length :: queues[i].Repr) && x in y :: x
 		ensures empty() <==> (size() == 0)
 	{
 		size() == 0
 	}
 
 	function minPriorityFunc() : nat
+		reads this`elements
+		reads this`sequences
+		reads this.queues
+		reads this.Repr
+		reads set i | 0 <= i < queues.Length :: queues[i]
+		reads set i | 0 <= i < queues.Length :: queues[i].elements
+		reads set i | 0 <= i < queues.Length :: queues[i]`used
+		reads set x, y | y in (set i | 0 <= i < queues.Length :: queues[i].Repr) && x in y :: x
 		requires !empty()
 		ensures 0 < minPriorityFunc() <= maxPriority
 		ensures |sequences[index(minPriorityFunc())]| > 0
@@ -170,28 +206,41 @@ class {:autocontracts} PriorityQueue
 	}
 	
 	method push(value : Signal, priority : nat)
+		modifies this.queues
+		modifies this`elements
+		modifies this`sequences
+		modifies set i | 0 <= i < queues.Length :: queues[i]
+		modifies set i | 0 <= i < queues.Length :: queues[i].elements
 		requires 0 < priority <= maxPriority
 		ensures sequences[index(priority)] == old(sequences[index(priority)]) + [value]
 		ensures size() == old(size()) + 1
+		ensures queues == old(queues)
 		ensures forall k :: 0 <= k < |sequences| && k != index(priority)
-		==> sequences[k] == old(sequences[k])
+		  ==> sequences[k] == old(sequences[k])
+		ensures forall i :: 0 <= i < queues.Length
+		  ==> queues[i] == old(queues[i])
+		ensures forall i :: 0 <= i < queues.Length
+		  ==> queues[i].elements == old(queues[i].elements) || fresh(queues[i].elements)
 	{
 		var queueIndex := index(priority);
 		queues[queueIndex].push(value);
-		elements := elements + 1;
 		sequences := addTo(sequences, priority, value);
+		elements := elements + 1;
+		// assert |sequences| == maxPriority;
+		// assert queues.Length == maxPriority;
+		// assert elements == |flatten(sequences)|;
+		// assert (forall i :: 0 <= i < maxPriority ==> queues[i].Valid());
+		// assert (forall i, j :: 0 <= i < j < maxPriority ==> queues[i] != queues[j]);
+		// assert (forall i, j :: 0 <= i < j < maxPriority ==> queues[i].elements != queues[j].elements);
+		// assert (forall i, j :: 0 <= i < j < maxPriority ==> queues[i].Repr * queues[j].Repr == {});
+		// assert (forall i :: 0 <= i < maxPriority ==> sequences[i] == queues[i].elemSeq);
+		// assert Valid();
 	}
 
 	method pop() returns (result : Signal)
-		modifies queue0.elements
-		modifies queue0`used
-		modifies queue0`elemSeq
-		modifies queue1.elements
-		modifies queue1`used
-		modifies queue1`elemSeq
-		modifies queue2.elements
-		modifies queue2`used
-		modifies queue2`elemSeq
+		modifies queues
+		modifies set i | 0 <= i < queues.Length :: queues[i]
+		modifies set i | 0 <= i < queues.Length :: queues[i].elements
 		modifies this`elements
 		modifies this`sequences
 		requires !empty()
@@ -201,6 +250,10 @@ class {:autocontracts} PriorityQueue
 		ensures forall k :: 0 <= k < |sequences| && k != old(index(minPriorityFunc()))
 		==> sequences[k] == old(sequences[k])
 		ensures Repr == old(Repr)
+		ensures forall i :: 0 <= i < queues.Length
+		  ==> queues[i] == old(queues[i])
+		ensures forall i :: 0 <= i < queues.Length
+		  ==> queues[i].elements == old(queues[i].elements)
 	{
 		var priority := minPriority();
 		var queueIndex := index(priority);
@@ -211,7 +264,14 @@ class {:autocontracts} PriorityQueue
 
 	method peek() returns (result : Signal)
 		requires !empty()
+		ensures elements == old(elements)
+		ensures sequences == old(sequences)
 		ensures result == sequences[index(minPriorityFunc())][0]
+		ensures forall i :: 0 <= i < queues.Length
+		  ==> queues[i] == old(queues[i])
+		ensures forall i :: 0 <= i < queues.Length
+		==> queues[i].elements == old(queues[i].elements)
+		ensures Repr == old(Repr)
 	{
 		var priority := minPriority();
 		var queueIndex := index(priority);
@@ -219,7 +279,6 @@ class {:autocontracts} PriorityQueue
 	}
 }
 
-/*
 method TestPriorityQueue()
 {
 	var q := new PriorityQueue(3, Reverse(false));
@@ -234,4 +293,4 @@ method TestPriorityQueue()
 	assert y == Brake(5);
 	y := q.pop();
 	assert y == Beam(20);
-}*/
+}
