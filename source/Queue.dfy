@@ -100,18 +100,21 @@ class {:autocontracts} Queue
 method TestQueue()
 {
 	var x := new Queue(Reverse(false));
+
 	x.push(Brake(2));
-	// assert x.size() == 1;
+	assert x.size() == 1;
+
 	x.push(Voltage(5));
-	// assert x.size() == 2;
+	assert x.size() == 2;
+
 	var y := x.pop();
-	print y, "\n";
-	// assert x.size() == 1;
-	// assert y == 2;
+	assert x.size() == 1;
+	assert y == Brake(2);
+
 	y := x.peek();
 	assert y == Voltage(5);
+
 	y := x.pop();
-	print y, "\n";
 	assert x.size() == 0;
 	assert y == Voltage(5);
 }

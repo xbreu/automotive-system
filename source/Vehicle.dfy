@@ -1,25 +1,6 @@
 include "PriorityQueue.dfy"
 include "Signal.dfy"
 
-lemma flattenEmptyImpliesAllEmpty<T>(sequences : seq<seq<T>>)
-  ensures (|flatten(sequences)| == 0) <==>
-	  (forall i :: 0 <= i < |sequences| ==> sequences[i] == [])
-{
-	if (|flatten(sequences)| == 0) {
-		assert flatten(sequences) == [];
-		if |sequences| == 0 {
-			assert forall i :: 0 <= i < |sequences| ==> sequences[i] == [];
-		} else {
-			assert sequences[0] == [];
-			flattenEmptyImpliesAllEmpty(sequences[1..]);
-			// assert forall i :: 0 <= i < |sequences| ==> sequences[i] == [];
-		}
-	}
-}
-
-datatype SwitchPosition = On | Off | Auto
-datatype KeyPosition = NoKeyInserted | KeyInserted | KeyInIgnitionOnPosition
-
 const priorityValues : nat := 3
 
 // Vehicle class
@@ -425,67 +406,6 @@ class {:autocontracts} Vehicle {
 	{
 		this.voltage := level;
 	}
-
-	/*method processAll()
-		modifies this`reverse
-		modifies this`brake
-		modifies this`voltage
-		modifies this`rearLights
-		modifies this`frontLights
-		modifies this`centerRearLight
-		modifies queue
-		modifies queue.queues
-		modifies set i | 0 <= i < queue.queues.Length :: queue.queues[i]
-		modifies set i | 0 <= i < queue.queues.Length :: queue.queues[i].elements
-		modifies queue`elements
-		modifies queue`sequences
-		ensures queueSize() == 0
-		ensures sequences() == emptyLists(priorityValues)
-		ensures queue == old(queue)
-	{
-		// assert queue.Valid();
-		// assert Valid();
-		var oldSize := queueSize();
-		var size := oldSize;
-
-		while size > 0
-			decreases size
-			invariant queue == old(queue)
-			invariant queue.queues == old(queue.queues)
-			invariant queue.Repr == old(queue.Repr)
-			invariant forall i :: 0 <= i < queue.queues.Length
-		    ==> queue.queues[i] == old(queue.queues[i])
-			invariant forall i :: 0 <= i < queue.queues.Length
-		    ==> queue.queues[i].elements == old(queue.queues[i].elements)
-			invariant 0 <= size <= oldSize
-			invariant queue.Valid()
-			invariant Valid()
-			invariant size == queueSize()
-		{
-			// assert queue.Valid();
-			// assert Valid();
-			processFirst();
-			// assert queue.Valid();
-			// assert Valid();
-			size := size - 1;
-		}
-
-		// assert this in Repr;
-		// assert null !in Repr;
-    // assert queue in Repr;
-		// assert queue.Repr <= Repr;
-		// assert this !in queue.Repr;
-		// assert queue.Valid();
-		// assert Valid();
-		// assert queue == old(queue);
-		// assert fresh(Repr - old(Repr));
-		// assert size == 0;
-		// assert |sequences()| == priorityValues;
-		// assert |flatten(sequences())| == 0;
-		flattenEmptyImpliesAllEmpty(sequences());
-		// assert forall i :: 0 <= i < |sequences()| ==> sequences()[i] == [];
-		// assert sequences() == emptyLists(priorityValues);
-	}*/
 }
 
 method TestVehicle()
@@ -544,7 +464,4 @@ method TestVehicle()
 	assert v.sequences()[0] == [];
 	assert v.sequences()[1] == [];
 	assert v.sequences()[2] == [Reverse(false)];
-
-	/*v.processAll();
-	assert v.queueSize() == 0;*/
 }
