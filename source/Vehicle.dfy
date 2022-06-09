@@ -5,25 +5,21 @@ const priorityValues : nat := 3
 
 // Vehicle class
 class {:autocontracts} Vehicle {
+	// Sensors
+	var voltage            : nat; // 0 - 500 dV
+	var exteriorBrightness : nat; // 0 – 100000 lx
 	// User interface
 	var keyStatus          : KeyPosition;
-	var ignitionOn         : bool;
 	var lightRotary        : SwitchPosition;
 	var reverse            : bool;
 	var brake              : nat; // 0 - 450 * 0.1 degrees
+	var ignitionOn         : bool;
 	// Actuators
 	var lowBeams           : nat; // 0 - 100 %
 	var tailLamps          : nat; // 0 - 100 %
 	var corneringLights    : nat; // 0 - 100 %
 	var brakeLight         : nat; // 0 - 100 %
 	var reverseLight       : nat; // 0 - 100 %
-	// Sensors
-	var voltage            : nat; // 0 - 500 dV
-	var exteriorBrightness : nat; // 0 – 100000 lx
-	// Concrete state of the lights
-	var frontLights        : nat;
-	var rearLights         : nat;
-	var centerRearLight    : nat;
 	// Implementation attributes
 	const queue            : PriorityQueue;
 
@@ -33,28 +29,36 @@ class {:autocontracts} Vehicle {
 
 	constructor()
 		ensures sequences() == emptyLists(priorityValues)
+		ensures voltage == 100
+		ensures exteriorBrightness == 50000
 		ensures keyStatus == NoKeyInserted
 		ensures lightRotary == Off
-		ensures voltage == 10
-		ensures brake == 0
 		ensures reverse == false
-		ensures frontLights     == 0
-		ensures rearLights      == 0
-		ensures centerRearLight == 0
+		ensures brake == 0
+		ensures ignitionOn == false
+		ensures lowBeams == 0
+		ensures tailLamps == 0
+		ensures corneringLights == 0
+		ensures brakeLight == 0
+		ensures reverseLight == 0
 		ensures fresh(queue)
 		ensures fresh(queue.queues)
 		ensures forall i :: 0 <= i < priorityValues ==> fresh(queue.queues[i])
 		ensures forall i :: 0 <= i < priorityValues ==> fresh(queue.queues[i].elements)
 	{
-		queue           := new PriorityQueue(priorityValues, Reverse(false));
-		keyStatus       := NoKeyInserted;
-		lightRotary     := Off;
-		reverse         := false;
-		voltage         := 10;
-		brake           := 0;
-		frontLights     := 0;
-		rearLights      := 0;
-		centerRearLight := 0;
+		queue := new PriorityQueue(priorityValues, Reverse(false));
+		voltage := 100;
+		exteriorBrightness := 50000;
+		keyStatus := NoKeyInserted;
+		lightRotary := Off;
+		reverse := false;
+		brake := 0;
+		ignitionOn := false;
+		lowBeams := 0;
+		tailLamps := 0;
+		corneringLights := 0;
+		brakeLight := 0;
+		reverseLight := 0;
 	}
 	
 	predicate Valid()
@@ -134,49 +138,6 @@ class {:autocontracts} Vehicle {
 	}
 
 	// --------------------------------------------------------------------------------
-	// 
-	// --------------------------------------------------------------------------------
-
-	method changeKeyStatus(status : KeyPosition)
-		ensures this.keyStatus == status
-		ensures this.lightRotary == old(this.lightRotary)
-		ensures this.voltage == old(this.voltage)
-		ensures this.reverse == old(this.reverse)
-		ensures this.brake == old(this.brake)
-		ensures queueSize() == old(queueSize())
-		ensures sequences() == old(sequences())
-		ensures queue.elements == old(queue.elements)
-		ensures queue.sequences == old(queue.sequences)
-		ensures forall i :: 0 <= i < queue.queues.Length
-		  ==> queue.queues[i] == old(queue.queues[i])
-		ensures forall i :: 0 <= i < queue.queues.Length
-		  ==> queue.queues[i].elements == old(queue.queues[i].elements)
-		ensures queue.Repr == old(queue.Repr)
-	{
-		this.keyStatus := status;
-		this.ignitionOn := status == KeyInIgnitionOnPosition;
-	}
-
-	method changeLightRotary(status : SwitchPosition)
-		ensures this.keyStatus == old(this.keyStatus)
-		ensures this.lightRotary == status
-		ensures this.voltage == old(this.voltage)
-		ensures this.reverse == old(this.reverse)
-		ensures this.brake == old(this.brake)
-		ensures queueSize() == old(queueSize())
-		ensures sequences() == old(sequences())
-		ensures queue.elements == old(queue.elements)
-		ensures queue.sequences == old(queue.sequences)
-		ensures forall i :: 0 <= i < queue.queues.Length
-		  ==> queue.queues[i] == old(queue.queues[i])
-		ensures forall i :: 0 <= i < queue.queues.Length
-		  ==> queue.queues[i].elements == old(queue.queues[i].elements)
-		ensures queue.Repr == old(queue.Repr)
-	{
-		this.lightRotary := status;
-	}
-
-	// --------------------------------------------------------------------------------
 	// Queue state
 	// --------------------------------------------------------------------------------
 	
@@ -223,6 +184,19 @@ class {:autocontracts} Vehicle {
 		priority(firstNonEmpty(sequences()))
 	}
 
+	function front() : Signal
+		reads this.Repr
+		reads queue
+		reads queue.queues
+		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i]
+		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i].elements
+		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i]`used
+		reads set x, y | y in (set i | 0 <= i < queue.queues.Length :: queue.queues[i].Repr) && x in y :: x
+		requires !emptyQueue()
+	{
+		sequences()[index(firstNonEmptyPriority())][0]
+	}
+	
 	method getFirst() returns (result : Signal)
 		requires !emptyQueue()
 		ensures !emptyQueue()
@@ -267,12 +241,7 @@ class {:autocontracts} Vehicle {
 	// --------------------------------------------------------------------------------
 	
 	method processFirst()
-		modifies this`reverse
-		modifies this`brake
-		modifies this`voltage
-		modifies this`rearLights
-		modifies this`frontLights
-		modifies this`centerRearLight
+		modifies this
 		modifies queue
 		modifies queue.queues
 		modifies set i | 0 <= i < queue.queues.Length :: queue.queues[i]
@@ -289,122 +258,48 @@ class {:autocontracts} Vehicle {
 		  ==> queue.queues[i] == old(queue.queues[i])
 		ensures forall i :: 0 <= i < queue.queues.Length
 		  ==> queue.queues[i].elements == old(queue.queues[i].elements)
-		ensures queue.queues == old(queue.queues)
-		ensures match old(sequences()[index(firstNonEmptyPriority())][0])
-		  case Reverse(activation) => this.reverse == activation
-		  case Brake(deflection) => this.brake == deflection
-			case Voltage(level) => this.voltage == level
-			case _ => true
-	{
+		ensures queue.queues == old(queue.queues)	
+		ensures match old(front())
+		  case Voltage(level) => voltage == level
+			case _ => voltage == old(voltage)
+		ensures match old(front())
+		  case ExteriorBrightness(level) => exteriorBrightness == level
+			case _ => exteriorBrightness == old(exteriorBrightness)
+		ensures match old(front())
+		  case KeyStatus(status) => keyStatus == status
+			case _ => keyStatus == old(keyStatus)
+		ensures match old(front())
+		  case LightRotary(value) => lightRotary == value
+			case _ => lightRotary == old(lightRotary)
+		ensures match old(front())
+		  case Reverse(value) => reverse == value
+			case _ => reverse == old(reverse)
+		ensures match old(front())
+		  case Brake(value) => brake == value
+			case _ => brake == old(brake)	
+	{	
 		// Get the first element from the queue
 		var element := queue.pop();
-
-		// Process element
-		match element
-			case Reverse(activation) => 
-			{ 
-				executeReverse(activation);
+		match element {
+			case Voltage(level) => {
+				voltage := level;
 			}
-			case Beam(luminosity) => 
-			{
-				executeBeam(luminosity);
+			case ExteriorBrightness(level) => {
+				exteriorBrightness := level;
 			}
-			case Brake(deflection) => 
-			{
-				executeBrake(deflection);
+			case KeyStatus(status) => {
+				keyStatus := status;
 			}
-			case Voltage(level) => 
-			{ 
-				executeVoltage(level);
-				// assert this.voltage == level;
+			case LightRotary(position) => {
+				lightRotary := position;
 			}
-	}
-
-	method executeReverse(activation : bool)
-		modifies this`reverse
-		modifies this`rearLights
-		ensures queue.elements == old(queue.elements)
-		ensures queue.sequences == old(queue.sequences)
-		ensures this.brake == old(this.brake)
-		ensures this.voltage == old(this.voltage)
-		ensures queueSize() == old(queueSize())
-		ensures sequences() == old(sequences())
-		ensures this.reverse == activation
-		ensures activation && !subvoltage() ==> this.rearLights == 100
-		ensures !activation ==> this.rearLights == 0
-	{
-		this.reverse := activation;
-		if activation && !subvoltage()
-		{
-			this.rearLights := 100;
-		}
-		else
-		{
-			this.rearLights := 0;
-		}
-	}
-
-	method executeBeam(luminosity : nat)
-		modifies this`frontLights
-		ensures queue.elements == old(queue.elements)
-		ensures queue.sequences == old(queue.sequences)
-		ensures this.brake == old(this.brake)
-		ensures this.voltage == old(this.voltage)
-		ensures this.reverse == old(this.reverse)
-		ensures this.rearLights == old(this.rearLights)
-		ensures queueSize() == old(queueSize())
-		ensures sequences() == old(sequences())
-		ensures !subvoltage() && !overvoltage() ==> this.frontLights == luminosity
-		ensures overvoltage() ==> this.frontLights == (100 - (this.voltage - 14) * 20) % 100
-	{
-		if !subvoltage()
-		{
-			if overvoltage()
-			{
-				this.frontLights := (100 - (this.voltage - 14) * 20) % 100;
+			case Reverse(activation) => {
+				reverse := activation;
 			}
-			else
-			{
-				this.frontLights := luminosity;
+			case Brake(deflection) => {
+				brake := deflection;
 			}
 		}
-	}
-
-	method executeBrake(deflection : nat)
-		modifies this`brake
-		modifies this`rearLights
-		modifies this`centerRearLight
-		ensures this.reverse == old(this.reverse)
-		ensures this.voltage == old(this.voltage)
-		ensures queueSize() == old(queueSize())
-		ensures sequences() == old(sequences())
-		ensures this.brake == deflection
-		ensures this.brake > 0 ==> (this.rearLights == 100 && this.rearLights == 100)
-		ensures this.brake == 0 ==> (this.rearLights == 0 && this.rearLights == 0)
-	{
-		this.brake := deflection;
-
-		if this.brake > 0
-		{
-			this.rearLights := 100;
-			this.centerRearLight := 100;
-		}
-		else
-		{
-			this.rearLights := 0;
-			this.centerRearLight := 0;
-		}
-	}
-
-	method executeVoltage(level : int)
-		modifies this`voltage
-		ensures this.reverse == old(this.reverse)
-		ensures this.brake == old(this.brake)
-		ensures queueSize() == old(queueSize())
-		ensures this.voltage == level
-		ensures sequences() == old(sequences())
-	{
-		this.voltage := level;
 	}
 }
 
@@ -414,12 +309,6 @@ method TestVehicle()
 	assert v.sequences() == [[], [], []];
 	assert v.keyStatus == NoKeyInserted;
 	assert v.voltage == 10;
-
-	v.changeKeyStatus(KeyInserted);
-	assert v.keyStatus == KeyInserted;
-
-	v.changeLightRotary(On);
-	assert v.lightRotary == On;
 
 	// Test add signal
 
