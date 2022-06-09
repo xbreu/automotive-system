@@ -295,8 +295,8 @@ class {:autocontracts} Vehicle {
 		ensures sequences() == emptyLists(priorityValues)
 		ensures queue == old(queue)
 	{
-		assert queue.Valid();
-		assert Valid();
+		// assert queue.Valid();
+		// assert Valid();
 		var oldSize := queueSize();
 		var size := oldSize;
 
@@ -314,11 +314,11 @@ class {:autocontracts} Vehicle {
 			invariant Valid()
 			invariant size == queueSize()
 		{
-			assert queue.Valid();
-			assert Valid();
+			// assert queue.Valid();
+			// assert Valid();
 			processFirst();
-			assert queue.Valid();
-			assert Valid();
+			// assert queue.Valid();
+			// assert Valid();
 			size := size - 1;
 		}
 
@@ -331,16 +331,15 @@ class {:autocontracts} Vehicle {
 		// assert Valid();
 		// assert queue == old(queue);
 		// assert fresh(Repr - old(Repr));
-		assert size == 0;
-		assert |sequences()| == priorityValues;
-		assert |flatten(sequences())| == 0;
+		// assert size == 0;
+		// assert |sequences()| == priorityValues;
+		// assert |flatten(sequences())| == 0;
 		flattenEmptyImpliesAllEmpty(sequences());
-		assert forall i :: 0 <= i < |sequences()| ==> sequences()[i] == [];
-		assert sequences() == emptyLists(priorityValues);
+		// assert forall i :: 0 <= i < |sequences()| ==> sequences()[i] == [];
+		// assert sequences() == emptyLists(priorityValues);
 	}
 }
 
-/*
 method TestVehicle()
 {
 	var v := new Vehicle();
@@ -391,4 +390,3 @@ method TestVehicle()
 	assert v.sequences()[1] == [];
 	assert v.sequences()[2] == [Reverse(false)];
 }
-*/
