@@ -13,7 +13,7 @@ class {:autocontracts} Vehicle {
 	var lightRotary        : SwitchPosition;
 	var reverse            : bool;
 	var brake              : nat; // 0 - 450 * 0.1 degrees
-	var ignitionOn         : bool;
+	var engineOn           : bool;
 	// Actuators
 	var lowBeams           : nat; // 0 - 100 %
 	var tailLamps          : nat; // 0 - 100 %
@@ -35,7 +35,7 @@ class {:autocontracts} Vehicle {
 		ensures lightRotary == Off
 		ensures reverse == false
 		ensures brake == 0
-		ensures ignitionOn == false
+		ensures engineOn == false
 		ensures lowBeams == 0
 		ensures tailLamps == 0
 		ensures corneringLights == 0
@@ -53,7 +53,7 @@ class {:autocontracts} Vehicle {
 		lightRotary := Off;
 		reverse := false;
 		brake := 0;
-		ignitionOn := false;
+		engineOn := false;
 		lowBeams := 0;
 		tailLamps := 0;
 		corneringLights := 0;
@@ -80,10 +80,10 @@ class {:autocontracts} Vehicle {
 		&& (reverseLight <= 100)
 		&& (exteriorBrightness <= 100000)
 		// Dependant variables
-		&& (ignitionOn <==> keyStatus == KeyInIgnitionOnPosition)
+		&& (engineOn <==> keyStatus == KeyInIgnitionOnPosition)
 		// ELS-14 | If the ignition is On and the light rotary switch is in the position On,
 		// then low beam headlights are activated.
-		&& (ignitionOn && lightRotary == On ==> lowBeams > 0)
+		&& (engineOn && lightRotary == On ==> lowBeams > 0)
 		// ELS-15 | While the ignition is in position KeyInserted: if the light rotary switch
 		// is turned to the position On, the low beam headlights are activated
 		// with 50% (to save power).
@@ -91,13 +91,13 @@ class {:autocontracts} Vehicle {
 		// ELS-16 | If the ignition is already off and the driver turns the light rotary
 		// switch to position Auto, the low beam headlights remain off or are
 		// deactivated (depending on the previous state).
-		&& (!ignitionOn && lightRotary == Auto ==> lowBeams == 0)
+		&& (!engineOn && lightRotary == Auto ==> lowBeams == 0)
 		// ELS-18 | If the light rotary switch is in position Auto and the ignition is On, the
 		// low beam headlights are activated as soon as the exterior brightness
 		// is lower than a threshold of 200 lx. If the exterior brightness exceeds
 		// a threshold of 250 lx, the low beam headlights are deactivated.
-		&& (ignitionOn && lightRotary == Auto && exteriorBrightness < 200 ==> lowBeams > 0)
-		&& (ignitionOn && lightRotary == Auto && exteriorBrightness > 250 ==> lowBeams == 0)
+		&& (engineOn && lightRotary == Auto && exteriorBrightness < 200 ==> lowBeams > 0)
+		&& (engineOn && lightRotary == Auto && exteriorBrightness > 250 ==> lowBeams == 0)
 		// ELS-22 | Whenever the low or high beam headlights are activated, the tail
 		// lights are activated, too.
 		&& (lowBeams > 0 ==> tailLamps > 0)
@@ -106,7 +106,7 @@ class {:autocontracts} Vehicle {
 		&& (reverse ==> corneringLights > 0)
 		// ELS-29 | The normal brightness of low beam lamps, brake lights, direction
 		// indicators, tail lamps, cornering lights, and reverse light is 100%.
-		&& (ignitionOn && lowBeams > 0 ==> lowBeams == 100)
+		&& (engineOn && lowBeams > 0 ==> lowBeams == 100)
 		&& (brakeLight > 0 ==> brakeLight == 100)
 		&& (tailLamps > 0 ==> tailLamps == 100)
 		&& (voltage > 80 && corneringLights > 0 ==> corneringLights == 100)
