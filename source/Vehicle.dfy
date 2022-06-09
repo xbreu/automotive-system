@@ -329,6 +329,11 @@ class {:autocontracts} Vehicle {
 		  ==> queue.queues[i].elements == old(queue.queues[i].elements)
 		ensures queue == old(queue)
 		ensures queue.queues == old(queue.queues)
+		ensures match old(sequences()[index(firstNonEmptyPriority())][0])
+		  case Reverse(activation) => this.reverse == activation
+		  case Brake(deflection) => this.brake == deflection
+			case Voltage(level) => this.voltage == level
+			case _ => true
 	{
 		// Get the first element from the queue
 		var element := queue.pop();
@@ -337,7 +342,7 @@ class {:autocontracts} Vehicle {
 		match element
 			case Reverse(activation) => 
 			{ 
-				executeReverse(activation); 
+				executeReverse(activation);
 			}
 			case Beam(luminosity) => 
 			{
@@ -349,10 +354,9 @@ class {:autocontracts} Vehicle {
 			}
 			case Voltage(level) => 
 			{ 
-				executeVoltage(level); 
+				executeVoltage(level);
 				// assert this.voltage == level;
 			}
-
 	}
 
 	method executeReverse(activation : bool)
@@ -546,7 +550,6 @@ method TestVehicle()
 	assert v.sequences()[2] == [Reverse(false)];
 	assert |v.sequences()| == 3;
 	assert v.sequences() == [[Voltage(30)], [Brake(5)], [Reverse(false)]];
-
 
 	// Test get first
 	var s := v.getFirst();
