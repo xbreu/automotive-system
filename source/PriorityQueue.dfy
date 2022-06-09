@@ -270,7 +270,7 @@ class {:autocontracts} PriorityQueue
 		ensures forall i :: 0 <= i < queues.Length
 		  ==> queues[i] == old(queues[i])
 		ensures forall i :: 0 <= i < queues.Length
-		==> queues[i].elements == old(queues[i].elements)
+		  ==> queues[i].elements == old(queues[i].elements)
 		ensures Repr == old(Repr)
 	{
 		var priority := minPriority();
