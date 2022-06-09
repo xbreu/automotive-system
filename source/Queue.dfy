@@ -11,6 +11,7 @@ class {:autocontracts} Queue
 		ensures |elemSeq| == 0
 		ensures elemSeq == []
 		ensures used == 0
+		ensures fresh(elements)
 	{
 		initializer := (_) => default;
 		elemSeq := [];
@@ -20,6 +21,9 @@ class {:autocontracts} Queue
 	}
 
 	predicate Valid()
+		reads this`used
+		reads this.elements
+		reads this`Repr
 	{
 		&& used <= elements.Length
 		&& elemSeq == elements[..used]
@@ -42,6 +46,7 @@ class {:autocontracts} Queue
 	method grow()
 		ensures elemSeq == old(elemSeq)
 		ensures elements.Length > old(elements.Length)
+		ensures fresh(elements)
 	{
 		var oldArray := elements;
 		elements := new Signal[2 * elements.Length + 1](initializer);
@@ -49,12 +54,13 @@ class {:autocontracts} Queue
 		{
 			elements[i] := oldArray[i];
 		}
-		assert elements[..used] == old(elements[..used]);
+		// assert elements[..used] == old(elements[..used]);
 		Repr := {this, elements};
 	}
 
 	method push(value : Signal) returns ()
 		ensures elemSeq == old(elemSeq) + [value]
+		ensures elements == old(elements) || fresh(elements)
 	{
 		if used == elements.Length {
 			grow();
@@ -72,6 +78,7 @@ class {:autocontracts} Queue
 		ensures value == old(elemSeq[0])
 		ensures elemSeq == old(elemSeq[1..])
 		ensures Repr == old(Repr)
+		ensures elements == old(elements)
 	{
 		value := elements[0];
 		used := used - 1;
