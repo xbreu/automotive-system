@@ -35,7 +35,7 @@ class {:autocontracts} Vehicle {
 	var centerRearLight    : nat;
 	var exteriorBrightness : nat;
 	// Implementation attributes
-	var queue              : PriorityQueue;
+	const queue            : PriorityQueue;
 
 	// --------------------------------------------------------------------------------
 	// Constructor and valid predicate
@@ -48,9 +48,9 @@ class {:autocontracts} Vehicle {
 		ensures voltage == 10
 		ensures brake == 0
 		ensures reverse == false
-		ensures frontLights     == 0;
-		ensures rearLights      == 0;
-		ensures centerRearLight == 0;
+		ensures frontLights     == 0
+		ensures rearLights      == 0
+		ensures centerRearLight == 0
 		ensures fresh(queue)
 		ensures fresh(queue.queues)
 		ensures forall i :: 0 <= i < priorityValues ==> fresh(queue.queues[i])
@@ -180,7 +180,6 @@ class {:autocontracts} Vehicle {
 		ensures this.voltage == old(this.voltage)
 		ensures queueSize() == old(queueSize())
 		ensures sequences() == old(sequences())
-		ensures queue == old(queue)
 		ensures queue.elements == old(queue.elements)
 		ensures queue.sequences == old(queue.sequences)
 		ensures forall i :: 0 <= i < queue.queues.Length
@@ -200,7 +199,6 @@ class {:autocontracts} Vehicle {
 		ensures this.voltage == old(this.voltage)
 		ensures queueSize() == old(queueSize())
 		ensures sequences() == old(sequences())
-		ensures queue == old(queue)
 		ensures queue.elements == old(queue.elements)
 		ensures queue.sequences == old(queue.sequences)
 		ensures forall i :: 0 <= i < queue.queues.Length
@@ -263,7 +261,6 @@ class {:autocontracts} Vehicle {
 		requires !emptyQueue()
 		ensures !emptyQueue()
 		ensures result == sequences()[index(firstNonEmptyPriority())][0]
-		ensures queue == old(queue)
 		ensures queue.elements == old(queue.elements)
 		ensures queue.sequences == old(queue.sequences)
 		ensures result == queue.sequences[index(queue.minPriorityFunc())][0]
@@ -289,7 +286,6 @@ class {:autocontracts} Vehicle {
 		  ==> sequences()[k] == old(sequences()[k])
 		ensures queueSize() == old(queueSize()) + 1
 		ensures |sequences()| == priorityValues
-		ensures queue == old(queue)
 		ensures queue.queues == old(queue.queues)
 		ensures forall i :: 0 <= i < queue.queues.Length
 		  ==> queue.queues[i] == old(queue.queues[i])
@@ -327,7 +323,6 @@ class {:autocontracts} Vehicle {
 		  ==> queue.queues[i] == old(queue.queues[i])
 		ensures forall i :: 0 <= i < queue.queues.Length
 		  ==> queue.queues[i].elements == old(queue.queues[i].elements)
-		ensures queue == old(queue)
 		ensures queue.queues == old(queue.queues)
 		ensures match old(sequences()[index(firstNonEmptyPriority())][0])
 		  case Reverse(activation) => this.reverse == activation
@@ -368,7 +363,6 @@ class {:autocontracts} Vehicle {
 		ensures this.voltage == old(this.voltage)
 		ensures queueSize() == old(queueSize())
 		ensures sequences() == old(sequences())
-		ensures queue == old(queue)
 		ensures this.reverse == activation
 		ensures activation && !subvoltage() ==> this.rearLights == 100
 		ensures !activation ==> this.rearLights == 0
@@ -394,7 +388,6 @@ class {:autocontracts} Vehicle {
 		ensures this.rearLights == old(this.rearLights)
 		ensures queueSize() == old(queueSize())
 		ensures sequences() == old(sequences())
-		ensures queue == old(queue)
 		ensures !subvoltage() && !overvoltage() ==> this.frontLights == luminosity
 		ensures overvoltage() ==> this.frontLights == (100 - (this.voltage - 14) * 20) % 100
 	{
@@ -418,7 +411,6 @@ class {:autocontracts} Vehicle {
 		ensures this.reverse == old(this.reverse)
 		ensures this.voltage == old(this.voltage)
 		ensures queueSize() == old(queueSize())
-		ensures queue == old(queue)
 		ensures sequences() == old(sequences())
 		ensures this.brake == deflection
 		ensures this.brake > 0 ==> (this.rearLights == 100 && this.rearLights == 100)
@@ -443,7 +435,6 @@ class {:autocontracts} Vehicle {
 		ensures this.reverse == old(this.reverse)
 		ensures this.brake == old(this.brake)
 		ensures queueSize() == old(queueSize())
-		ensures queue == old(queue)
 		ensures this.voltage == level
 		ensures sequences() == old(sequences())
 	{
