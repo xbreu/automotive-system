@@ -24,16 +24,25 @@ const priorityValues : nat := 3
 
 // Vehicle class
 class {:autocontracts} Vehicle {
-	// Primitive attributes
+	// User interface
 	var keyStatus          : KeyPosition;
+	var ignitionOn         : bool;
 	var lightRotary        : SwitchPosition;
 	var reverse            : bool;
-	var voltage            : int;
-	var brake              : nat;
+	var brake              : nat; // 0 - 450 * 0.1 degrees
+	// Actuators
+	var lowBeams           : nat; // 0 - 100 %
+	var tailLamps          : nat; // 0 - 100 %
+	var corneringLights    : nat; // 0 - 100 %
+	var brakeLight         : nat; // 0 - 100 %
+	var reverseLight       : nat; // 0 - 100 %
+	// Sensors
+	var voltage            : nat; // 0 - 500 dV
+	var exteriorBrightness : nat; // 0 – 100000 lx
+	// Concrete state of the lights
 	var frontLights        : nat;
 	var rearLights         : nat;
 	var centerRearLight    : nat;
-	var exteriorBrightness : nat;
 	// Implementation attributes
 	const queue            : PriorityQueue;
 
@@ -77,85 +86,54 @@ class {:autocontracts} Vehicle {
 	{
 		&& queue.Valid()
 		&& queue.maxPriority == priorityValues
-		&& lightRules()
-	}
-
-	predicate lightRules()
-	{
-		true
-	}
-
-	// --------------------------------------------------------------------------------
-	// Activation predicates
-	// --------------------------------------------------------------------------------
-	
-	predicate method subvoltage()
-		reads this`voltage
-		reads this.Repr
-		reads queue
-		reads queue.queues
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i]
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i].elements
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i]`used
-		reads set x, y | y in (set i | 0 <= i < queue.queues.Length :: queue.queues[i].Repr) && x in y :: x
-	{
-		voltage <= 8
-	}
-
-	predicate method overvoltage()
-		reads this`voltage
-		reads this.Repr
-		reads queue
-		reads queue.queues
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i]
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i].elements
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i]`used
-		reads set x, y | y in (set i | 0 <= i < queue.queues.Length :: queue.queues[i].Repr) && x in y :: x
-	{
-		voltage >= 15
-	}
-
-	predicate ignitionOn()
-		reads this`keyStatus
-		reads this.Repr
-		reads queue
-		reads queue.queues
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i]
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i].elements
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i]`used
-		reads set x, y | y in (set i | 0 <= i < queue.queues.Length :: queue.queues[i].Repr) && x in y :: x
-	{
-		keyStatus == KeyInIgnitionOnPosition
-	}
-
-	predicate lowBeams()
-		reads this`keyStatus
-		reads this`lightRotary
-		reads this`exteriorBrightness
-		reads this.Repr
-		reads queue
-		reads queue.queues
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i]
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i].elements
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i]`used
-		reads set x, y | y in (set i | 0 <= i < queue.queues.Length :: queue.queues[i].Repr) && x in y :: x
-	{
-		|| (ignitionOn() && lightRotary == On)
-		|| (ignitionOn() && lightRotary == Auto && exteriorBrightness <= 200)
-	}
-
-	predicate powerSaving()
-		reads this`keyStatus
-		reads this`lightRotary
-		reads this.Repr
-		reads queue
-		reads queue.queues
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i]
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i].elements
-		reads set i | 0 <= i < queue.queues.Length :: queue.queues[i]`used
-		reads set x, y | y in (set i | 0 <= i < queue.queues.Length :: queue.queues[i].Repr) && x in y :: x
-	{
-		keyStatus == KeyInserted && lightRotary == On
+		// Variable domains
+		&& (brake <= 450)
+		&& (lowBeams <= 100)
+		&& (tailLamps <= 100)
+		&& (corneringLights <= 100)
+		&& (brakeLight <= 100)
+		&& (reverseLight <= 100)
+		&& (exteriorBrightness <= 100000)
+		// Dependant variables
+		&& (ignitionOn <==> keyStatus == KeyInIgnitionOnPosition)
+		// ELS-14 | If the ignition is On and the light rotary switch is in the position On,
+		// then low beam headlights are activated.
+		&& (ignitionOn && lightRotary == On ==> lowBeams > 0)
+		// ELS-15 | While the ignition is in position KeyInserted: if the light rotary switch
+		// is turned to the position On, the low beam headlights are activated
+		// with 50% (to save power).
+		&& (keyStatus == KeyInserted && lightRotary == On ==> lowBeams == 50)
+		// ELS-16 | If the ignition is already off and the driver turns the light rotary
+		// switch to position Auto, the low beam headlights remain off or are
+		// deactivated (depending on the previous state).
+		&& (!ignitionOn && lightRotary == Auto ==> lowBeams == 0)
+		// ELS-18 | If the light rotary switch is in position Auto and the ignition is On, the
+		// low beam headlights are activated as soon as the exterior brightness
+		// is lower than a threshold of 200 lx. If the exterior brightness exceeds
+		// a threshold of 250 lx, the low beam headlights are deactivated.
+		&& (ignitionOn && lightRotary == Auto && exteriorBrightness < 200 ==> lowBeams > 0)
+		&& (ignitionOn && lightRotary == Auto && exteriorBrightness > 250 ==> lowBeams == 0)
+		// ELS-22 | Whenever the low or high beam headlights are activated, the tail
+		// lights are activated, too.
+		&& (lowBeams > 0 ==> tailLamps > 0)
+		// ELS-27 | If reverse gear is activated, both opposite cornering lights are
+		// activated.
+		&& (reverse ==> corneringLights > 0)
+		// ELS-29 | The normal brightness of low beam lamps, brake lights, direction
+		// indicators, tail lamps, cornering lights, and reverse light is 100%.
+		&& (ignitionOn && lowBeams > 0 ==> lowBeams == 100)
+		&& (brakeLight > 0 ==> brakeLight == 100)
+		&& (tailLamps > 0 ==> tailLamps == 100)
+		&& (voltage > 80 && corneringLights > 0 ==> corneringLights == 100)
+		&& (reverseLight > 0 ==> reverseLight == 100)
+		// ELS-39 | If the brake pedal is deflected more than 3 degrees, all brake lamps have to
+		// be activated until the deflection is lower than 1 degree again.
+		&& (brake > 30 ==> brakeLight > 0)
+		&& (brake < 10 ==> brakeLight == 0)
+		// ELS-41 | The reverse light is activated whenever the reverse gear is engaged.
+		&& (reverse ==> reverseLight > 0)
+		// ELS-45 | With subvoltage the cornering light is not available.
+		&& (voltage <= 80 ==> corneringLights == 0)
 	}
 	
 	// --------------------------------------------------------------------------------
@@ -180,10 +158,10 @@ class {:autocontracts} Vehicle {
 
 	method changeKeyStatus(status : KeyPosition)
 		ensures this.keyStatus == status
-		ensures queue.elements == old(queue.elements)
-		ensures queue.sequences == old(queue.sequences)
-		ensures this.brake == old(this.brake)
+		ensures this.lightRotary == old(this.lightRotary)
 		ensures this.voltage == old(this.voltage)
+		ensures this.reverse == old(this.reverse)
+		ensures this.brake == old(this.brake)
 		ensures queueSize() == old(queueSize())
 		ensures sequences() == old(sequences())
 		ensures queue.elements == old(queue.elements)
@@ -195,14 +173,15 @@ class {:autocontracts} Vehicle {
 		ensures queue.Repr == old(queue.Repr)
 	{
 		this.keyStatus := status;
+		this.ignitionOn := status == KeyInIgnitionOnPosition;
 	}
 
 	method changeLightRotary(status : SwitchPosition)
+		ensures this.keyStatus == old(this.keyStatus)
 		ensures this.lightRotary == status
-		ensures queue.elements == old(queue.elements)
-		ensures queue.sequences == old(queue.sequences)
-		ensures this.brake == old(this.brake)
 		ensures this.voltage == old(this.voltage)
+		ensures this.reverse == old(this.reverse)
+		ensures this.brake == old(this.brake)
 		ensures queueSize() == old(queueSize())
 		ensures sequences() == old(sequences())
 		ensures queue.elements == old(queue.elements)
