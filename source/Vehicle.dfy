@@ -47,6 +47,10 @@ class {:autocontracts} Vehicle {
 		ensures brake == 0
 		ensures reverse == false
 		ensures fresh(queue)
+		ensures fresh(queue.queues)
+		ensures forall i :: 0 <= i < priorityValues ==> fresh(queue.queues[i])
+		ensures forall i :: 0 <= i < priorityValues ==> fresh(queue.queues[i].elements)
+	
 	{
 		queue           := new PriorityQueue(priorityValues, Reverse(false));
 		keyStatus       := NoKeyInserted;
@@ -238,6 +242,12 @@ class {:autocontracts} Vehicle {
 		ensures queueSize() == old(queueSize()) + 1
 		ensures |sequences()| == priorityValues
 		ensures queue == old(queue)
+		ensures queue.queues == old(queue.queues)
+		ensures forall i :: 0 <= i < queue.queues.Length
+		  ==> queue.queues[i] == old(queue.queues[i])
+		ensures forall i :: 0 <= i < queue.queues.Length
+		  ==> queue.queues[i].elements == old(queue.queues[i].elements)
+		  || fresh(queue.queues[i].elements)
 	{
 		queue.push(signal, getPriority(signal));
 	}
