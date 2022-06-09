@@ -77,6 +77,12 @@ class {:autocontracts} Vehicle {
 	{
 		&& queue.Valid()
 		&& queue.maxPriority == priorityValues
+		&& lightRules()
+	}
+
+	predicate lightRules()
+	{
+		true
 	}
 
 	// --------------------------------------------------------------------------------
