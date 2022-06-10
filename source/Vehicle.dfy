@@ -103,22 +103,22 @@ class {:autocontracts} Vehicle {
 		&& (lowBeams > 0 ==> tailLamps > 0)
 		// ELS-27 | If reverse gear is activated, both opposite cornering lights are
 		// activated.
-		//&& (reverse && voltage > 80 ==> corneringLights > 0)
+		&& (reverse && voltage > 80 ==> corneringLights > 0)
 		// ELS-29 | The normal brightness of low beam lamps, brake lights, direction
 		// indicators, tail lamps, cornering lights, and reverse light is 100%.
-		//&& (engineOn && lowBeams > 0 ==> lowBeams == 100)
-		//&& (brakeLight > 0 ==> brakeLight == 100)
-		//&& (tailLamps > 0 ==> tailLamps == 100)
-		//&& (voltage > 80 && corneringLights > 0 ==> corneringLights == 100)
-		//&& (reverseLight > 0 ==> reverseLight == 100)
+		&& (engineOn && lowBeams > 0 ==> lowBeams == 100)
+		&& (brakeLight > 0 ==> brakeLight == 100)
+		&& (tailLamps > 0 ==> tailLamps == 100)
+		&& (voltage > 80 && corneringLights > 0 ==> corneringLights == 100)
+		&& (reverseLight > 0 ==> reverseLight == 100)
 		// ELS-39 | If the brake pedal is deflected more than 3 degrees, all brake lamps have to
 		// be activated until the deflection is lower than 1 degree again.
-		//&& (brake > 30 ==> brakeLight > 0)
-		//&& (brake < 10 ==> brakeLight == 0)
+		&& (brake > 30 ==> brakeLight > 0)
+		&& (brake < 10 ==> brakeLight == 0)
 		// ELS-41 | The reverse light is activated whenever the reverse gear is engaged.
-		//&& (reverse ==> reverseLight > 0)
+		&& (reverse ==> reverseLight > 0)
 		// ELS-45 | With subvoltage the cornering light is not available.
-		//&& (voltage <= 80 ==> corneringLights == 0)
+		&& (voltage <= 80 ==> corneringLights == 0)
 	}
 	
 	// --------------------------------------------------------------------------------
@@ -284,13 +284,17 @@ class {:autocontracts} Vehicle {
 	{	
 		// Get the first element from the queue
 		var element := queue.pop();
-
-		assert sequences()[old(index(firstNonEmptyPriority()))] == old(sequences()[index(firstNonEmptyPriority())][1..]);
-		assert queueSize() == old(queueSize()) - 1;
 	
 		match element {
 			case Voltage(level) => {
 				voltage := level;
+				if voltage > 80 {
+					if reverse { corneringLights := 100; }
+					else if corneringLights > 0 { corneringLights := 100; }
+				}
+				else if voltage <= 80 {
+					corneringLights := 0;
+				}
 			}
 			case ExteriorBrightness(level) => {
 				exteriorBrightness := level;
@@ -307,11 +311,12 @@ class {:autocontracts} Vehicle {
 					engineOn := true;
 					if engineOn && lightRotary == Auto && exteriorBrightness < 200 { lowBeams := 100; tailLamps := 100;}
 					else if engineOn && lightRotary == Auto && exteriorBrightness > 250 { lowBeams := 0; }
-					else if engineOn && lightRotary == On {lowBeams := 100; tailLamps := 100; }			
+					else if engineOn && lightRotary == On { lowBeams := 100; tailLamps := 100; }
+					else if engineOn && lowBeams > 0 { lowBeams := 100; }		
 				}
 				else if keyStatus == KeyInserted {
 					engineOn := false;
-					if lightRotary == On { lowBeams := 50; tailLamps := 50; }
+					if lightRotary == On { lowBeams := 50; tailLamps := 100; }
 					else if lightRotary == Auto { lowBeams := 0; }
 				}
 				else { 
@@ -323,7 +328,7 @@ class {:autocontracts} Vehicle {
 				lightRotary := position;
 				if lightRotary == On {
 					if engineOn { lowBeams := 100; tailLamps := 100; }
-					else if keyStatus == KeyInserted { lowBeams := 50; tailLamps := 50; }
+					else if keyStatus == KeyInserted { lowBeams := 50; tailLamps := 100; }
 				}
 				else if lightRotary == Auto { 
 					if !engineOn { lowBeams := 0; }
@@ -335,8 +340,7 @@ class {:autocontracts} Vehicle {
 				reverse := activation;
 				if reverse { 
 					reverseLight := 100;
-					if voltage > 80
-					{ corneringLights := 100; }
+					if voltage > 80 { corneringLights := 100; }
 				}
 				else { reverseLight := 0; }
 			}
@@ -345,15 +349,11 @@ class {:autocontracts} Vehicle {
 				if brake > 30 { brakeLight := 100; }
 				else if brake < 10 { brakeLight := 0; }
 			}
-
 			case _ => {}
 		}
-
 	}
 }
 
-
-/*
 method TestVehicle()
 {
 	var v := new Vehicle();
@@ -363,29 +363,29 @@ method TestVehicle()
 
 	// Test add signal
 
-	v.addSignal(Reverse(false));
-	assert index(getPriority(Reverse(false))) == 2;
+	v.addSignal(Reverse(true));
+	assert index(getPriority(Reverse(true))) == 2;
 	assert v.sequences()[0] == [];
 	assert v.sequences()[1] == [];
-	assert v.sequences()[2] == [Reverse(false)];
+	assert v.sequences()[2] == [Reverse(true)];
 	assert |v.sequences()| == 3;
-	assert v.sequences() == [[], [], [Reverse(false)]];
+	assert v.sequences() == [[], [], [Reverse(true)]];
 
 	v.addSignal(Voltage(30));
 	assert index(getPriority(Voltage(30))) == 0;
 	assert v.sequences()[0] == [Voltage(30)];
 	assert v.sequences()[1] == [];
-	assert v.sequences()[2] == [Reverse(false)];
+	assert v.sequences()[2] == [Reverse(true)];
 	assert |v.sequences()| == 3;
-	assert v.sequences() == [[Voltage(30)], [], [Reverse(false)]];
+	assert v.sequences() == [[Voltage(30)], [], [Reverse(true)]];
 
-	v.addSignal(Brake(5));
-	assert index(getPriority(Brake(5))) == 1;
+	v.addSignal(Brake(50));
+	assert index(getPriority(Brake(50))) == 1;
 	assert v.sequences()[0] == [Voltage(30)];
-	assert v.sequences()[1] == [Brake(5)];
-	assert v.sequences()[2] == [Reverse(false)];
+	assert v.sequences()[1] == [Brake(50)];
+	assert v.sequences()[2] == [Reverse(true)];
 	assert |v.sequences()| == 3;
-	assert v.sequences() == [[Voltage(30)], [Brake(5)], [Reverse(false)]];
+	assert v.sequences() == [[Voltage(30)], [Brake(50)], [Reverse(true)]];
 
 	// Test get first
 	var s := v.getFirst();
@@ -395,14 +395,23 @@ method TestVehicle()
 	v.processFirst();
 	assert v.queueSize() == 2;
 	assert v.sequences()[0] == [];
-	assert v.sequences()[1] == [Brake(5)];
-	assert v.sequences()[2] == [Reverse(false)];
+	assert v.sequences()[1] == [Brake(50)];
+	assert v.sequences()[2] == [Reverse(true)];
 	assert v.voltage == 30;
 
 	v.processFirst();
 	assert v.queueSize() == 1;
 	assert v.sequences()[0] == [];
 	assert v.sequences()[1] == [];
-	assert v.sequences()[2] == [Reverse(false)];
+	assert v.sequences()[2] == [Reverse(true)];
+	assert v.brake == 50;
+	assert v.brakeLight == 100;
+
+	v.processFirst();
+	assert v.queueSize() == 0;
+	assert v.sequences()[0] == [];
+	assert v.sequences()[1] == [];
+	assert v.sequences()[2] == [];
+	assert v.reverse == true;
+	assert v.reverseLight == 100;
 }
-*/
