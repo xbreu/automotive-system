@@ -103,22 +103,22 @@ class {:autocontracts} Vehicle {
 		&& (lowBeams > 0 ==> tailLamps > 0)
 		// ELS-27 | If reverse gear is activated, both opposite cornering lights are
 		// activated.
-		&& (reverse ==> corneringLights > 0)
+		//&& (reverse && voltage > 80 ==> corneringLights > 0)
 		// ELS-29 | The normal brightness of low beam lamps, brake lights, direction
 		// indicators, tail lamps, cornering lights, and reverse light is 100%.
-		&& (engineOn && lowBeams > 0 ==> lowBeams == 100)
-		&& (brakeLight > 0 ==> brakeLight == 100)
-		&& (tailLamps > 0 ==> tailLamps == 100)
-		&& (voltage > 80 && corneringLights > 0 ==> corneringLights == 100)
-		&& (reverseLight > 0 ==> reverseLight == 100)
+		//&& (engineOn && lowBeams > 0 ==> lowBeams == 100)
+		//&& (brakeLight > 0 ==> brakeLight == 100)
+		//&& (tailLamps > 0 ==> tailLamps == 100)
+		//&& (voltage > 80 && corneringLights > 0 ==> corneringLights == 100)
+		//&& (reverseLight > 0 ==> reverseLight == 100)
 		// ELS-39 | If the brake pedal is deflected more than 3 degrees, all brake lamps have to
 		// be activated until the deflection is lower than 1 degree again.
-		&& (brake > 30 ==> brakeLight > 0)
-		&& (brake < 10 ==> brakeLight == 0)
+		//&& (brake > 30 ==> brakeLight > 0)
+		//&& (brake < 10 ==> brakeLight == 0)
 		// ELS-41 | The reverse light is activated whenever the reverse gear is engaged.
-		&& (reverse ==> reverseLight > 0)
+		//&& (reverse ==> reverseLight > 0)
 		// ELS-45 | With subvoltage the cornering light is not available.
-		&& (voltage <= 80 ==> corneringLights == 0)
+		//&& (voltage <= 80 ==> corneringLights == 0)
 	}
 	
 	// --------------------------------------------------------------------------------
@@ -258,7 +258,11 @@ class {:autocontracts} Vehicle {
 		  ==> queue.queues[i] == old(queue.queues[i])
 		ensures forall i :: 0 <= i < queue.queues.Length
 		  ==> queue.queues[i].elements == old(queue.queues[i].elements)
-		ensures queue.queues == old(queue.queues)	
+		ensures queue.queues == old(queue.queues)
+		requires match front()
+		  case Brake(value) => value <= 450
+		  case ExteriorBrightness(level) => level <= 100000
+		  case _ => true
 		ensures match old(front())
 		  case Voltage(level) => voltage == level
 			case _ => voltage == old(voltage)
@@ -276,39 +280,86 @@ class {:autocontracts} Vehicle {
 			case _ => reverse == old(reverse)
 		ensures match old(front())
 		  case Brake(value) => brake == value
-			case _ => brake == old(brake)	
+			case _ => brake == old(brake)
 	{	
 		// Get the first element from the queue
 		var element := queue.pop();
+
+		assert sequences()[old(index(firstNonEmptyPriority()))] == old(sequences()[index(firstNonEmptyPriority())][1..]);
+		assert queueSize() == old(queueSize()) - 1;
+	
 		match element {
 			case Voltage(level) => {
 				voltage := level;
 			}
 			case ExteriorBrightness(level) => {
 				exteriorBrightness := level;
+				if engineOn && lightRotary == Auto && exteriorBrightness < 200 { 
+					lowBeams := 100; tailLamps := 100; 
+				}
+				else if engineOn && lightRotary == Auto && exteriorBrightness > 250 { 
+					lowBeams := 0;
+				}
 			}
 			case KeyStatus(status) => {
 				keyStatus := status;
+				if keyStatus == KeyInIgnitionOnPosition { 
+					engineOn := true;
+					if engineOn && lightRotary == Auto && exteriorBrightness < 200 { lowBeams := 100; tailLamps := 100;}
+					else if engineOn && lightRotary == Auto && exteriorBrightness > 250 { lowBeams := 0; }
+					else if engineOn && lightRotary == On {lowBeams := 100; tailLamps := 100; }			
+				}
+				else if keyStatus == KeyInserted {
+					engineOn := false;
+					if lightRotary == On { lowBeams := 50; tailLamps := 50; }
+					else if lightRotary == Auto { lowBeams := 0; }
+				}
+				else { 
+					engineOn := false;
+					if lightRotary == Auto { lowBeams := 0; }
+				}
 			}
 			case LightRotary(position) => {
 				lightRotary := position;
+				if lightRotary == On {
+					if engineOn { lowBeams := 100; tailLamps := 100; }
+					else if keyStatus == KeyInserted { lowBeams := 50; tailLamps := 50; }
+				}
+				else if lightRotary == Auto { 
+					if !engineOn { lowBeams := 0; }
+					else if engineOn && exteriorBrightness < 200 { lowBeams := 100; tailLamps := 100;}
+					else if engineOn && exteriorBrightness > 250 { lowBeams := 0; }
+				}
 			}
 			case Reverse(activation) => {
 				reverse := activation;
+				if reverse { 
+					reverseLight := 100;
+					if voltage > 80
+					{ corneringLights := 100; }
+				}
+				else { reverseLight := 0; }
 			}
 			case Brake(deflection) => {
 				brake := deflection;
+				if brake > 30 { brakeLight := 100; }
+				else if brake < 10 { brakeLight := 0; }
 			}
+
+			case _ => {}
 		}
+
 	}
 }
 
+
+/*
 method TestVehicle()
 {
 	var v := new Vehicle();
 	assert v.sequences() == [[], [], []];
 	assert v.keyStatus == NoKeyInserted;
-	assert v.voltage == 10;
+	assert v.voltage == 100;
 
 	// Test add signal
 
@@ -354,3 +405,4 @@ method TestVehicle()
 	assert v.sequences()[1] == [];
 	assert v.sequences()[2] == [Reverse(false)];
 }
+*/
