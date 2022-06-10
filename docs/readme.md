@@ -5,7 +5,8 @@
 The goal of the project is to explore the validation and verification of a realistic safety-critical software system during the design and implementation stages of development.
 
 It has two main parts:
-- Model and analyse the design of a critical system using Alloy;
+1. Model and analyse the design of a critical system using Alloy;
+2. Implement and verify a component of a safety-critical system using Dafny.
 
 ## Problem
 
